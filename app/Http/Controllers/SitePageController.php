@@ -322,6 +322,29 @@ class SitePageController extends Controller
 
         usort($seccionesArray, fn ($a, $b) => ($a['orden'] ?? 99) <=> ($b['orden'] ?? 99));
 
+        // ─── SEO: calcular título y descripción en el servidor para que Google los vea ───
+        $seoCustomTitle       = $estilos['seo']['title'] ?? null;
+        $seoCustomDescription = $estilos['seo']['description'] ?? null;
+        $seoCustomKeywords    = $estilos['seo']['keywords'] ?? null;
+
+        $seoTitle = $seoCustomTitle
+            ?: "{$site->nombre} — " . ($seccionActiva['nombre'] ?? 'Inicio');
+
+        $rawDescription = $seoCustomDescription
+            ?: ($seccionActiva['descripcion'] ?? null)
+            ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
+
+        $seoDescription = mb_substr(strip_tags($rawDescription), 0, 160);
+
+        Inertia::share([
+            '_seo' => [
+                'title'       => $seoTitle,
+                'description' => $seoDescription,
+                'keywords'    => $seoCustomKeywords,
+            ],
+        ]);
+        // ─────────────────────────────────────────────────────────────────────────────────
+
         return Inertia::render(self::paginaPlantilla($site->plantilla), [
             'site' => [
                 'id' => $site->id,

@@ -76,7 +76,22 @@
 <?php $component->withAttributes([]); ?>
 <?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::processComponentKey($component); ?>
 
-            <title><?php echo e(config('app.name', 'Laravel')); ?></title>
+            <?php
+                $seoData = $page['props']['_seo'] ?? [];
+                $seoTitle       = $seoData['title']       ?? config('app.name', 'Laravel');
+                $seoDescription = $seoData['description'] ?? '';
+                $seoKeywords    = $seoData['keywords']    ?? '';
+            ?>
+            <title><?php echo e($seoTitle); ?></title>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seoDescription): ?>
+                <meta name="description" content="<?php echo e($seoDescription); ?>">
+                <meta property="og:description" content="<?php echo e($seoDescription); ?>">
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($seoKeywords): ?>
+                <meta name="keywords" content="<?php echo e($seoKeywords); ?>">
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            <meta property="og:title" content="<?php echo e($seoTitle); ?>">
+            <meta property="og:type" content="website">
          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal56673881198e3a2924721e242dee6899)): ?>

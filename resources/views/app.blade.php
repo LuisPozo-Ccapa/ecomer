@@ -65,7 +65,22 @@
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx', "resources/js/pages/{$page['component']}.jsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            @php
+                $seoData = $page['props']['_seo'] ?? [];
+                $seoTitle       = $seoData['title']       ?? config('app.name', 'Laravel');
+                $seoDescription = $seoData['description'] ?? '';
+                $seoKeywords    = $seoData['keywords']    ?? '';
+            @endphp
+            <title>{{ $seoTitle }}</title>
+            @if($seoDescription)
+                <meta name="description" content="{{ $seoDescription }}">
+                <meta property="og:description" content="{{ $seoDescription }}">
+            @endif
+            @if($seoKeywords)
+                <meta name="keywords" content="{{ $seoKeywords }}">
+            @endif
+            <meta property="og:title" content="{{ $seoTitle }}">
+            <meta property="og:type" content="website">
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">
