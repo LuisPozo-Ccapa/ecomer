@@ -149,8 +149,15 @@ class ProductoForm
                                 ->searchable()
                                 ->hidden(fn (Get $get) => blank($get('categoria_id')))
                                 ->placeholder('— sin subcategoría —'),
+                            TextInput::make('codigo_referencia')
+                                ->label('Código de Referencia')
+                                ->placeholder(fn (?Producto $record) => $record ? 'PROD-'.str_pad((string) $record->id, 5, '0', STR_PAD_LEFT) : 'Ej: PROD-00001')
+                                ->helperText('Identificador para clientes. Si se deja vacío, la web usará PROD-XXXXX automáticamente.')
+                                ->maxLength(255),
                             TextInput::make('sku')
                                 ->label('SKU')
+                                ->placeholder('Ej: SKU-12345')
+                                ->helperText('Código de inventario o proveedor.')
                                 ->maxLength(255),
                             TextInput::make('orden')
                                 ->numeric()

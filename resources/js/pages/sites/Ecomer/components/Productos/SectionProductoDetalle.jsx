@@ -842,7 +842,15 @@ export default function SectionProductoDetalle({
                                             )}
                                             <tr className="border-b border-gray-100">
                                                 <td className="py-2.5 font-semibold text-gray-500">Código de Referencia</td>
-                                                <td className="py-2.5 text-gray-800">PROD-{producto.id.toString().padStart(5, '0')}</td>
+                                                <td className="py-2.5 text-gray-800 font-medium">
+                                                    {producto.codigo_referencia || `PROD-${producto.id.toString().padStart(5, '0')}`}
+                                                </td>
+                                            </tr>
+                                            <tr className="border-b border-gray-100">
+                                                <td className="py-2.5 font-semibold text-gray-500">SKU</td>
+                                                <td className="py-2.5 text-gray-800 font-mono">
+                                                    {producto.sku || '—'}
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

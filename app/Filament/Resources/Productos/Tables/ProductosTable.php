@@ -17,6 +17,20 @@ class ProductosTable
     {
         return $table
             ->columns([
+                TextColumn::make('codigo_referencia')
+                    ->label('Cód. Ref.')
+                    ->formatStateUsing(fn ($state, Producto $record) => $state ?: 'PROD-'.str_pad((string) $record->id, 5, '0', STR_PAD_LEFT))
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color('gray')
+                    ->toggleable(),
+                TextColumn::make('sku')
+                    ->label('SKU')
+                    ->searchable()
+                    ->sortable()
+                    ->placeholder('—')
+                    ->toggleable(),
                 TextColumn::make('nombre')
                     ->searchable()
                     ->sortable(),
