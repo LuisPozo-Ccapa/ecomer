@@ -206,6 +206,16 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     const navSecciones = useMemo(() => {
         let list = Array.isArray(secciones) ? [...secciones] : [];
 
+        const hasHomeInList = list.some((s) => {
+            const slug = (s.slug || '').toLowerCase();
+            const nombre = (s.nombre || '').toLowerCase();
+            return slug === 'inicio' || slug === 'hero' || nombre === 'inicio' || nombre === 'hero';
+        });
+
+        if (!hasHomeInList) {
+            list.unshift({ slug: 'inicio', nombre: 'Inicio', orden: 1 });
+        }
+
         const prodOrden = estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== ''
             ? Number(estilos.seccion_productos.orden)
             : 2;
@@ -742,10 +752,18 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 }
 
                                 if (hasStandalonePage) {
+                                    const homeHref = dominio === 'plantillas'
+                                        ? `/plantillas/${siteSlug}`
+                                        : (siteSlug ? `/${dominio}/${siteSlug}` : `/${dominio}`);
+
+                                    const targetHref = isInicio
+                                        ? homeHref
+                                        : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`));
+
                                     return (
                                         <Link
                                             key={seccion.slug}
-                                            href={dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`)}
+                                            href={targetHref}
                                             className={linkClasses}
                                             style={activeStyle}
                                         >
@@ -1558,10 +1576,18 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             }
 
                             if (hasStandalonePage) {
+                                const homeHref = dominio === 'plantillas'
+                                    ? `/plantillas/${siteSlug}`
+                                    : (siteSlug ? `/${dominio}/${siteSlug}` : `/${dominio}`);
+
+                                const targetHref = isInicio
+                                    ? homeHref
+                                    : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`));
+
                                 return (
                                     <Link
                                         key={seccion.slug}
-                                        href={dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`)}
+                                        href={targetHref}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={linkClasses}
                                         style={activeStyle}
