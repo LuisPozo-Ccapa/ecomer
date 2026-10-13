@@ -740,7 +740,7 @@ export default function SectionProductoDetalle({
                                         className="w-full py-3 px-6 rounded-full font-bold text-sm border border-[var(--color-primario)] text-[var(--color-primario)] bg-white hover:bg-[var(--color-primario)] hover:text-white shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
                                     >
                                         <span>↗</span>
-                                        <span>Más Información</span>
+                                        <span>Ver ficha técnica</span>
                                     </a>
                                 )}
                             </div>
