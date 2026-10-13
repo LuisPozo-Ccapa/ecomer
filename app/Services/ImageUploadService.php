@@ -97,6 +97,19 @@ class ImageUploadService
     private static function syncToPublicPath(string $relativeDestination, string $contents): void
     {
         try {
+            $normalized = ltrim($relativeDestination, '/');
+
+            $publicDisk = Storage::disk('public');
+            $directory = dirname($normalized);
+            if ($directory !== '.' && $directory !== '/' && ! $publicDisk->exists($directory)) {
+                $publicDisk->makeDirectory($directory);
+            }
+            $publicDisk->put($normalized, $contents);
+        } catch (\Throwable $e) {
+            // Ignore disk sync errors and continue with public mirror fallback
+        }
+
+        try {
             $targetPath = public_path('storage/'.ltrim($relativeDestination, '/'));
             $targetDir = dirname($targetPath);
 

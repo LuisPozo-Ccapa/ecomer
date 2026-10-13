@@ -11,6 +11,65 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['site_id', 'tienda_id', 'moneda_id', 'categoria_id', 'subcategoria_id', 'marca_id', 'nombre', 'slug', 'descripcion_corta', 'descripcion', 'precio', 'precio_oferta', 'precio_dolares', 'precio_oferta_dolares', 'precio_euros', 'precio_oferta_euros', 'cantidad', 'stock', 'sku', 'codigo_referencia', 'enlace', 'imagen', 'imagenes', 'activo', 'destacado', 'es_liquidacion', 'orden'])]
 class Producto extends Model
 {
+    private static function normalizeStoragePath(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $raw = trim((string) $value);
+        if ($raw === '') {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $raw)) {
+            $parsed = parse_url($raw);
+            $path = $parsed['path'] ?? $raw;
+            $raw = $path;
+        }
+
+        $raw = preg_replace('#^/?storage/#', '', $raw);
+        $raw = preg_replace('#^/?public/#', '', $raw);
+        $raw = ltrim($raw, '/');
+
+        return $raw !== '' ? $raw : null;
+    }
+
+    public function getImagenAttribute($value): ?string
+    {
+        return self::normalizeStoragePath($value);
+    }
+
+    public function setImagenAttribute($value): void
+    {
+        $this->attributes['imagen'] = self::normalizeStoragePath($value);
+    }
+
+    public function getImagenesAttribute($value): array
+    {
+        if (is_array($value)) {
+            return array_values(array_filter(array_map(fn ($item) => self::normalizeStoragePath($item), $value)));
+        }
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return array_values(array_filter(array_map(fn ($item) => self::normalizeStoragePath($item), $decoded)));
+            }
+        }
+
+        return [];
+    }
+
+    public function setImagenesAttribute($value): void
+    {
+        $normalized = is_array($value)
+            ? array_values(array_filter(array_map(fn ($item) => self::normalizeStoragePath($item), $value)))
+            : [];
+
+        $this->attributes['imagenes'] = json_encode($normalized);
+    }
+
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
