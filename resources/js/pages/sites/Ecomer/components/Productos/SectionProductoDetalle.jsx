@@ -130,6 +130,12 @@ export default function SectionProductoDetalle({
 
     if (!producto) return null;
 
+    const enlaceProducto = typeof producto?.enlace === 'string'
+        ? producto.enlace.trim()
+        : (typeof producto?.link === 'string'
+            ? producto.link.trim()
+            : (typeof producto?.url === 'string' ? producto.url.trim() : ''));
+
     const pSolesReg = varianteSeleccionada?.precio
         ? Number(varianteSeleccionada.precio)
         : (producto.precio_soles != null && producto.precio_soles !== '' ? Number(producto.precio_soles) : (producto.precio != null && producto.precio !== '' ? Number(producto.precio) : 0));
@@ -725,6 +731,18 @@ export default function SectionProductoDetalle({
                                     <DynamicIcon name="FaWhatsapp" className="h-4 w-4" />
                                     <span>Consultar o pedir por WhatsApp</span>
                                 </button>
+
+                                {enlaceProducto && (
+                                    <a
+                                        href={enlaceProducto}
+                                        target={/^https?:\/\//i.test(enlaceProducto) ? '_blank' : undefined}
+                                        rel={/^https?:\/\//i.test(enlaceProducto) ? 'noreferrer' : undefined}
+                                        className="w-full py-3 px-6 rounded-full font-bold text-sm border border-[var(--color-primario)] text-[var(--color-primario)] bg-white hover:bg-[var(--color-primario)] hover:text-white shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+                                    >
+                                        <span>↗</span>
+                                        <span>Más Información</span>
+                                    </a>
+                                )}
                             </div>
 
                             {/* Beneficios de Despacho y Entrega */}

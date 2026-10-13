@@ -9,4 +9,136 @@
     scrollbar-width: thin;
 }
 
+/* =========================================================
+   TagsInput — Papelera en lugar de X
+   Compatible con modo claro y oscuro de Filament
+   Sin Unicode — 100% SVG data URI
+   ========================================================= */
 
+/* ---- MODO CLARO ---- */
+.fi-fo-tags-input .fi-badge {
+    position: relative !important;
+    overflow: visible !important;
+    background-color: #fef3c7 !important;           /* amber-100 */
+    border: 1px solid #fbbf24 !important;            /* amber-400 */
+    color: #92400e !important;                       /* amber-900 */
+    border-radius: 999px !important;
+    padding: 0.18rem 0.4rem 0.18rem 0.7rem !important;
+    font-weight: 600 !important;
+    font-size: 0.72rem !important;
+    gap: 0.35rem !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    /* quitar ring de Filament */
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+}
+
+.fi-fo-tags-input .fi-badge:hover {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Texto */
+.fi-fo-tags-input .fi-badge .fi-badge-label {
+    color: #92400e !important;
+    transition: opacity 0.2s ease !important;
+    pointer-events: none !important;
+}
+
+/* El texto permanece visible al hover */
+
+/* Botón eliminar: círculo pequeño con papelera */
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background-color: rgba(146, 64, 14, 0.1) !important;
+    border: 1px solid rgba(146, 64, 14, 0.25) !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+    position: relative !important;
+    outline: none !important;
+}
+
+/* Ocultar el ícono X SVG que pone Filament */
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn .fi-icon,
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn svg {
+    display: none !important;
+}
+
+/* Papelera en claro (ámbar oscuro) */
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn::after {
+    content: '' !important;
+    display: block !important;
+    width: 10px !important;
+    height: 10px !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' stroke='%2392400e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 11v6M14 11v6' stroke='%2392400e' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.18) !important;
+    border-color: #ef4444 !important;
+    transform: scale(1.1) !important;
+}
+
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' stroke='%23ef4444' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 11v6M14 11v6' stroke='%23ef4444' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.fi-fo-tags-input .fi-badge .fi-badge-delete-btn:active {
+    background-color: rgba(239, 68, 68, 0.35) !important;
+    transform: scale(0.95) !important;
+}
+
+/* ---- MODO OSCURO (Filament agrega clase .dark al <html>) ---- */
+.dark .fi-fo-tags-input .fi-badge {
+    background-color: #1c1917 !important;           /* stone-900 */
+    border-color: rgba(251, 191, 36, 0.45) !important; /* amber-400 semitransparente */
+    color: #fbbf24 !important;                       /* amber-400 */
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+}
+
+.dark .fi-fo-tags-input .fi-badge:hover {
+    border-color: rgba(239, 68, 68, 0.65) !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12) !important;
+}
+
+.dark .fi-fo-tags-input .fi-badge .fi-badge-label {
+    color: #fbbf24 !important;
+}
+
+/* El texto permanece visible al hover en oscuro */
+
+/* Botón eliminar en oscuro */
+.dark .fi-fo-tags-input .fi-badge .fi-badge-delete-btn {
+    background-color: rgba(251, 191, 36, 0.1) !important;
+    border-color: rgba(251, 191, 36, 0.3) !important;
+}
+
+/* Papelera en oscuro (ámbar claro) */
+.dark .fi-fo-tags-input .fi-badge .fi-badge-delete-btn::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' stroke='%23fbbf24' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 11v6M14 11v6' stroke='%23fbbf24' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.dark .fi-fo-tags-input .fi-badge .fi-badge-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.25) !important;
+    border-color: rgba(239, 68, 68, 0.65) !important;
+}
+
+.dark .fi-fo-tags-input .fi-badge .fi-badge-delete-btn:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6' stroke='%23ef4444' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10 11v6M14 11v6' stroke='%23ef4444' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.dark .fi-fo-tags-input .fi-badge .fi-badge-delete-btn:active {
+    background-color: rgba(239, 68, 68, 0.45) !important;
+    transform: scale(0.95) !important;
+}

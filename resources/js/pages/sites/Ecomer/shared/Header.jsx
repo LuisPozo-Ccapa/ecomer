@@ -234,15 +234,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             list.push({ slug: 'servicios', nombre: 'Servicios', orden: servOrden });
         }
 
-        const catOrden = estilos?.catalogo?.orden !== undefined && estilos?.catalogo?.orden !== ''
-            ? Number(estilos.catalogo.orden)
-            : 4;
-
-        const hasCatalogoInList = list.some((s) => (s.slug || '').toLowerCase() === 'catalogo');
-
-        if (isCatalogoActivo && !hasCatalogoInList) {
-            list.push({ slug: 'catalogo', nombre: catalogoTitulo, isCatalogo: true, orden: catOrden });
-        }
+        // El catálogo ya no va en el nav — se muestra como botón flotante lateral
 
         const marcasOrden = estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== ''
             ? Number(estilos.seccion_marcas.orden)
@@ -259,24 +251,27 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             list.push({ slug: 'marcas', nombre: 'Marcas', orden: marcasOrden });
         }
 
-        list = list.map((s) => {
-            const slug = (s.slug || '').toLowerCase();
-            if (slug === 'productos' || slug === 'tienda' || slug === 'tiendas') {
-                return { ...s, orden: estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== '' ? Number(estilos.seccion_productos.orden) : (s.orden ?? 2) };
-            }
-            if (slug === 'servicios' || slug === 'servicio') {
-                return { ...s, orden: estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== '' ? Number(estilos.seccion_servicios.orden) : (s.orden ?? 3) };
-            }
-            if (slug === 'catalogo') {
-                return { ...s, isCatalogo: true, orden: estilos?.catalogo?.orden !== undefined && estilos?.catalogo?.orden !== '' ? Number(estilos.catalogo.orden) : (s.orden ?? 4) };
-            }
-            if (slug === 'marcas' || slug === 'marca') {
-                return { ...s, orden: estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== '' ? Number(estilos.seccion_marcas.orden) : (s.orden ?? 5) };
-            }
-            return { ...s, orden: s.orden ?? 99 };
-        });
+        list = list
+            .map((s) => {
+                if (!s) return null;
 
-        list.sort((a, b) => Number(a.orden ?? 99) - Number(b.orden ?? 99));
+                const slug = (s.slug || '').toLowerCase();
+                if (slug === 'productos' || slug === 'tienda' || slug === 'tiendas') {
+                    return { ...s, orden: estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== '' ? Number(estilos.seccion_productos.orden) : (s.orden ?? 2) };
+                }
+                if (slug === 'servicios' || slug === 'servicio') {
+                    return { ...s, orden: estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== '' ? Number(estilos.seccion_servicios.orden) : (s.orden ?? 3) };
+                }
+                // Excluir catálogo del nav — va como botón flotante
+                if (slug === 'catalogo' || s.isCatalogo) return null;
+                if (slug === 'marcas' || slug === 'marca') {
+                    return { ...s, orden: estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== '' ? Number(estilos.seccion_marcas.orden) : (s.orden ?? 5) };
+                }
+                return { ...s, orden: s.orden ?? 99 };
+            })
+            .filter(Boolean);
+
+        list.sort((a, b) => Number(a?.orden ?? 99) - Number(b?.orden ?? 99));
 
         return list;
     }, [secciones, hasStore, serviciosSitio, marcasSitio, estilos, isCatalogoActivo, catalogoTitulo]);
@@ -644,25 +639,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                     }`;
                                 const activeStyle = activa ? { backgroundColor: 'var(--color-primario)', color: '#fff' } : {};
 
-                                if (slugLower === 'catalogo' || seccion.isCatalogo) {
-                                    if (!isCatalogoActivo) return null;
-                                    return (
-                                        <a
-                                            key="catalogo"
-                                            href={downloadUrl}
-                                            onClick={handleDescargarCatalogo}
-                                            className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 cursor-pointer ${isCatalogoUrlActive
-                                                ? 'text-white shadow-xs'
-                                                : isTransparentMode
-                                                    ? 'text-white/90 hover:text-white hover:bg-white/20'
-                                                    : 'text-gray-800 hover:text-white hover:bg-[var(--color-primario)]/60'
-                                                }`}
-                                            style={isCatalogoUrlActive ? { backgroundColor: 'var(--color-primario)', color: '#fff' } : {}}
-                                        >
-                                            {catalogoTitulo}
-                                        </a>
-                                    );
-                                }
+                                // Catálogo → va como botón flotante, no en el nav
+                                if (slugLower === 'catalogo' || seccion.isCatalogo) return null;
 
                                 if (isLiquidaciones) {
                                     const targetUrl = dominio === 'plantillas'
@@ -1404,22 +1382,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 }`;
                             const activeStyle = activa ? { backgroundColor: 'var(--color-primario)', color: '#fff' } : {};
 
-                            if (slugLower === 'catalogo' || seccion.isCatalogo) {
-                                if (!isCatalogoActivo) return null;
-                                return (
-                                    <a
-                                        key="catalogo"
-                                        href={downloadUrl}
-                                        onClick={(e) => {
-                                            setMobileMenuOpen(false);
-                                            handleDescargarCatalogo(e);
-                                        }}
-                                        className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                                    >
-                                        {catalogoTitulo}
-                                    </a>
-                                );
-                            }
+                            // Catálogo → va como botón flotante, no en el menú móvil
+                            if (slugLower === 'catalogo' || seccion.isCatalogo) return null;
 
                             if (isLiquidaciones) {
                                 const targetUrl = dominio === 'plantillas'
@@ -1639,6 +1603,63 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
             {/* OFFCANVAS DRAWER DEL CARRITO */}
             <CartOffcanvas site={site} estilos={estilos} seccionesData={seccionesData} />
+
+            {/* BOTÓN FLOTANTE DE CATÁLOGO — lado derecho */}
+            {isCatalogoActivo && (
+                <a
+                    href={downloadUrl}
+                    onClick={handleDescargarCatalogo}
+                    title={catalogoTitulo}
+                    style={{
+                        position: 'fixed',
+                        right: 0,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        zIndex: 9999,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '16px 10px',
+                        backgroundColor: 'var(--color-primario, #1e3a5f)',
+                        color: '#ffffff',
+                        borderRadius: '12px 0 0 12px',
+                        boxShadow: '-4px 0 20px rgba(0,0,0,0.25)',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        transition: 'padding-right 0.3s ease, box-shadow 0.3s ease',
+                        minWidth: '44px',
+                    }}
+                    onMouseEnter={e => {
+                        e.currentTarget.style.paddingRight = '16px';
+                        e.currentTarget.style.boxShadow = '-6px 0 28px rgba(0,0,0,0.35)';
+                    }}
+                    onMouseLeave={e => {
+                        e.currentTarget.style.paddingRight = '10px';
+                        e.currentTarget.style.boxShadow = '-4px 0 20px rgba(0,0,0,0.25)';
+                    }}
+                >
+                    {/* Ícono libro/PDF */}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {/* Texto vertical */}
+                    <span style={{
+                        writingMode: 'vertical-rl',
+                        textOrientation: 'mixed',
+                        transform: 'rotate(180deg)',
+                        fontSize: '0.72rem',
+                        fontWeight: '700',
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        whiteSpace: 'nowrap',
+                        userSelect: 'none',
+                    }}>
+                        {catalogoTitulo}
+                    </span>
+                </a>
+            )}
         </>
     );
 }

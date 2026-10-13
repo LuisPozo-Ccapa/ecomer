@@ -50,15 +50,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             list.push({ slug: 'productos', nombre: 'Productos', orden: prodOrden });
         }
 
-        const catOrden = estilos?.catalogo?.orden !== undefined && estilos?.catalogo?.orden !== ''
-            ? Number(estilos.catalogo.orden)
-            : 4;
-
-        const hasCatalogoInList = list.some((s) => (s.slug || '').toLowerCase() === 'catalogo');
-
-        if (isCatalogoActivo && !hasCatalogoInList) {
-            list.push({ slug: 'catalogo', nombre: catalogoTitulo, isCatalogo: true, orden: catOrden });
-        }
+        // El catálogo ya no va en el nav — se muestra como botón flotante lateral
 
         list = list.map((s) => {
             const slug = (s.slug || '').toLowerCase();
@@ -68,11 +60,10 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             if (slug === 'servicios' || slug === 'servicio') {
                 return { ...s, orden: estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== '' ? Number(estilos.seccion_servicios.orden) : (s.orden ?? 3) };
             }
-            if (slug === 'catalogo') {
-                return { ...s, isCatalogo: true, orden: estilos?.catalogo?.orden !== undefined && estilos?.catalogo?.orden !== '' ? Number(estilos.catalogo.orden) : (s.orden ?? 4) };
-            }
+            // Excluir catálogo del nav — va como botón flotante
+            if (slug === 'catalogo') return null;
             return { ...s, orden: s.orden ?? 99 };
-        });
+        }).filter(Boolean);
 
         list.sort((a, b) => Number(a.orden ?? 99) - Number(b.orden ?? 99));
 
@@ -176,30 +167,6 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 const anchorId = slugLower === 'contactos' ? 'contacto' : slugLower;
                                 const isInicioPage = !seccionActiva || seccionActiva.slug?.toLowerCase() === 'inicio';
 
-                                if (slugLower === 'catalogo' || seccion.isCatalogo) {
-                                    if (!isCatalogoActivo) return null;
-                                    return catalogoEnlace ? (
-                                        <a
-                                            key="catalogo"
-                                            href={catalogoEnlace}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 text-gray-800 hover:text-white hover:bg-[var(--color-primario)]/60"
-                                        >
-                                            {catalogoTitulo} ↗
-                                        </a>
-                                    ) : (
-                                        <Link
-                                            key="catalogo"
-                                            href={catalogoUrl}
-                                            className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${isCatalogoUrlActive ? 'text-white' : 'text-gray-800 hover:text-white'}`}
-                                            style={isCatalogoUrlActive ? { backgroundColor: 'var(--color-primario)', color: '#fff' } : {}}
-                                        >
-                                            {catalogoTitulo}
-                                        </Link>
-                                    );
-                                }
-
                                 // Páginas que tienen componente/archivo propio independiente
                                 const PAGE_SECTIONS = ['inicio', 'productos', 'servicios'];
                                 const hasStandalonePage = PAGE_SECTIONS.includes(slugLower);
@@ -273,6 +240,125 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
             {/* OFFCANVAS DRAWER DEL CARRITO */}
             <CartOffcanvas site={site} estilos={estilos} seccionesData={seccionesData} />
+
+            {/* BOTÓN FLOTANTE DE CATÁLOGO — lado derecho */}
+            {isCatalogoActivo && (
+                catalogoEnlace ? (
+                    <a
+                        href={catalogoEnlace}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={catalogoTitulo}
+                        style={{
+                            position: 'fixed',
+                            right: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            zIndex: 9999,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '16px 10px',
+                            backgroundColor: 'var(--color-primario, #1e3a5f)',
+                            color: '#ffffff',
+                            borderRadius: '12px 0 0 12px',
+                            boxShadow: '-4px 0 20px rgba(0,0,0,0.25)',
+                            textDecoration: 'none',
+                            cursor: 'pointer',
+                            transition: 'padding-right 0.3s ease, box-shadow 0.3s ease',
+                            minWidth: '44px',
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.paddingRight = '16px';
+                            e.currentTarget.style.boxShadow = '-6px 0 28px rgba(0,0,0,0.35)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.paddingRight = '10px';
+                            e.currentTarget.style.boxShadow = '-4px 0 20px rgba(0,0,0,0.25)';
+                        }}
+                    >
+                        {/* Ícono libro */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {/* Texto vertical */}
+                        <span style={{
+                            writingMode: 'vertical-rl',
+                            textOrientation: 'mixed',
+                            transform: 'rotate(180deg)',
+                            fontSize: '0.72rem',
+                            fontWeight: '700',
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            whiteSpace: 'nowrap',
+                            userSelect: 'none',
+                        }}>
+                            {catalogoTitulo}
+                        </span>
+                    </a>
+                ) : (
+                    <Link
+                        href={catalogoUrl}
+                        title={catalogoTitulo}
+                        style={{
+                            position: 'fixed',
+                            right: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            zIndex: 9999,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '16px 10px',
+                            backgroundColor: isCatalogoUrlActive
+                                ? 'var(--color-primario, #1e3a5f)'
+                                : 'var(--color-primario, #1e3a5f)',
+                            color: '#ffffff',
+                            borderRadius: '12px 0 0 12px',
+                            boxShadow: isCatalogoUrlActive
+                                ? '-4px 0 20px rgba(0,0,0,0.4)'
+                                : '-4px 0 20px rgba(0,0,0,0.25)',
+                            textDecoration: 'none',
+                            cursor: 'pointer',
+                            transition: 'padding-right 0.3s ease, box-shadow 0.3s ease',
+                            minWidth: '44px',
+                            outline: isCatalogoUrlActive ? '2px solid rgba(255,255,255,0.35)' : 'none',
+                            outlineOffset: '-3px',
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.paddingRight = '16px';
+                            e.currentTarget.style.boxShadow = '-6px 0 28px rgba(0,0,0,0.35)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.paddingRight = '10px';
+                            e.currentTarget.style.boxShadow = isCatalogoUrlActive ? '-4px 0 20px rgba(0,0,0,0.4)' : '-4px 0 20px rgba(0,0,0,0.25)';
+                        }}
+                    >
+                        {/* Ícono libro */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        {/* Texto vertical */}
+                        <span style={{
+                            writingMode: 'vertical-rl',
+                            textOrientation: 'mixed',
+                            transform: 'rotate(180deg)',
+                            fontSize: '0.72rem',
+                            fontWeight: '700',
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            whiteSpace: 'nowrap',
+                            userSelect: 'none',
+                        }}>
+                            {catalogoTitulo}
+                        </span>
+                    </Link>
+                )
+            )}
         </>
     );
 }

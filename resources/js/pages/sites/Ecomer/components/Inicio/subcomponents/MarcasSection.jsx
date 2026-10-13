@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, FreeMode } from 'swiper/modules';
 import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
 
@@ -233,24 +233,26 @@ export default function MarcasSection({
                 {marcasList.length > 0 && (
                     <div className="mb-10">
                         <Swiper
-                            modules={[Autoplay]}
-                            spaceBetween={16}
-                            slidesPerView={2}
-                            loop={marcasList.length > 3}
-                            autoplay={{
-                                delay: 2500,
-                                disableOnInteraction: false,
-                                pauseOnMouseEnter: true,
-                            }}
-                            speed={600}
-                            breakpoints={{
-                                480: { slidesPerView: 3, spaceBetween: 16 },
-                                768: { slidesPerView: 4, spaceBetween: 20 },
-                                1024: { slidesPerView: 5, spaceBetween: 24 },
-                                1280: { slidesPerView: 6, spaceBetween: 28 },
-                            }}
-                            className="py-2"
-                        >
+    modules={[Autoplay, FreeMode]}
+    freeMode={true}
+    loop={marcasList.length > 3}
+    autoplay={{
+        delay: 0,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: false,
+        pauseOnMouseLeave: false,
+    }}
+    speed={5000}
+    allowTouchMove={true}
+    grabCursor={true}
+    breakpoints={{
+        480: { slidesPerView: 3, spaceBetween: 16 },
+        768: { slidesPerView: 4, spaceBetween: 20 },
+        1024: { slidesPerView: 5, spaceBetween: 24 },
+        1280: { slidesPerView: 6, spaceBetween: 28 },
+    }}
+    className="py-2"
+>
                             {marcasList.map((m, idx) => (
                                 <SwiperSlide key={m.id || m.slug || idx}>
                                     <div className="flex items-center justify-center h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 group cursor-pointer text-center">

@@ -201,10 +201,21 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         return productos.filter((prod) => {
             // Coincidencia por búsqueda de texto
             const busq = busqueda.trim().toLowerCase();
+            const nombre = String(prod.nombre ?? '').toLowerCase();
+            const descripcion = String(prod.descripcion ?? '').toLowerCase();
+            const codigoReferencia = String(
+                prod.codigo_referencia ?? prod.codigoReferencia ?? prod.referencia ?? ''
+            ).trim();
+            const codigoReferenciaGenerado = prod.id ? `PROD-${String(prod.id).padStart(5, '0')}` : '';
+            const codigoReferenciaBusqueda = (codigoReferencia || codigoReferenciaGenerado).toLowerCase();
+            const sku = String(prod.sku ?? prod.SKU ?? '').toLowerCase();
+
             const coincideBusqueda =
                 !busq ||
-                prod.nombre?.toLowerCase().includes(busq) ||
-                prod.descripcion?.toLowerCase().includes(busq);
+                nombre.includes(busq) ||
+                descripcion.includes(busq) ||
+                codigoReferenciaBusqueda.includes(busq) ||
+                sku.includes(busq);
 
             if (!coincideBusqueda) return false;
 
@@ -695,7 +706,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                             <div className="relative w-full sm:w-96">
                                 <input
                                     type="text"
-                                    placeholder="Buscar por nombre o ingrediente..."
+                                    placeholder="Buscar por nombre, código o SKU..."
                                     value={busqueda}
                                     onChange={(e) => setBusqueda(e.target.value)}
                                     className="w-full px-4 py-2 pl-10 rounded-full border border-gray-200 focus:border-[var(--color-primario)] focus:ring-2 focus:ring-[var(--color-primario)]/20 outline-none transition-all text-xs sm:text-sm"

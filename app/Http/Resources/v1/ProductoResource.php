@@ -22,6 +22,7 @@ class ProductoResource extends JsonResource
             'descripcion' => $this->descripcion,
             'sku' => $this->sku,
             'codigo_referencia' => $this->codigo_referencia,
+            'enlace' => $this->enlace,
             'precio' => $this->precio !== null ? (float) $this->precio : null,
             'precio_oferta' => $this->precio_oferta ? (float) $this->precio_oferta : null,
             'precio_soles' => $this->precio !== null ? (float) $this->precio : null,

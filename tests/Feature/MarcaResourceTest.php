@@ -56,6 +56,34 @@ class MarcaResourceTest extends TestCase
         $this->assertEquals('Nike', $resourceArray['marca_objeto']['titulo']);
     }
 
+    public function test_puede_guardar_enlace_en_producto(): void
+    {
+        $user = User::factory()->create();
+        $dominio = Dominio::create(['nombre' => 'midominio.com', 'user_id' => $user->id]);
+        $plantilla = Plantilla::create(['nombre' => 'Plantilla Test', 'slug' => 'plantilla-test', 'tipo' => 'ecommerce']);
+        $site = Site::create([
+            'user_id' => $user->id,
+            'dominio_id' => $dominio->id,
+            'plantilla_id' => $plantilla->id,
+            'nombre' => 'Sitio Test',
+            'slug' => 'sitio-test',
+        ]);
+
+        $producto = Producto::create([
+            'site_id' => $site->id,
+            'nombre' => 'Set de entrenamiento',
+            'slug' => 'set-de-entrenamiento',
+            'precio' => 199.90,
+            'enlace' => 'https://ejemplo.com/producto/set-de-entrenamiento',
+        ]);
+
+        $this->assertDatabaseHas('productos', [
+            'id' => $producto->id,
+            'enlace' => 'https://ejemplo.com/producto/set-de-entrenamiento',
+        ]);
+        $this->assertSame('https://ejemplo.com/producto/set-de-entrenamiento', $producto->fresh()->enlace);
+    }
+
     public function test_puede_asignar_marcas_a_sitios_y_plantillas(): void
     {
         $user = User::factory()->create();

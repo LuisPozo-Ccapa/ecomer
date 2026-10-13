@@ -158,6 +158,11 @@ class ProductoForm
                                 ->placeholder('Ej: SKU-12345')
                                 ->helperText('Código de inventario o proveedor.')
                                 ->maxLength(255),
+                            TextInput::make('enlace')
+                                ->label('Enlace del producto')
+                                ->placeholder('https://ejemplo.com/producto o /productos')
+                                ->maxLength(255)
+                                ->nullable(),
                             TextInput::make('orden')
                                 ->numeric()
                                 ->default(0),
