@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 const showSection59b4ede910234ae5c6690508612f0045 = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ showSection59b4ede910234ae5c6690508612f0045.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 showSection59b4ede910234ae5c6690508612f0045.url = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions) => {
@@ -123,7 +123,7 @@ showSection59b4ede910234ae5c6690508612f0045.url = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 showSection59b4ede910234ae5c6690508612f0045.get = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -133,7 +133,7 @@ showSection59b4ede910234ae5c6690508612f0045.get = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 showSection59b4ede910234ae5c6690508612f0045.head = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -143,7 +143,7 @@ showSection59b4ede910234ae5c6690508612f0045.head = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 const showSection59b4ede910234ae5c6690508612f0045Form = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -153,7 +153,7 @@ const showSection59b4ede910234ae5c6690508612f0045Form = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 showSection59b4ede910234ae5c6690508612f0045Form.get = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ showSection59b4ede910234ae5c6690508612f0045Form.get = (args: { dominio: string |
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{seccion}'
 */
 showSection59b4ede910234ae5c6690508612f0045Form.head = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -179,7 +179,7 @@ showSection59b4ede910234ae5c6690508612f0045Form.head = (args: { dominio: string 
 showSection59b4ede910234ae5c6690508612f0045.form = showSection59b4ede910234ae5c6690508612f0045Form
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 const showSection38a32a6d7d70adc7eda0fe7c91a318d8 = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -194,7 +194,7 @@ showSection38a32a6d7d70adc7eda0fe7c91a318d8.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 showSection38a32a6d7d70adc7eda0fe7c91a318d8.url = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions) => {
@@ -223,7 +223,7 @@ showSection38a32a6d7d70adc7eda0fe7c91a318d8.url = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 showSection38a32a6d7d70adc7eda0fe7c91a318d8.get = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -233,7 +233,7 @@ showSection38a32a6d7d70adc7eda0fe7c91a318d8.get = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 showSection38a32a6d7d70adc7eda0fe7c91a318d8.head = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -243,7 +243,7 @@ showSection38a32a6d7d70adc7eda0fe7c91a318d8.head = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 const showSection38a32a6d7d70adc7eda0fe7c91a318d8Form = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -253,7 +253,7 @@ const showSection38a32a6d7d70adc7eda0fe7c91a318d8Form = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 showSection38a32a6d7d70adc7eda0fe7c91a318d8Form.get = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -263,7 +263,7 @@ showSection38a32a6d7d70adc7eda0fe7c91a318d8Form.get = (args: { dominio: string |
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSection
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:61
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:49
 * @route '/api/v1/sites/{dominio}/{site}/{seccion}'
 */
 showSection38a32a6d7d70adc7eda0fe7c91a318d8Form.head = (args: { dominio: string | number, site: string | number, seccion: string | number } | [dominio: string | number, site: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -290,7 +290,7 @@ export const showSection = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 const showSitefd647586bc344bbe2dd8e3d8023457f9 = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -305,7 +305,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 showSitefd647586bc344bbe2dd8e3d8023457f9.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -332,7 +332,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9.url = (args: { dominio: string | number
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 showSitefd647586bc344bbe2dd8e3d8023457f9.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -342,7 +342,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9.get = (args: { dominio: string | number
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 showSitefd647586bc344bbe2dd8e3d8023457f9.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -352,7 +352,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9.head = (args: { dominio: string | numbe
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 const showSitefd647586bc344bbe2dd8e3d8023457f9Form = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -362,7 +362,7 @@ const showSitefd647586bc344bbe2dd8e3d8023457f9Form = (args: { dominio: string | 
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 showSitefd647586bc344bbe2dd8e3d8023457f9Form.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -372,7 +372,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9Form.get = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}'
 */
 showSitefd647586bc344bbe2dd8e3d8023457f9Form.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -388,7 +388,7 @@ showSitefd647586bc344bbe2dd8e3d8023457f9Form.head = (args: { dominio: string | n
 showSitefd647586bc344bbe2dd8e3d8023457f9.form = showSitefd647586bc344bbe2dd8e3d8023457f9Form
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 const showSited39cf58583f4ff26ee7470bf48d24cf7 = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -403,7 +403,7 @@ showSited39cf58583f4ff26ee7470bf48d24cf7.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 showSited39cf58583f4ff26ee7470bf48d24cf7.url = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions) => {
@@ -429,7 +429,7 @@ showSited39cf58583f4ff26ee7470bf48d24cf7.url = (args: { dominio: string | number
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 showSited39cf58583f4ff26ee7470bf48d24cf7.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -439,7 +439,7 @@ showSited39cf58583f4ff26ee7470bf48d24cf7.get = (args: { dominio: string | number
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 showSited39cf58583f4ff26ee7470bf48d24cf7.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -449,7 +449,7 @@ showSited39cf58583f4ff26ee7470bf48d24cf7.head = (args: { dominio: string | numbe
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 const showSited39cf58583f4ff26ee7470bf48d24cf7Form = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -459,7 +459,7 @@ const showSited39cf58583f4ff26ee7470bf48d24cf7Form = (args: { dominio: string | 
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 showSited39cf58583f4ff26ee7470bf48d24cf7Form.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -469,7 +469,7 @@ showSited39cf58583f4ff26ee7470bf48d24cf7Form.get = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\SiteApiController::showSite
-* @see app/Http/Controllers/Api/v1/SiteApiController.php:46
+* @see app/Http/Controllers/Api/v1/SiteApiController.php:34
 * @route '/api/v1/sites/{dominio}/{site}'
 */
 showSited39cf58583f4ff26ee7470bf48d24cf7Form.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

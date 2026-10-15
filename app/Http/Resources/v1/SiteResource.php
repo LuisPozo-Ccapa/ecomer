@@ -20,7 +20,7 @@ class SiteResource extends JsonResource
             'slug' => $this->slug,
             'estado' => $this->estado,
             'imagen' => $this->imagen ? asset('storage/'.$this->imagen) : null,
-            'dominio' => $this->dominio?->nombre,
+            'dominio' => null,
             'tienda_id' => $this->tienda_id,
             'tienda' => $this->whenLoaded('tienda', fn () => [
                 'id' => $this->tienda->id,

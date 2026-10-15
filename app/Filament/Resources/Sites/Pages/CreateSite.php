@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Sites\Pages;
 
 use App\Filament\Resources\Sites\SiteResource;
-use App\Models\Dominio;
 use App\Models\Plantilla;
 use App\Models\Pregunta;
 use App\Models\Respuesta;
@@ -26,7 +25,6 @@ class CreateSite extends CreateRecord
                 $this->form->fill([
                     'plantilla_id' => $plantilla->id,
                     'estado' => 'publicado',
-                    'dominio_id' => Dominio::where('user_id', auth()->id())->value('id'),
                     'tiendas' => $plantilla->tiendas->pluck('id')->all(),
                     'estilos' => $plantilla->estilos,
                     'respuestas' => $plantilla->respuestas

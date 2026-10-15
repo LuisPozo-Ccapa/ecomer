@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Sites\Schemas;
 use App\Filament\Forms\Components\IconPicker;
 use App\Filament\Resources\Plantillas\Schemas\PlantillaForm;
 use App\Models\Categoria;
-use App\Models\Dominio;
 use App\Models\Plantilla;
 use App\Models\Respuesta;
 use App\Models\Subcategoria;
@@ -81,10 +80,6 @@ class SiteForm
                                                             ->all() ?? []);
                                                     }
                                                 }),
-                                            Select::make('dominio_id')
-                                                ->label('Dominio')
-                                                ->options(fn (Get $get) => Dominio::where('user_id', $get('user_id'))->pluck('nombre', 'id'))
-                                                ->searchable(),
                                             Select::make('estado')
                                                 ->options([
                                                     'borrador' => 'Borrador',

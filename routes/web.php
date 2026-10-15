@@ -15,10 +15,7 @@ Route::get('/sitemap.php', [SitemapController::class, 'index']);
 
 
 Route::get('/', function () {
-    $site = Site::where('estado', 'publicado')->with('dominio')->first();
-    $dominio = $site?->dominio?->nombre ?? 'TortasLucha';
-
-    return redirect()->to("/{$dominio}/Inicio");
+    return redirect()->to('/Inicio');
 })->name('welcome');
 
 Route::get('/plantillas', [PlantillasController::class, 'index'])->name('plantillas.index');
@@ -110,9 +107,10 @@ Route::get('/comprobar-archivos', function () {
     ]);
 });
 
-Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar2');
+Route::get('/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar');
 Route::get('/{dominio}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar1');
+Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar2');
 
-Route::get('/{param1}/{param2}/{param3}', [SitePageController::class, 'show'])->name('sitios.show3');
+Route::get('/{seccion}', [SitePageController::class, 'show'])->name('sitios.seccion');
 Route::get('/{dominio}/{seccion}', [SitePageController::class, 'show'])->name('sitios.show');
-Route::get('/{dominio}', [SitePageController::class, 'redirectToFirst'])->name('sitios.home');
+Route::get('/{param1}/{param2}/{param3}', [SitePageController::class, 'show'])->name('sitios.show3');

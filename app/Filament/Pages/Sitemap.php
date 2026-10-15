@@ -30,7 +30,7 @@ class Sitemap extends Page
 
         $baseUrl = url('/');
         $sites = Site::where('estado', 'publicado')
-            ->with(['dominio', 'plantilla.secciones', 'servicios.servicios', 'marcas', 'tiendas'])
+            ->with(['plantilla.secciones', 'servicios.servicios', 'marcas', 'tiendas'])
             ->get();
 
         $urls = [];
@@ -42,8 +42,7 @@ class Sitemap extends Page
         ];
 
         foreach ($sites as $site) {
-            $dominio = $site->dominio?->nombre ?? $site->slug;
-            $siteUrl = "{$baseUrl}/{$dominio}";
+            $siteUrl = "{$baseUrl}";
 
             $urls[] = [
                 'loc' => $siteUrl,

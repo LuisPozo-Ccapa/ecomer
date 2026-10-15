@@ -27,12 +27,11 @@ class SitemapController extends Controller
 
         // 2. Sitios publicados y sus rutas/secciones reales
         $sites = Site::where('estado', 'publicado')
-            ->with(['dominio', 'plantilla.secciones', 'servicios.servicios', 'marcas', 'tiendas'])
+            ->with(['plantilla.secciones', 'servicios.servicios', 'marcas', 'tiendas'])
             ->get();
 
         foreach ($sites as $site) {
-            $dominio = $site->dominio?->nombre ?? $site->slug;
-            $siteUrl = "{$baseUrl}/{$dominio}";
+            $siteUrl = "{$baseUrl}";
             $siteLastMod = $site->updated_at ? $site->updated_at->toIso8601String() : now()->toIso8601String();
 
             // Inicio del sitio

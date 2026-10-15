@@ -23,24 +23,12 @@ class SiteApiController extends Controller
         return SiteResource::collection($sites);
     }
 
-    private function findSite(string $dominioOrSlug, ?string $siteSlug = null): Site
+    private function findSite(?string $dominioOrSlug = null, ?string $siteSlug = null): Site
     {
-        $query = Site::query()
-            ->with(['plantilla.secciones.preguntas', 'dominio', 'respuestas', 'tiendas.moneda'])
-            ->where('estado', 'publicado');
-
-        if ($siteSlug) {
-            $query->where('slug', $siteSlug)
-                ->whereHas('dominio', fn ($q) => $q->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-        } else {
-            $query->where(function ($q) use ($dominioOrSlug) {
-                $q->where('slug', $dominioOrSlug)
-                    ->orWhereRaw('LOWER(slug) = ?', [strtolower($dominioOrSlug)])
-                    ->orWhereHas('dominio', fn ($d) => $d->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-            });
-        }
-
-        return $query->firstOrFail();
+        return Site::query()
+            ->with(['plantilla.secciones.preguntas', 'respuestas', 'tiendas.moneda'])
+            ->where('estado', 'publicado')
+            ->firstOrFail();
     }
 
     public function showSite(string $param1, ?string $param2 = null): JsonResponse

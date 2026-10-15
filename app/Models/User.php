@@ -39,10 +39,6 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
-    public function dominios(): HasMany
-    {
-        return $this->hasMany(Dominio::class);
-    }
 
     public function sites(): HasMany
     {

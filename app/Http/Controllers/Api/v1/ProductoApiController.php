@@ -92,23 +92,11 @@ class ProductoApiController extends Controller
         return ProductoResource::collection($productos);
     }
 
-    private function findSite(string $dominioOrSlug, ?string $siteSlug = null): Site
+    private function findSite(?string $dominioOrSlug = null, ?string $siteSlug = null): Site
     {
-        $query = Site::with('tiendas')
-            ->where('estado', 'publicado');
-
-        if ($siteSlug) {
-            $query->where('slug', $siteSlug)
-                ->whereHas('dominio', fn ($q) => $q->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-        } else {
-            $query->where(function ($q) use ($dominioOrSlug) {
-                $q->where('slug', $dominioOrSlug)
-                    ->orWhereRaw('LOWER(slug) = ?', [strtolower($dominioOrSlug)])
-                    ->orWhereHas('dominio', fn ($d) => $d->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-            });
-        }
-
-        return $query->firstOrFail();
+        return Site::with('tiendas')
+            ->where('estado', 'publicado')
+            ->firstOrFail();
     }
 
     public function indexBySite(string $param1, ?string $param2 = null): AnonymousResourceCollection

@@ -22,39 +22,36 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SitePageController extends Controller
 {
-    public function redirectToFirst(string $param1, ?string $param2 = null): RedirectResponse
+    public function redirectToFirst(?string $param1 = null, ?string $param2 = null): RedirectResponse
     {
-        $dominio = $param1;
-        $siteSlug = $param2;
-
-        $siteModel = $this->findSite($dominio, $siteSlug);
-        $primeraSeccion = $siteModel->plantilla->secciones
+        $siteModel = $this->findSite();
+        $primeraSeccion = $siteModel->plantilla?->secciones
             ->where('activa', true)
             ->reject(fn ($s) => strtolower($s->slug) === 'nav')
             ->first();
 
         $seccionSlug = $primeraSeccion ? $primeraSeccion->slug : 'Inicio';
 
-        return $siteSlug
-            ? Redirect::to("/{$dominio}/{$siteSlug}/{$seccionSlug}")
-            : Redirect::to("/{$dominio}/{$seccionSlug}");
+        return Redirect::to("/{$seccionSlug}");
     }
 
-    public function show(string $param1, string $param2, ?string $param3 = null): Response|RedirectResponse
+    public function show(string $param1, ?string $param2 = null, ?string $param3 = null): Response|RedirectResponse
     {
-        if ($param3 !== null) {
+        // Si viene solo un parámetro (ej. /Inicio, /productos, etc.)
+        if ($param2 === null && $param3 === null) {
+            $dominio = '';
+            $siteSlug = null;
+            $seccionSlug = $param1;
+        } elseif ($param3 !== null) {
             $dominio = $param1;
             $siteSlug = $param2;
             $seccionSlug = $param3;
         } else {
-            $siteBySlug = Site::where('slug', $param2)
-                ->whereHas('dominio', fn ($q) => $q->where('nombre', $param1))
-                ->first();
-
-            if ($siteBySlug) {
-                return $this->redirectToFirst($param1, $param2);
+            // Caso de 2 parámetros: compatibilidad si alguien entra por /lismercorp/Inicio -> redirigir a /Inicio
+            $site = $this->findSite();
+            if (in_array(strtolower($param1), [strtolower($site->slug), 'lismercorp', 'tortaslucha'])) {
+                return Redirect::to("/{$param2}");
             }
-
             $dominio = $param1;
             $siteSlug = null;
             $seccionSlug = $param2;
@@ -367,31 +364,12 @@ class SitePageController extends Controller
         ]);
     }
 
-    private function findSite(string $dominioOrSlug, ?string $siteSlug = null): Site
+    private function findSite(?string $dominioOrSlug = null, ?string $siteSlug = null): Site
     {
-        $query = Site::query()
-            ->with(['plantilla.secciones.preguntas', 'plantilla.marcas', 'dominio', 'respuestas', 'servicios.servicios', 'marcas'])
-            ->where('estado', 'publicado');
-
-        if ($siteSlug) {
-            $query->where('slug', $siteSlug)
-                ->whereHas('dominio', fn ($q) => $q->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-        } else {
-            $query->where(function ($q) use ($dominioOrSlug) {
-                $q->where('slug', $dominioOrSlug)
-                    ->orWhereRaw('LOWER(slug) = ?', [strtolower($dominioOrSlug)])
-                    ->orWhereHas('dominio', fn ($d) => $d->whereRaw('LOWER(nombre) = ?', [strtolower($dominioOrSlug)]));
-            });
-        }
-
-        $site = $query->first();
-
-        if (! $site && in_array(strtolower($dominioOrSlug), ['productos', 'servicios', 'tienda', 'tiendas', 'servicio'])) {
-            $site = Site::query()
-                ->with(['plantilla.secciones.preguntas', 'dominio', 'respuestas', 'servicios.servicios'])
-                ->where('estado', 'publicado')
-                ->first();
-        }
+        $site = Site::query()
+            ->with(['plantilla.secciones.preguntas', 'plantilla.marcas', 'respuestas', 'servicios.servicios', 'marcas'])
+            ->where('estado', 'publicado')
+            ->first();
 
         if (! $site) {
             abort(404);
@@ -565,7 +543,7 @@ class SitePageController extends Controller
         return $valor;
     }
 
-    public function descargarCatalogo(string $param1, ?string $param2 = null)
+    public function descargarCatalogo(?string $param1 = null, ?string $param2 = null)
     {
         @ini_set('memory_limit', '512M');
         @set_time_limit(300);

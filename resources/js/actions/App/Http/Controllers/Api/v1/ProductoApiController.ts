@@ -211,7 +211,7 @@ destacadosByPlantilla.form = destacadosByPlantillaForm
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 const destacadosBySite5fabf7a660ba3025260dd35b2e71be3c = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -226,7 +226,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -253,7 +253,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.url = (args: { dominio: string 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -263,7 +263,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.get = (args: { dominio: string 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -273,7 +273,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.head = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 const destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -283,7 +283,7 @@ const destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm = (args: { dominio: s
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -293,7 +293,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm.get = (args: { dominio: str
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/productos/destacados'
 */
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -309,7 +309,7 @@ destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm.head = (args: { dominio: st
 destacadosBySite5fabf7a660ba3025260dd35b2e71be3c.form = destacadosBySite5fabf7a660ba3025260dd35b2e71be3cForm
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 const destacadosBySite6b4a18ac79d932b67408e31151a68291 = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -324,7 +324,7 @@ destacadosBySite6b4a18ac79d932b67408e31151a68291.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 destacadosBySite6b4a18ac79d932b67408e31151a68291.url = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions) => {
@@ -350,7 +350,7 @@ destacadosBySite6b4a18ac79d932b67408e31151a68291.url = (args: { dominio: string 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 destacadosBySite6b4a18ac79d932b67408e31151a68291.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -360,7 +360,7 @@ destacadosBySite6b4a18ac79d932b67408e31151a68291.get = (args: { dominio: string 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 destacadosBySite6b4a18ac79d932b67408e31151a68291.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -370,7 +370,7 @@ destacadosBySite6b4a18ac79d932b67408e31151a68291.head = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 const destacadosBySite6b4a18ac79d932b67408e31151a68291Form = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -380,7 +380,7 @@ const destacadosBySite6b4a18ac79d932b67408e31151a68291Form = (args: { dominio: s
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 destacadosBySite6b4a18ac79d932b67408e31151a68291Form.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -390,7 +390,7 @@ destacadosBySite6b4a18ac79d932b67408e31151a68291Form.get = (args: { dominio: str
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::destacadosBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:134
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:122
 * @route '/api/v1/sites/{dominio}/{site}/productos/destacados'
 */
 destacadosBySite6b4a18ac79d932b67408e31151a68291Form.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -417,7 +417,7 @@ export const destacadosBySite = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 const indexBySitea4967ec043ece80050756544b0088baf = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -432,7 +432,7 @@ indexBySitea4967ec043ece80050756544b0088baf.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 indexBySitea4967ec043ece80050756544b0088baf.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -459,7 +459,7 @@ indexBySitea4967ec043ece80050756544b0088baf.url = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 indexBySitea4967ec043ece80050756544b0088baf.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -469,7 +469,7 @@ indexBySitea4967ec043ece80050756544b0088baf.get = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 indexBySitea4967ec043ece80050756544b0088baf.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -479,7 +479,7 @@ indexBySitea4967ec043ece80050756544b0088baf.head = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 const indexBySitea4967ec043ece80050756544b0088bafForm = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -489,7 +489,7 @@ const indexBySitea4967ec043ece80050756544b0088bafForm = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 indexBySitea4967ec043ece80050756544b0088bafForm.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -499,7 +499,7 @@ indexBySitea4967ec043ece80050756544b0088bafForm.get = (args: { dominio: string |
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/productos'
 */
 indexBySitea4967ec043ece80050756544b0088bafForm.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -515,7 +515,7 @@ indexBySitea4967ec043ece80050756544b0088bafForm.head = (args: { dominio: string 
 indexBySitea4967ec043ece80050756544b0088baf.form = indexBySitea4967ec043ece80050756544b0088bafForm
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 const indexBySite5147ef8fe6a5cca7656e8910f406b798 = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -530,7 +530,7 @@ indexBySite5147ef8fe6a5cca7656e8910f406b798.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 indexBySite5147ef8fe6a5cca7656e8910f406b798.url = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions) => {
@@ -556,7 +556,7 @@ indexBySite5147ef8fe6a5cca7656e8910f406b798.url = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 indexBySite5147ef8fe6a5cca7656e8910f406b798.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -566,7 +566,7 @@ indexBySite5147ef8fe6a5cca7656e8910f406b798.get = (args: { dominio: string | num
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 indexBySite5147ef8fe6a5cca7656e8910f406b798.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -576,7 +576,7 @@ indexBySite5147ef8fe6a5cca7656e8910f406b798.head = (args: { dominio: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 const indexBySite5147ef8fe6a5cca7656e8910f406b798Form = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -586,7 +586,7 @@ const indexBySite5147ef8fe6a5cca7656e8910f406b798Form = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 indexBySite5147ef8fe6a5cca7656e8910f406b798Form.get = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -596,7 +596,7 @@ indexBySite5147ef8fe6a5cca7656e8910f406b798Form.get = (args: { dominio: string |
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::indexBySite
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:114
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:102
 * @route '/api/v1/sites/{dominio}/{site}/productos'
 */
 indexBySite5147ef8fe6a5cca7656e8910f406b798Form.head = (args: { dominio: string | number, site: string | number } | [dominio: string | number, site: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -785,7 +785,7 @@ destacados.form = destacadosForm
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 export const show = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -800,7 +800,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 show.url = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -833,7 +833,7 @@ show.url = (args: { producto: string | { slug: string } } | [producto: string | 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 show.get = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -843,7 +843,7 @@ show.get = (args: { producto: string | { slug: string } } | [producto: string | 
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 show.head = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -853,7 +853,7 @@ show.head = (args: { producto: string | { slug: string } } | [producto: string |
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 const showForm = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -863,7 +863,7 @@ const showForm = (args: { producto: string | { slug: string } } | [producto: str
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 showForm.get = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -873,7 +873,7 @@ showForm.get = (args: { producto: string | { slug: string } } | [producto: strin
 
 /**
 * @see \App\Http\Controllers\Api\v1\ProductoApiController::show
-* @see app/Http/Controllers/Api/v1/ProductoApiController.php:155
+* @see app/Http/Controllers/Api/v1/ProductoApiController.php:143
 * @route '/api/v1/productos/{producto}'
 */
 showForm.head = (args: { producto: string | { slug: string } } | [producto: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

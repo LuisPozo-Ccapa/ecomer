@@ -1,6 +1,5 @@
 import Categorias from './Categorias'
 import Colores from './Colores'
-import Dominios from './Dominios'
 import Marcas from './Marcas'
 import Monedas from './Monedas'
 import Plantillas from './Plantillas'
@@ -16,7 +15,6 @@ import Users from './Users'
 const Resources = {
     Categorias: Object.assign(Categorias, Categorias),
     Colores: Object.assign(Colores, Colores),
-    Dominios: Object.assign(Dominios, Dominios),
     Marcas: Object.assign(Marcas, Marcas),
     Monedas: Object.assign(Monedas, Monedas),
     Plantillas: Object.assign(Plantillas, Plantillas),
