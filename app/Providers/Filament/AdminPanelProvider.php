@@ -50,6 +50,29 @@ class AdminPanelProvider extends PanelProvider
                                 localStorage.setItem("collapsedGroups", "[]");
                             }
                         })();
+                        document.addEventListener("alpine:init", function() {
+                            if (window.Alpine) {
+                                var originalStore = window.Alpine.store.bind(window.Alpine);
+                                window.Alpine.store = function(name, value) {
+                                    if (name === "sidebar" && value) {
+                                        value.groupIsCollapsed = function(t) {
+                                            return Array.isArray(this.collapsedGroups) && this.collapsedGroups.includes(t);
+                                        };
+                                        value.collapseGroup = function(t) {
+                                            if (!Array.isArray(this.collapsedGroups)) this.collapsedGroups = [];
+                                            if (!this.collapsedGroups.includes(t)) this.collapsedGroups = this.collapsedGroups.concat(t);
+                                        };
+                                        value.toggleCollapsedGroup = function(t) {
+                                            if (!Array.isArray(this.collapsedGroups)) this.collapsedGroups = [];
+                                            this.collapsedGroups = this.collapsedGroups.includes(t)
+                                                ? this.collapsedGroups.filter(function(n) { return n !== t; })
+                                                : this.collapsedGroups.concat(t);
+                                        };
+                                    }
+                                    return originalStore.apply(this, arguments);
+                                };
+                            }
+                        });
                     </script>
                     <script>window.__ICON_PICKER_DATA__ = '.json_encode([
                         'svgs' => IconRegistry::getSvgs(),
