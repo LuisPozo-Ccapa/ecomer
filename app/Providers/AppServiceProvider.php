@@ -6,6 +6,7 @@ use App\Services\ImageUploadService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // El rol 'super_admin' tiene acceso total e incondicional a todos los recursos y policies
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('super_admin') ? true : null;
+        });
+
         View::share('errors', new ViewErrorBag);
 
         // Asegurar que las carpetas de subida temporal de Livewire existan y tengan permisos
