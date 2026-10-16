@@ -177,7 +177,7 @@ export default function HeroSection({ seccionData }) {
                         modules={[Autoplay, Pagination, EffectFade]}
                         effect="fade"
                         fadeEffect={{ crossFade: true }}
-                        loop={true}
+                        loop={slides.length >= 3}
                         autoplay={{ delay: 4500, disableOnInteraction: false }}
                         pagination={{ clickable: true }}
                         className="hero-swiper w-full h-auto"

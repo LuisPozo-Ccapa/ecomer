@@ -260,11 +260,21 @@ export default function Footer({
     const isCatalogoActivo = Boolean(catalogoConfig.activo);
     const catalogoTitulo = catalogoConfig.titulo || 'Catálogo Digital (PDF)';
     const catalogoEnlace = catalogoConfig.enlace ? String(catalogoConfig.enlace).trim() : null;
+
+    const buildUrl = (path = '') => {
+        const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '';
+        if (dominio === 'plantillas') {
+            return `/plantillas/${siteSlug}${cleanPath}`;
+        }
+        if (dominio && String(dominio).trim() !== '') {
+            return siteSlug ? `/${dominio}/${siteSlug}${cleanPath}` : `/${dominio}${cleanPath}`;
+        }
+        return cleanPath || '/';
+    };
+
     const catalogoDownloadUrl = catalogoEnlace
         ? catalogoEnlace
-        : (dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/catalogo/descargar-pdf`
-            : (siteSlug ? `/${dominio}/${siteSlug}/catalogo/descargar-pdf` : `/${dominio}/catalogo/descargar-pdf`));
+        : buildUrl('/catalogo/descargar-pdf');
 
     const siteName = site?.nombre || 'Store';
     const currentYear = new Date().getFullYear();
@@ -277,9 +287,7 @@ export default function Footer({
         const isStandalone = standaloneSlugs.includes(slugLower);
 
         if (isStandalone) {
-            return dominio === 'plantillas'
-                ? `/plantillas/${siteSlug}/${seccion.slug}`
-                : `/${dominio}/${seccion.slug}`;
+            return buildUrl(`/${seccion.slug}`);
         }
 
         const mainSlug = secciones?.[0]?.slug || 'inicio';
@@ -287,9 +295,7 @@ export default function Footer({
         if (isHome) {
             return `#${anchorId}`;
         }
-        return dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/${mainSlug}#${anchorId}`
-            : `/${dominio}/${mainSlug}#${anchorId}`;
+        return `${buildUrl(`/${mainSlug}`)}#${anchorId}`;
     };
 
     const handleSectionClick = (e, seccion) => {

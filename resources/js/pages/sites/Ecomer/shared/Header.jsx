@@ -101,11 +101,22 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     const catalogoTitulo = catalogoConfig.titulo || 'Catálogo';
     const catalogoEnlace = catalogoConfig.enlace ? String(catalogoConfig.enlace).trim() : null;
     const isCatalogoUrlActive = Boolean(currentUrl && currentUrl.includes('catalogo=1'));
+
+    // Helper robusto para generar URLs relativas seguras sin dobles barras iniciales
+    const buildUrl = (path = '') => {
+        const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '';
+        if (dominio === 'plantillas') {
+            return `/plantillas/${siteSlug}${cleanPath}`;
+        }
+        if (dominio && String(dominio).trim() !== '') {
+            return siteSlug ? `/${dominio}/${siteSlug}${cleanPath}` : `/${dominio}${cleanPath}`;
+        }
+        return cleanPath || '/';
+    };
+
     const downloadUrl = catalogoEnlace
         ? catalogoEnlace
-        : (dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/catalogo/descargar-pdf`
-            : (siteSlug ? `/${dominio}/${siteSlug}/catalogo/descargar-pdf` : `/${dominio}/catalogo/descargar-pdf`));
+        : buildUrl('/catalogo/descargar-pdf');
 
     const handleDescargarCatalogo = (e) => {
         if (e && e.preventDefault) e.preventDefault();
@@ -141,10 +152,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     };
 
     const getProductosUrl = (catName, subName) => {
-        let baseUrl = dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/productos`
-            : (siteSlug ? `/${dominio}/${siteSlug}/productos` : `/${dominio}/productos`);
-
+        const baseUrl = buildUrl('/productos');
         const params = new URLSearchParams();
         if (catName) params.set('categoria', catName);
         if (subName) params.set('subcategoria', subName);
@@ -154,10 +162,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     };
 
     const getMarcaUrl = (marcaNombre) => {
-        let baseUrl = dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/productos`
-            : (siteSlug ? `/${dominio}/${siteSlug}/productos` : `/${dominio}/productos`);
-
+        const baseUrl = buildUrl('/productos');
         const params = new URLSearchParams();
         if (marcaNombre) params.set('marca', marcaNombre);
 
@@ -170,9 +175,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
         const term = searchQuery.trim();
         if (!term) return;
 
-        const targetUrl = dominio === 'plantillas'
-            ? `/plantillas/${siteSlug}/productos?q=${encodeURIComponent(term)}`
-            : (siteSlug ? `/${dominio}/${siteSlug}/productos?q=${encodeURIComponent(term)}` : `/${dominio}/productos?q=${encodeURIComponent(term)}`);
+        const targetUrl = `${buildUrl('/productos')}?q=${encodeURIComponent(term)}`;
 
         router.visit(targetUrl);
         setMobileSearchOpen(false);
@@ -283,7 +286,14 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
         list.sort((a, b) => Number(a?.orden ?? 99) - Number(b?.orden ?? 99));
 
-        return list;
+        // Deduplicar por slug para prevenir warnings de claves duplicadas de React
+        const seenSlugs = new Set();
+        return list.filter((s) => {
+            const key = (s.slug || s.nombre || '').toLowerCase().trim();
+            if (!key || seenSlugs.has(key)) return false;
+            seenSlugs.add(key);
+            return true;
+        });
     }, [secciones, hasStore, serviciosSitio, marcasSitio, estilos, isCatalogoActivo, catalogoTitulo]);
 
     const getDisplayName = (seccion) => {
@@ -581,7 +591,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
                         {/* Logo del Sitio */}
                         <Link
-                            href={dominio === 'plantillas' ? `/plantillas/${siteSlug}/${secciones?.[0]?.slug || 'inicio'}` : (siteSlug ? `/${dominio}/${siteSlug}/${secciones?.[0]?.slug || 'inicio'}` : `/${dominio}/${secciones?.[0]?.slug || 'inicio'}`)}
+                            href={buildUrl(`/${secciones?.[0]?.slug || 'inicio'}`)}
                             className="flex items-center justify-center"
                         >
                             {logoNav || site?.imagen ? (
@@ -653,9 +663,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 if (slugLower === 'catalogo' || seccion.isCatalogo) return null;
 
                                 if (isLiquidaciones) {
-                                    const targetUrl = dominio === 'plantillas'
-                                        ? `/plantillas/${siteSlug}/productos?liquidaciones=1`
-                                        : (siteSlug ? `/${dominio}/${siteSlug}/productos?liquidaciones=1` : `/${dominio}/productos?liquidaciones=1`);
+                                    const targetUrl = `${buildUrl('/productos')}?liquidaciones=1`;
                                     const isLiquidacionesActiva = Boolean(currentUrl && (currentUrl.includes('liquidaciones=1') || currentUrl.includes('liquidacion=1') || currentUrl.includes('filtro_producto=liquidaciones') || currentUrl.includes('filtro_producto=liquidacion')));
 
                                     const linkClassesLiq = `rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${isLiquidacionesActiva
@@ -678,9 +686,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 }
 
                                 if (isOfertas) {
-                                    const targetUrl = dominio === 'plantillas'
-                                        ? `/plantillas/${siteSlug}/productos?ofertas=1`
-                                        : (siteSlug ? `/${dominio}/${siteSlug}/productos?ofertas=1` : `/${dominio}/productos?ofertas=1`);
+                                    const targetUrl = `${buildUrl('/productos')}?ofertas=1`;
                                     const isOfertasActiva = Boolean(currentUrl && (currentUrl.includes('ofertas=1') || currentUrl.includes('oferta=1') || currentUrl.includes('solo_ofertas=1') || currentUrl.includes('filtro_producto=ofertas') || currentUrl.includes('filtro_producto=oferta')));
 
                                     const linkClassesOf = `rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${isOfertasActiva
@@ -752,13 +758,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 }
 
                                 if (hasStandalonePage) {
-                                    const homeHref = dominio === 'plantillas'
-                                        ? `/plantillas/${siteSlug}`
-                                        : (siteSlug ? `/${dominio}/${siteSlug}` : `/${dominio}`);
-
-                                    const targetHref = isInicio
-                                        ? homeHref
-                                        : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`));
+                                    const homeHref = buildUrl('');
+                                    const targetHref = isInicio ? homeHref : buildUrl(`/${pageSlugTarget}`);
 
                                     return (
                                         <Link
@@ -775,7 +776,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 const mainPageSlug = (secciones && secciones[0]?.slug) || 'inicio';
                                 const anchorHref = isInicioPage
                                     ? `#${anchorId}`
-                                    : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${mainPageSlug}#${anchorId}` : (siteSlug ? `/${dominio}/${siteSlug}/${mainPageSlug}#${anchorId}` : `/${dominio}/${mainPageSlug}#${anchorId}`));
+                                    : `${buildUrl(`/${mainPageSlug}`)}#${anchorId}`;
 
                                 return (
                                     <a
@@ -1404,9 +1405,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             if (slugLower === 'catalogo' || seccion.isCatalogo) return null;
 
                             if (isLiquidaciones) {
-                                const targetUrl = dominio === 'plantillas'
-                                    ? `/plantillas/${siteSlug}/productos?liquidaciones=1`
-                                    : (siteSlug ? `/${dominio}/${siteSlug}/productos?liquidaciones=1` : `/${dominio}/productos?liquidaciones=1`);
+                                const targetUrl = `${buildUrl('/productos')}?liquidaciones=1`;
                                 const isLiquidacionesActiva = Boolean(currentUrl && (currentUrl.includes('liquidaciones=1') || currentUrl.includes('liquidacion=1') || currentUrl.includes('filtro_producto=liquidaciones') || currentUrl.includes('filtro_producto=liquidacion')));
 
                                 return (
@@ -1426,9 +1425,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             }
 
                             if (isOfertas) {
-                                const targetUrl = dominio === 'plantillas'
-                                    ? `/plantillas/${siteSlug}/productos?ofertas=1`
-                                    : (siteSlug ? `/${dominio}/${siteSlug}/productos?ofertas=1` : `/${dominio}/productos?ofertas=1`);
+                                const targetUrl = `${buildUrl('/productos')}?ofertas=1`;
                                 const isOfertasActiva = Boolean(currentUrl && (currentUrl.includes('ofertas=1') || currentUrl.includes('oferta=1') || currentUrl.includes('solo_ofertas=1') || currentUrl.includes('filtro_producto=ofertas') || currentUrl.includes('filtro_producto=oferta')));
 
                                 return (
@@ -1576,13 +1573,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             }
 
                             if (hasStandalonePage) {
-                                const homeHref = dominio === 'plantillas'
-                                    ? `/plantillas/${siteSlug}`
-                                    : (siteSlug ? `/${dominio}/${siteSlug}` : `/${dominio}`);
-
-                                const targetHref = isInicio
-                                    ? homeHref
-                                    : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${pageSlugTarget}` : (siteSlug ? `/${dominio}/${siteSlug}/${pageSlugTarget}` : `/${dominio}/${pageSlugTarget}`));
+                                const homeHref = buildUrl('');
+                                const targetHref = isInicio ? homeHref : buildUrl(`/${pageSlugTarget}`);
 
                                 return (
                                     <Link
@@ -1600,7 +1592,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             const mainPageSlug = (secciones && secciones[0]?.slug) || 'inicio';
                             const anchorHref = isInicioPage
                                 ? `#${anchorId}`
-                                : (dominio === 'plantillas' ? `/plantillas/${siteSlug}/${mainPageSlug}#${anchorId}` : (siteSlug ? `/${dominio}/${siteSlug}/${mainPageSlug}#${anchorId}` : `/${dominio}/${mainPageSlug}#${anchorId}`));
+                                : `${buildUrl(`/${mainPageSlug}`)}#${anchorId}`;
 
                             return (
                                 <a

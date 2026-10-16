@@ -84,8 +84,8 @@
       "_vendor-framer-motion-C1JIXETN.js"
     ]
   },
-  "_HeroSection-2I8UYTzk.js": {
-    "file": "assets/HeroSection-2I8UYTzk.js",
+  "_HeroSection-B1VAorIh.js": {
+    "file": "assets/HeroSection-B1VAorIh.js",
     "name": "HeroSection",
     "imports": [
       "_rolldown-runtime-hePW80VL.js",
@@ -364,7 +364,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BNBpo5GS.js",
+    "file": "assets/app-CN2mCqAj.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -387,7 +387,7 @@
       "_BanerPieSection-D5bCNXax.js",
       "_CategoriaSection-BQglV9mO.js",
       "_GaleriaSection-c-HkhU03.js",
-      "_HeroSection-2I8UYTzk.js",
+      "_HeroSection-B1VAorIh.js",
       "_MarcasSection-H1vidZYr.js",
       "_OfertasSection-VHewsYZ1.js",
       "_ProductosDestacadosSection-Dy-XNTta.js",
@@ -505,7 +505,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-byJVFtv-.js",
+    "file": "assets/Index-C3q2CCO0.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -537,13 +537,13 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-C9RBpoWi.js",
+    "file": "assets/SectionInicio-CxaSsTND.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-framer-motion-C1JIXETN.js",
-      "_HeroSection-2I8UYTzk.js",
+      "_HeroSection-B1VAorIh.js",
       "_GaleriaSection-c-HkhU03.js",
       "_OfertasSection-VHewsYZ1.js",
       "_MarcasSection-H1vidZYr.js",
@@ -620,7 +620,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/Footer.jsx": {
-    "file": "assets/Footer-Br70xB2A.js",
+    "file": "assets/Footer-Be2nKCbX.js",
     "name": "Footer",
     "src": "resources/js/pages/sites/Ecomer/shared/Footer.jsx",
     "isDynamicEntry": true,
@@ -634,7 +634,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/Header.jsx": {
-    "file": "assets/Header-C5UikD4Q.js",
+    "file": "assets/Header-D1jd1wrG.js",
     "name": "Header",
     "src": "resources/js/pages/sites/Ecomer/shared/Header.jsx",
     "isDynamicEntry": true,
