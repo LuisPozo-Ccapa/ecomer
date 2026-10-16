@@ -9,6 +9,23 @@
     scrollbar-width: thin;
 }
 
+/* Forzar que las pestañas (Tabs y Subtabs de Filament) sean horizontales con scroll */
+.fi-tabs {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 0.25rem !important;
+    scrollbar-width: thin;
+}
+
+.fi-tabs-item {
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+}
+
 /* =========================================================
    TagsInput — Papelera en lugar de X
    Compatible con modo claro y oscuro de Filament
