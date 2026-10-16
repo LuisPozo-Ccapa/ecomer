@@ -39,7 +39,19 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): HtmlString => new HtmlString(
-                    '<script>window.__ICON_PICKER_DATA__ = '.json_encode([
+                    '<script>
+                        (function() {
+                            try {
+                                var cg = JSON.parse(localStorage.getItem("collapsedGroups"));
+                                if (!Array.isArray(cg)) {
+                                    localStorage.setItem("collapsedGroups", "[]");
+                                }
+                            } catch (e) {
+                                localStorage.setItem("collapsedGroups", "[]");
+                            }
+                        })();
+                    </script>
+                    <script>window.__ICON_PICKER_DATA__ = '.json_encode([
                         'svgs' => IconRegistry::getSvgs(),
                         'categories' => PlantillaForm::getIconOptions(),
                     ]).';</script>'
