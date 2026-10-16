@@ -9,7 +9,7 @@ foreach ($sites as $site) {
     $resp = \App\Models\Respuesta::where('site_id', $site->id)->get();
     foreach ($resp as $r) {
         if (str_contains($r->valor, 'lismer') || str_contains($r->valor, 'banner') || str_contains($r->valor, '.png') || str_contains($r->valor, '.jpg') || str_contains($r->valor, '.webp')) {
-            echo "  Pregunta {$r->pregunta_id}: {$r->valor}\n";
+            echo "  Pregunta {$r->sasasasapregunta_id}: {$r->valor}\n";
         }
     }
 }
