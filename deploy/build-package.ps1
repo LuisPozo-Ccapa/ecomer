@@ -16,10 +16,10 @@
 [CmdletBinding()]
 param(
     [int]$CuotaMB = 200,
-    [switch]$OmitirBuild   # si el build de vite ya se hizo y no quieres repetirlo
+    [switch]$OmitirBuild,     # si el build de vite ya se hizo y no quieres repetirlo
+    [switch]$OmitirComposer   # solo reempaquetar, sin volver a tocar vendor
 )
 
-$ErrorActionPreference = 'Stop'
 $raiz = Split-Path $PSScriptRoot -Parent
 Set-Location $raiz
 
@@ -27,6 +27,7 @@ Set-Location $raiz
 # Se usa 'Continue' y se comprueban los codigos de salida manualmente.
 $ErrorActionPreference = 'Continue'
 
+if (-not $OmitirComposer) {
 Write-Host "`n=== 1/4 composer (produccion) ===" -ForegroundColor Cyan
 $php = 'C:\laragon\bin\php\php-8.4.25-Win32-vs17-x64\php.exe'
 if (-not (Test-Path $php)) { throw "No se encontro PHP 8.4 en $php" }
@@ -42,6 +43,9 @@ if (-not $composer) { throw "No se encontro composer" }
 & $php $composer install `
     --no-dev --optimize-autoloader --no-interaction --no-progress 2>&1 | Out-Host
 if ($LASTEXITCODE -ne 0) { throw "composer install fallo" }
+} else {
+    Write-Host "`n=== 1/4 composer: OMITIDO ===" -ForegroundColor Yellow
+}
 
 if (-not $OmitirBuild) {
     Write-Host "`n=== 2/4 frontend (vite build) ===" -ForegroundColor Cyan
@@ -59,8 +63,8 @@ if (Test-Path $zip) { Remove-Item $zip -Force }
 $stage = Join-Path $env:TEMP ('ecomer-stage-' + (Get-Date -Format 'yyyyMMddHHmmss'))
 robocopy $raiz $stage /MIR /NFL /NDL /NJH /NJS /NP `
     /XD node_modules .git scratch tests vendor\phpunit vendor\fakerphp vendor\mockery `
-    /XF .env .env.backup .env.production composer-setup.php package-lock.json `
-        DOCUMENTACION_ARQUITECTURA.md '*.zip' | Out-Null
+    /XF .env .env.backup .env.production .env.test-ci composer-setup.php `
+        package-lock.json DOCUMENTACION_ARQUITECTURA.md '*.zip' | Out-Null
 
 # storage: conserva estructura y .gitkeep, NO las imagenes (ya estan en el servidor)
 Get-ChildItem (Join-Path $stage 'storage\app\public') -Recurse -File -ErrorAction SilentlyContinue |
@@ -70,8 +74,26 @@ Get-ChildItem (Join-Path $stage 'storage\framework') -Recurse -File -ErrorAction
 Remove-Item (Join-Path $stage 'storage\logs\*.log') -Force -ErrorAction SilentlyContinue
 Remove-Item (Join-Path $stage 'storage\app\livewire-tmp\*') -Force -Recurse -ErrorAction SilentlyContinue
 
-Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -CompressionLevel Optimal
+# Compress-Archive de PS 5.1 escribe los nombres con '\' y al descomprimir en
+# Linux/cPanel quedarian ficheros con barras invertidas literales. Se escribe
+# el zip a mano con separador '/'.
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$fs = [System.IO.File]::Open($zip, [System.IO.FileMode]::Create)
+$arch = New-Object System.IO.Compression.ZipArchive($fs, [System.IO.Compression.ZipArchiveMode]::Create)
+try {
+    $base = (Get-Item $stage).FullName
+    $n = 0
+    foreach ($f in (Get-ChildItem $base -Recurse -File)) {
+        $rel = $f.FullName.Substring($base.Length + 1) -replace '\\', '/'
+        $entry = $arch.CreateEntry($rel, [System.IO.Compression.CompressionLevel]::Optimal)
+        $out = $entry.Open()
+        try { $f.OpenRead().CopyTo($out) } finally { $out.Dispose() }
+        $n++
+    }
+} finally { $arch.Dispose(); $fs.Dispose() }
 Remove-Item $stage -Recurse -Force
+Write-Host "  entradas escritas con separador '/': $n"
 
 Write-Host "`n=== 4/4 resultado ===" -ForegroundColor Cyan
 $mb = [math]::Round((Get-Item $zip).Length / 1MB, 2)
