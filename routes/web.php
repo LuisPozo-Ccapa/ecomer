@@ -58,6 +58,8 @@ Route::get('/storage/{path}', function (string $path) {
 })->where('path', '.*')->name('storage.local');
 
 Route::get('/limpiar-cache-opcache', function () {
+    abort_unless(app()->isLocal(), 404);
+
     if (function_exists('opcache_reset')) {
         @opcache_reset();
     }
@@ -91,6 +93,8 @@ Route::get('/limpiar-cache-opcache', function () {
 });
 
 Route::get('/comprobar-archivos', function () {
+    abort_unless(app()->isLocal(), 404);
+
     $filePath = app_path('Filament/Resources/Sites/Schemas/SiteForm.php');
     if (! file_exists($filePath)) {
         return response()->json(['error' => 'El archivo no existe en: ' . $filePath]);

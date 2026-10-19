@@ -47,9 +47,9 @@ class SitePageController extends Controller
             $siteSlug = $param2;
             $seccionSlug = $param3;
         } else {
-            // Caso de 2 parámetros: compatibilidad si alguien entra por /lismercorp/Inicio -> redirigir a /Inicio
-            $site = $this->findSite();
-            if (in_array(strtolower($param1), [strtolower($site->slug), 'lismercorp', 'tortaslucha'])) {
+            // Caso de 2 parámetros: si el primer segmento es el slug del sitio (ej. /lismercorp/Inicio), redirigir a /Inicio
+            $site = $this->findSite($param1);
+            if ($site && strcasecmp($param1, (string) $site->slug) === 0) {
                 return Redirect::to("/{$param2}");
             }
             $dominio = $param1;
@@ -366,9 +366,23 @@ class SitePageController extends Controller
 
     private function findSite(?string $dominioOrSlug = null, ?string $siteSlug = null): Site
     {
-        $site = Site::query()
-            ->with(['plantilla.secciones.preguntas', 'plantilla.marcas', 'respuestas', 'servicios.servicios', 'marcas'])
-            ->where('estado', 'publicado')
+        $base = Site::query()->where('estado', 'publicado');
+        $slug = $siteSlug ?: $dominioOrSlug;
+
+        if ($slug !== null && $slug !== '') {
+            $site = (clone $base)
+                ->with(['plantilla.secciones.preguntas', 'plantilla.marcas', 'respuestas', 'servicios.servicios', 'marcas', 'tiendas'])
+                ->where('slug', $slug)
+                ->first();
+
+            if ($site) {
+                return $site;
+            }
+        }
+
+        $site = $base
+            ->with(['plantilla.secciones.preguntas', 'plantilla.marcas', 'respuestas', 'servicios.servicios', 'marcas', 'tiendas'])
+            ->orderBy('id')
             ->first();
 
         if (! $site) {

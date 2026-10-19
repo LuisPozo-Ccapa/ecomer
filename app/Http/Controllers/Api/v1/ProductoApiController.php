@@ -94,9 +94,18 @@ class ProductoApiController extends Controller
 
     private function findSite(?string $dominioOrSlug = null, ?string $siteSlug = null): Site
     {
-        return Site::with('tiendas')
-            ->where('estado', 'publicado')
-            ->firstOrFail();
+        $base = Site::query()->where('estado', 'publicado');
+        $slug = $siteSlug ?: $dominioOrSlug;
+
+        if ($slug !== null && $slug !== '') {
+            $site = (clone $base)->with('tiendas')->where('slug', $slug)->first();
+
+            if ($site) {
+                return $site;
+            }
+        }
+
+        return $base->with('tiendas')->orderBy('id')->firstOrFail();
     }
 
     public function indexBySite(string $param1, ?string $param2 = null): AnonymousResourceCollection
