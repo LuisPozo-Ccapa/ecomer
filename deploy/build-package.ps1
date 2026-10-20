@@ -74,12 +74,11 @@ Get-ChildItem (Join-Path $stage 'storage\framework') -Recurse -File -ErrorAction
 Remove-Item (Join-Path $stage 'storage\logs\*.log') -Force -ErrorAction SilentlyContinue
 Remove-Item (Join-Path $stage 'storage\app\livewire-tmp\*') -Force -Recurse -ErrorAction SilentlyContinue
 
-# El .htaccess de la RAIZ lo genera cPanel con el handler de PHP del dominio
-# (AddHandler application/x-httpd-ea-phpXX). Traerlo desde el repo lo borraria
-# y el dominio volveria a la version PHP por defecto. public/.htaccess (rewrite
-# de Laravel, cache, compresion) si se sube: no lleva nada de cPanel.
-Remove-Item (Join-Path $stage '.htaccess') -Force -ErrorAction SilentlyContinue
-Write-Host "  .htaccess de raiz excluido (lo gestiona cPanel)"
+# El .htaccess de la RAIZ SI viaja: sin el no hay rewrite hacia public/ y el
+# sitio no carga en un clon nuevo. Trae SOLO las reglas de rewrite, sin el
+# bloque de cPanel (AddHandler application/x-httpd-ea-phpXX): ese handler no
+# existe en local y Apache serviria los .php como texto plano. En produccion
+# hay que anadirlo a mano al final del fichero una vez extraido el paquete.
 
 # Compress-Archive de PS 5.1 escribe los nombres con '\' y al descomprimir en
 # Linux/cPanel quedarian ficheros con barras invertidas literales. Se escribe
