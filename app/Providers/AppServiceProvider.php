@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('production') || request()->header('X-Forwarded-Proto') === 'https' || request()->secure()) {
+            URL::forceScheme('https');
+        }
+
         // El rol 'super_admin' tiene acceso total e incondicional a todos los recursos y policies
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super_admin') ? true : null;
