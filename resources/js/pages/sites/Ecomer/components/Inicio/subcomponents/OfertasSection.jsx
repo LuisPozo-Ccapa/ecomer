@@ -34,15 +34,39 @@ export default function OfertasSection({
     if (!imagenUrl) return null;
 
     // Filtrar productos dinámicamente por la categoría especificada
-    const categoriaTarget = categoriaNombre.toLowerCase();
+    const normalizeText = (str) =>
+        String(str || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+
+    const categoriaTarget = normalizeText(categoriaNombre);
+    const categoriaSlugTarget = categoriaTarget.replace(/[-_ ]+/g, '-');
+
     const productosFiltrados = (productos || []).filter((prod) => {
         if (!categoriaTarget) return true;
-        const catProd =
+
+        const catName = normalizeText(
             typeof prod.categoria === 'string'
                 ? prod.categoria
-                : prod.categoria?.nombre || prod.categoria?.slug || '';
-        const catLower = catProd.toLowerCase();
-        return catLower === categoriaTarget || catLower.includes(categoriaTarget) || categoriaTarget.includes(catLower);
+                : prod.categoria?.nombre || ''
+        );
+        const catSlug = normalizeText(
+            prod.categoria_objeto?.slug || prod.categoria?.slug || ''
+        ).replace(/[-_ ]+/g, '-');
+        const subCatName = normalizeText(
+            typeof prod.subcategoria === 'string'
+                ? prod.subcategoria
+                : prod.subcategoria?.nombre || ''
+        );
+
+        return (
+            catName === categoriaTarget ||
+            (catName && (catName.includes(categoriaTarget) || categoriaTarget.includes(catName))) ||
+            (catSlug && (catSlug === categoriaSlugTarget || catSlug.includes(categoriaSlugTarget))) ||
+            (subCatName && (subCatName === categoriaTarget || subCatName.includes(categoriaTarget)))
+        );
     });
 
     const isInCart = (prod) => {

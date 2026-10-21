@@ -115,7 +115,8 @@ class PlantillasController extends Controller
         if (! empty($tiendaIds)) {
             $productosQuery->where(function ($q) use ($tiendaIds) {
                 $q->whereIn('tienda_id', $tiendaIds)
-                    ->orWhereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds));
+                    ->orWhereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds))
+                    ->orWhereDoesntHave('tiendas');
             });
         }
 

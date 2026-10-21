@@ -70,17 +70,17 @@ export default function SectionInicio({
             />
             <OfertasSection
                 seccionData={ofertas}
-                productos={productos}
+                productos={initialProductos.length > 0 ? initialProductos : productos}
                 onSeleccionarProducto={onSeleccionarProducto}
             />
             <MarcasSection
                 seccionData={marcas}
-                productos={productos}
+                productos={initialProductos.length > 0 ? initialProductos : productos}
                 marcasSitio={marcasSitio}
                 onSeleccionarProducto={onSeleccionarProducto}
             />
             <CategoriaSection
-                productos={productos}
+                productos={initialProductos.length > 0 ? initialProductos : productos}
                 dominio={dominio}
                 siteSlug={siteSlug}
                 onSeleccionarProducto={onSeleccionarProducto}

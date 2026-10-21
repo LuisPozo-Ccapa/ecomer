@@ -160,8 +160,8 @@
       "_DynamicIcon-x4dDLJ1Q.js"
     ]
   },
-  "_OfertasSection-TPxKPd8e.js": {
-    "file": "assets/OfertasSection-TPxKPd8e.js",
+  "_OfertasSection-D78MRE16.js": {
+    "file": "assets/OfertasSection-D78MRE16.js",
     "name": "OfertasSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -346,7 +346,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CL4F-5qL.css",
+    "file": "assets/app-DRJ0qxvy.css",
     "name": "app",
     "names": [
       "app.css"
@@ -364,7 +364,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DGIRasEN.js",
+    "file": "assets/app-CL5Y8HVF.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -389,7 +389,7 @@
       "_GaleriaSection-By-fWXqN.js",
       "_HeroSection-C7jsDsS5.js",
       "_MarcasSection-CmcFeIMo.js",
-      "_OfertasSection-TPxKPd8e.js",
+      "_OfertasSection-D78MRE16.js",
       "_ProductosDestacadosSection-8iokPqre.js",
       "_TikTokSection-sbvirtCz.js",
       "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx",
@@ -505,7 +505,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-uWe-6OXs.js",
+    "file": "assets/Index-BNdoO4Zu.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -537,7 +537,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-BMDEqHBu.js",
+    "file": "assets/SectionInicio-Bhd1jvUp.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -545,7 +545,7 @@
       "_vendor-framer-motion-Brhgw_zz.js",
       "_HeroSection-C7jsDsS5.js",
       "_GaleriaSection-By-fWXqN.js",
-      "_OfertasSection-TPxKPd8e.js",
+      "_OfertasSection-D78MRE16.js",
       "_MarcasSection-CmcFeIMo.js",
       "_CategoriaSection-CbZmh0VR.js",
       "_TikTokSection-sbvirtCz.js",
