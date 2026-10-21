@@ -92,7 +92,7 @@ class Producto extends Model
 
     public function subcategoria(): BelongsTo
     {
-        return $this->belongsTo(Categoria::class, 'subcategoria_id');
+        return $this->belongsTo(Subcategoria::class, 'subcategoria_id');
     }
 
     public function marca(): BelongsTo
