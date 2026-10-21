@@ -111,7 +111,7 @@ class Sitemap extends Page
                 ];
             }
 
-            $estilos = array_replace_recursive($site->plantilla->estilos ?? [], $site->estilos ?? []);
+            $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
             if (! empty($estilos['catalogo']['activo'])) {
                 $urls[] = [
                     'loc' => "{$siteUrl}/catalogo",

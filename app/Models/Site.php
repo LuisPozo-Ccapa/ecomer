@@ -113,4 +113,29 @@ class Site extends Model
             $this->attributes['estilos'] = $value;
         }
     }
+
+    /**
+     * Combina arrays de estilos recursivamente respetando listas secuenciales (repeaters, multiselects, etc.).
+     * Las listas secuenciales entrantes reemplazan totalmente la lista previa para permitir eliminar o reordenar elementos.
+     *
+     * @param array<string, mixed> $original
+     * @param array<string, mixed> $incoming
+     * @return array<string, mixed>
+     */
+    public static function mergeEstilos(array $original, array $incoming): array
+    {
+        foreach ($incoming as $key => $value) {
+            if (is_array($value) && isset($original[$key]) && is_array($original[$key])) {
+                if (array_is_list($value) || array_is_list($original[$key])) {
+                    $original[$key] = $value;
+                } else {
+                    $original[$key] = static::mergeEstilos($original[$key], $value);
+                }
+            } else {
+                $original[$key] = $value;
+            }
+        }
+
+        return $original;
+    }
 }

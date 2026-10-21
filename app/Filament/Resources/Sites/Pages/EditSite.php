@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Sites\Pages;
 use App\Filament\Resources\Sites\SiteResource;
 use App\Models\Pregunta;
 use App\Models\Respuesta;
+use App\Models\Site;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
@@ -180,7 +181,7 @@ class EditSite extends EditRecord
                 $freshEstilos = json_decode($freshEstilos, true) ?? [];
             }
             if (is_array($freshEstilos)) {
-                $data['estilos'] = array_replace_recursive($freshEstilos, $data['estilos']);
+                $data['estilos'] = Site::mergeEstilos($freshEstilos, $data['estilos']);
             }
         }
 

@@ -157,7 +157,7 @@ class SitePageController extends Controller
             $productosDestacados = $productos;
         }
 
-        $estilos = array_replace_recursive($site->plantilla->estilos ?? [], $site->estilos ?? []);
+        $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
 
         // Serializar servicios del sitio para el frontend
         $serviciosSitio = $site->servicios
@@ -567,7 +567,7 @@ class SitePageController extends Controller
 
         $site = $this->findSite($dominio, $siteSlug);
 
-        $estilos = array_replace_recursive($site->plantilla->estilos ?? [], $site->estilos ?? []);
+        $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
         $catalogoConfig = $estilos['catalogo'] ?? [];
 
         if (! empty($catalogoConfig['enlace'])) {

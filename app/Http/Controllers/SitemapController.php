@@ -107,7 +107,7 @@ class SitemapController extends Controller
             }
 
             // Catálogo (si está activo en sus estilos)
-            $estilos = array_replace_recursive($site->plantilla->estilos ?? [], $site->estilos ?? []);
+            $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
             if (! empty($estilos['catalogo']['activo'])) {
                 $urls[] = [
                     'loc' => $this->formatUrl("{$siteUrl}/catalogo"),
