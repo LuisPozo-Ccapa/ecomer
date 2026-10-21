@@ -50,6 +50,39 @@ class AdminPanelProvider extends PanelProvider
                                 localStorage.setItem("collapsedGroups", "[]");
                             }
                         })();
+                        function patchLivewireIntercept() {
+                            if (window.Livewire && window.Livewire.interceptMessage && !window.__livewire_intercept_patched) {
+                                window.__livewire_intercept_patched = true;
+                                var originalIntercept = window.Livewire.interceptMessage;
+                                window.Livewire.interceptMessage = function(callback) {
+                                    return originalIntercept.call(this, function(params) {
+                                        var originalOnSuccess = params.onSuccess;
+                                        if (typeof originalOnSuccess === "function") {
+                                            params.onSuccess = function(successCallback) {
+                                                return originalOnSuccess.call(this, function(res) {
+                                                    if (!res) res = {};
+                                                    if (typeof res.onMorphed !== "function") {
+                                                        res.onMorphed = function(cb) {
+                                                            try {
+                                                                if (typeof cb === "function") cb();
+                                                            } catch (e) {
+                                                                console.warn("Livewire onMorphed fallback caught error:", e);
+                                                            }
+                                                        };
+                                                    }
+                                                    return successCallback.call(this, res);
+                                                });
+                                            };
+                                        }
+                                        return callback(params);
+                                    });
+                                };
+                            }
+                        }
+                        document.addEventListener("livewire:init", patchLivewireIntercept);
+                        document.addEventListener("livewire:initialized", patchLivewireIntercept);
+                        document.addEventListener("DOMContentLoaded", patchLivewireIntercept);
+                        if (window.Livewire) { patchLivewireIntercept(); }
                         document.addEventListener("alpine:init", function() {
                             if (window.Alpine) {
                                 var originalStore = window.Alpine.store.bind(window.Alpine);
