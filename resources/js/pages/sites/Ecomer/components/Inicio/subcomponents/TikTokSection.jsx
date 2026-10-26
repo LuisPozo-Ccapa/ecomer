@@ -276,10 +276,10 @@ export default function TikTokSection({ seccionData }) {
                             <div className="relative aspect-[9/16] w-full max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
                                 {showIframe && selectedVideo.idVideo ? (
                                     <iframe
-                                        src={`https://www.tiktok.com/embed/v2/${selectedVideo.idVideo}?lang=es-ES`}
+                                        src={`https://www.tiktok.com/player/v1/${selectedVideo.idVideo}?autoplay=1&muted=0&description=1&music_info=1`}
                                         className="w-full h-full rounded-2xl border-0"
                                         allowFullScreen
-                                        allow="autoplay; encrypted-media; picture-in-picture"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                         referrerPolicy="no-referrer-when-downgrade"
                                     />
                                 ) : (
