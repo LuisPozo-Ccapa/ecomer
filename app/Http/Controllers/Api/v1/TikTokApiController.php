@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Services\TikTokCoverService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -12,56 +13,65 @@ use Illuminate\Support\Facades\Log;
 class TikTokApiController extends Controller
 {
     /**
-     * Proxy request to TikTok oEmbed endpoint with caching to avoid CORS and 503 rate-limits.
+     * Proxy request to TikTok oEmbed endpoint with local storage cover caching.
      */
     public function oembed(Request $request): JsonResponse
     {
         $id = $request->query('id');
         $url = $request->query('url');
 
+        if (! $id && $url && preg_match('/\/video\/(\d+)/', $url, $matches)) {
+            $id = $matches[1];
+        }
+
         if (! $url && $id) {
             $url = "https://www.tiktok.com/@tiktok/video/{$id}";
         }
 
-        if (! $url) {
+        if (! $url && ! $id) {
             return response()->json([
                 'success' => false,
                 'message' => 'El parámetro URL o ID de vídeo es requerido.'
             ], 400);
         }
 
-        // Clean cache key based on video URL
-        $cacheKey = 'tiktok_oembed_' . md5($url);
+        // 1. Obtener o descargar la portada local optimizada con TikTokCoverService
+        $localCoverUrl = null;
+        if ($id) {
+            $localCoverUrl = TikTokCoverService::getOrDownloadCover($id);
+        }
 
-        // Cache response for 24 hours (86400 seconds)
-        $data = Cache::remember($cacheKey, 86400, function () use ($url) {
+        // 2. Consultar oEmbed para obtener título y autor si están disponibles
+        $cacheKey = 'tiktok_oembed_meta_' . md5($url);
+        $meta = Cache::remember($cacheKey, 86400, function () use ($url) {
             try {
-                $response = Http::withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-                    'Accept' => 'application/json',
-                    'Accept-Language' => 'es-ES,es;q=0.9,en;q=0.8',
-                ])
-                ->timeout(5)
-                ->get('https://www.tiktok.com/oembed', [
-                    'url' => $url,
-                ]);
+                $response = Http::withoutVerifying()
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+                        'Accept' => 'application/json',
+                        'Accept-Language' => 'es-ES,es;q=0.9,en;q=0.8',
+                    ])
+                    ->timeout(6)
+                    ->get('https://www.tiktok.com/oembed', [
+                        'url' => $url,
+                    ]);
 
                 if ($response->successful()) {
                     $json = $response->json();
-                    if (is_array($json) && !empty($json['thumbnail_url'])) {
+                    if (is_array($json)) {
                         return $json;
                     }
                 }
-
-                Log::warning("TikTok oEmbed devolvió estado {$response->status()} para {$url}");
             } catch (\Throwable $e) {
-                Log::error("Error consultando oEmbed de TikTok: " . $e->getMessage());
+                Log::warning("TikTokApiController: Error consultando oEmbed: " . $e->getMessage());
             }
 
             return null;
         });
 
-        if (! $data) {
+        $finalThumbnail = $localCoverUrl ?: ($meta['thumbnail_url'] ?? null);
+
+        if (! $finalThumbnail && ! $meta) {
             return response()->json([
                 'success' => false,
                 'thumbnail_url' => null,
@@ -73,7 +83,12 @@ class TikTokApiController extends Controller
             ]);
         }
 
-        return response()->json(array_merge(['success' => true], $data), 200, [
+        $responseData = array_merge($meta ?: [], [
+            'success' => true,
+            'thumbnail_url' => $finalThumbnail,
+        ]);
+
+        return response()->json($responseData, 200, [
             'Access-Control-Allow-Origin' => '*',
             'Cache-Control' => 'public, max-age=86400',
         ]);

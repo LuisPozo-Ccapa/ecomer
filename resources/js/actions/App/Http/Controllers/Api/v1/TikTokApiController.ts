@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
 const oembed37225db75fc0647542ccba7d49d1f4af = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
 oembed37225db75fc0647542ccba7d49d1f4af.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
 oembed37225db75fc0647542ccba7d49d1f4af.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.get = (options?: RouteQueryOptions): Rout
 })
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
 oembed37225db75fc0647542ccba7d49d1f4af.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.head = (options?: RouteQueryOptions): Rou
 
     /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
     const oembed37225db75fc0647542ccba7d49d1f4afForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.head = (options?: RouteQueryOptions): Rou
 
             /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
         oembed37225db75fc0647542ccba7d49d1f4afForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.head = (options?: RouteQueryOptions): Rou
         })
             /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/v1/tiktok-oembed'
  */
         oembed37225db75fc0647542ccba7d49d1f4afForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ oembed37225db75fc0647542ccba7d49d1f4af.head = (options?: RouteQueryOptions): Rou
     oembed37225db75fc0647542ccba7d49d1f4af.form = oembed37225db75fc0647542ccba7d49d1f4afForm
     /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
 const oembed4e5421b5155041cc533542d9d2870ca6 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
 oembed4e5421b5155041cc533542d9d2870ca6.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
 oembed4e5421b5155041cc533542d9d2870ca6.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.get = (options?: RouteQueryOptions): Rout
 })
 /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
 oembed4e5421b5155041cc533542d9d2870ca6.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.head = (options?: RouteQueryOptions): Rou
 
     /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
     const oembed4e5421b5155041cc533542d9d2870ca6Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.head = (options?: RouteQueryOptions): Rou
 
             /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
         oembed4e5421b5155041cc533542d9d2870ca6Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ oembed4e5421b5155041cc533542d9d2870ca6.head = (options?: RouteQueryOptions): Rou
         })
             /**
 * @see \App\Http\Controllers\Api\v1\TikTokApiController::oembed
- * @see app/Http/Controllers/Api/v1/TikTokApiController.php:17
+ * @see app/Http/Controllers/Api/v1/TikTokApiController.php:18
  * @route '/api/tiktok-oembed'
  */
         oembed4e5421b5155041cc533542d9d2870ca6Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

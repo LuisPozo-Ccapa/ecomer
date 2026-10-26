@@ -168,11 +168,23 @@ class ImageOptimizerService
 
         [$origWidth, $origHeight, $type] = $imageInfo;
 
-        // Cargar recurso GD según el tipo de imagen
+        // INICIO: Proteccion contra colapso de memoria por imagenes gigantes
+        $totalPixels = $origWidth * $origHeight;
+        if ($totalPixels > 25000000) {
+            $defaultResult['message'] = 'Imagen demasiado grande para procesar en memoria (' . $origWidth . 'x' . $origHeight . '). Se mantiene original.';
+            return $defaultResult;
+        }
+
+        @ini_set('memory_limit', '1024M');
+        // FIN: Proteccion contra colapso de memoria por imagenes gigantes
+
+        // Cargar recurso GD segun el tipo de imagen
         $srcImage = null;
         $tmpConvertedPng = null;
 
-        switch ($type) {
+        // INICIO: Manejo seguro de decodificacion de imagen
+        try {
+    switch ($type) {
             case IMAGETYPE_JPEG:
                 if (function_exists('imagecreatefromjpeg')) {
                     $srcImage = @imagecreatefromjpeg($filePath);
@@ -189,7 +201,7 @@ class ImageOptimizerService
                 }
                 // Fallback con dwebp binario si GD no tiene soporte nativo de WebP
                 if (! $srcImage) {
-                    $dwebpBin = file_exists('/opt/lampp/bin/dwebp') ? '/opt/lampp/bin/dwebp' : (exec('which dwebp') ?: null);
+                    $dwebpBin = file_exists('/opt/lampp/bin/dwebp') ? '/opt/lampp/bin/dwebp' : (PHP_OS_FAMILY !== 'Windows' ? (@exec('which dwebp 2>/dev/null') ?: null) : null);
                     if ($dwebpBin) {
                         $tmpConvertedPng = sys_get_temp_dir().'/dwebp_'.md5($filePath.microtime(true)).'.png';
                         @exec(escapeshellarg($dwebpBin).' '.escapeshellarg($filePath).' -o '.escapeshellarg($tmpConvertedPng).' 2>&1');
@@ -210,6 +222,13 @@ class ImageOptimizerService
                 }
                 break;
         }
+
+
+        } catch (\Throwable $e) {
+            $defaultResult['message'] = 'Excepcion al decodificar imagen: ' . $e->getMessage();
+            return $defaultResult;
+        }
+        // FIN: Manejo seguro de decodificacion de imagen
 
         if (! $srcImage && function_exists('imagecreatefromstring')) {
             $data = @file_get_contents($filePath);
@@ -241,7 +260,7 @@ class ImageOptimizerService
 
         // Iterar compresión y dimensiones hasta que el peso sea <= $maxSizeBytes
         $quality = 85;
-        $cwebpBin = file_exists('/opt/lampp/bin/cwebp') ? '/opt/lampp/bin/cwebp' : (exec('which cwebp') ?: null);
+        $cwebpBin = file_exists('/opt/lampp/bin/cwebp') ? '/opt/lampp/bin/cwebp' : (PHP_OS_FAMILY !== 'Windows' ? (@exec('which cwebp 2>/dev/null') ?: null) : null);
         $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
         for ($attempt = 0; $attempt < 6; $attempt++) {
