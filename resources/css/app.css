@@ -33,4 +33,15 @@ img, svg, video, canvas {
     box-sizing: border-box;
 }
 
+/* Marquee continuo para marcas */
+@keyframes marcas-infinite-scroll {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+
 

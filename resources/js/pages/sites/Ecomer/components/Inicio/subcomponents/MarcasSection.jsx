@@ -1,10 +1,6 @@
 import { useMemo } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, FreeMode } from 'swiper/modules';
 import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
-
-import 'swiper/css';
 
 export default function MarcasSection({
     seccionData,
@@ -119,6 +115,22 @@ export default function MarcasSection({
         return result;
     }, [marcasFromBackend, marcasFromProductos, marcasFromCMS]);
 
+    // Pista base para el marquee: asegurar suficientes marcas para cualquier resolución y loop uniforme
+    const marcasTrack = useMemo(() => {
+        if (!marcasList || marcasList.length === 0) return [];
+        let list = [...marcasList];
+        while (list.length < 12) {
+            list = [...list, ...marcasList];
+        }
+        return list;
+    }, [marcasList]);
+
+    // Duración para una velocidad continua y constante (~2.5s por marca visible)
+    const marqueeDuration = useMemo(() => {
+        const count = marcasTrack.length;
+        return Math.max(25, count * 2.5);
+    }, [marcasTrack.length]);
+
     // Extraer Categorías desde seccionData CMS (si están configuradas)
     const categoriasRaw = getValor('categorias') || getValor('categorías') || getValor('categoria') || getValor('lista_categorias');
     const cmsCatList = useMemo(() => {
@@ -229,33 +241,27 @@ export default function MarcasSection({
                     </div>
                 </div>
 
-                {/* ── CARRUSEL DE LOGOS / MARCAS ── */}
+                {/* ── CARRUSEL INFINITO DE MARCAS (MARQUEE CONTINUO SIN PARAR) ── */}
                 {marcasList.length > 0 && (
-                    <div className="mb-10">
-                        <Swiper
-    modules={[Autoplay, FreeMode]}
-    freeMode={true}
-    loop={marcasList.length > 3}
-    autoplay={{
-        delay: 0,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: false,
-        pauseOnMouseLeave: false,
-    }}
-    speed={5000}
-    allowTouchMove={true}
-    grabCursor={true}
-    breakpoints={{
-        480: { slidesPerView: 3, spaceBetween: 16 },
-        768: { slidesPerView: 4, spaceBetween: 20 },
-        1024: { slidesPerView: 5, spaceBetween: 24 },
-        1280: { slidesPerView: 6, spaceBetween: 28 },
-    }}
-    className="py-2"
->
-                            {marcasList.map((m, idx) => (
-                                <SwiperSlide key={m.id || m.slug || idx}>
-                                    <div className="flex items-center justify-center h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 group cursor-pointer text-center">
+                    <div className="relative w-full overflow-hidden mb-10 py-2 select-none">
+                        {/* Difuminado suave en los bordes para una transición continua elegante */}
+                        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-white to-transparent z-10" />
+                        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-white to-transparent z-10" />
+
+                        {/* Riel con desplazamiento continuo lineal sin parar */}
+                        <div
+                            className="flex w-max will-change-transform"
+                            style={{
+                                animation: `marcas-infinite-scroll ${marqueeDuration}s linear infinite`,
+                            }}
+                        >
+                            {/* Pista 1 */}
+                            <div className="flex shrink-0 items-center gap-4 sm:gap-6 pr-4 sm:pr-6">
+                                {marcasTrack.map((m, idx) => (
+                                    <div
+                                        key={`m1-${idx}`}
+                                        className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
+                                    >
                                         {m.imagen ? (
                                             <img
                                                 src={m.imagen}
@@ -275,9 +281,50 @@ export default function MarcasSection({
                                             </span>
                                         )}
                                     </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                ))}
+                            </div>
+
+                            {/* Pista 2 (duplicado exacto para costura de loop invisible y fluida) */}
+                            <div className="flex shrink-0 items-center gap-4 sm:gap-6 pr-4 sm:pr-6" aria-hidden="true">
+                                {marcasTrack.map((m, idx) => (
+                                    <div
+                                        key={`m2-${idx}`}
+                                        className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
+                                    >
+                                        {m.imagen ? (
+                                            <img
+                                                src={m.imagen}
+                                                alt={m.titulo || `Marca ${idx + 1}`}
+                                                width={300}
+                                                height={150}
+                                                className="max-h-full max-w-full object-contain opacity-95 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        ) : (
+                                            <span
+                                                className="text-sm sm:text-base font-extrabold text-gray-700 tracking-tight group-hover:text-[var(--color-primario)] transition-colors line-clamp-2"
+                                                style={{ fontFamily: 'var(--tipografia-titulos)' }}
+                                            >
+                                                {m.titulo}
+                                            </span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Animación 60fps lineal sin pausas */}
+                        <style>{`
+                            @keyframes marcas-infinite-scroll {
+                                0% {
+                                    transform: translate3d(0, 0, 0);
+                                }
+                                100% {
+                                    transform: translate3d(-50%, 0, 0);
+                                }
+                            }
+                        `}</style>
                     </div>
                 )}
 
