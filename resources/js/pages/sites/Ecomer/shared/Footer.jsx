@@ -26,13 +26,15 @@ export default function Footer({
     estilos = {},
     productos = []
 }) {
-    // --- EXTRACCIÓN DE DATOS DE LAS SECCIONES Y CMS ---
-    const activeNav = seccionesData?.nav || seccionesData?.['nav'] || seccionesData?.['NAV'] || null;
+    // --- EXTRACCIÓN DE DATOS DE LAS SECCIONES Y CMS (IDENTICO AL NAVBAR) ---
+    const activeNav =
+        seccionesData?.nav ||
+        seccionesData?.NAV ||
+        seccionesData?.['nav'] ||
+        Object.values(seccionesData || {}).find((s) => s?.slug?.toLowerCase() === 'nav') ||
+        null;
     const activeContacto = seccionesData?.contacto || seccionesData?.['contacto'] || seccionesData?.['Contacto'] || null;
     const activeMarcas = seccionesData?.marcas || seccionesData?.['marcas'] || seccionesData?.['Marcas'] || null;
-
-    // Logo y mensaje
-    const logoNav = activeNav?.contenido?.find((c) => c.label === 'logo_nav')?.valor;
 
     // Acciones y contactos desde NAV (CMS) y General (estilos.acciones_nav)
     const getNavContent = (labelName) => {
@@ -40,6 +42,9 @@ export default function Footer({
             (c) => (c.label || '').toLowerCase() === labelName.toLowerCase()
         )?.valor;
     };
+
+    // Logo consumido de manera idéntica al Navbar (CMS nav logo / logo_nav -> fallback site.imagen)
+    const logoNav = getNavContent('logo') || getNavContent('logo_nav') || site?.imagen;
 
     const rawCmsNavActions =
         getNavContent('accion') ||
@@ -411,303 +416,330 @@ export default function Footer({
             <footer className="w-full bg-[#050505] text-[#d4d4d8] font-sans antialiased border-t border-neutral-900 selection:bg-neutral-800 selection:text-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
 
-                {/* --- 1. BARRA SUPERIOR: VALOR Y BENEFICIOS BASADOS EN NAV / ACCIONES --- */}
-                <div className="pb-10 border-b border-neutral-800/80">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="flex items-center gap-2 group cursor-pointer shrink-0">
-                            <span className="text-lg md:text-xl font-bold tracking-tight text-white group-hover:text-neutral-200 transition-colors">
-                                Compra oficial en {siteName}
-                            </span>
-                            <FaArrowRight className="h-4 w-4 text-neutral-400 group-hover:translate-x-1 transition-transform" />
-                        </div>
+                    {/* --- 1. BARRA SUPERIOR: VALOR Y BENEFICIOS BASADOS EN NAV / ACCIONES --- */}
+                    <div className="pb-10 border-b border-neutral-800/80">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="flex items-center gap-2 group cursor-pointer shrink-0">
+                                <span className="text-lg md:text-xl font-bold tracking-tight text-white group-hover:text-neutral-200 transition-colors">
+                                    Compra oficial en {siteName}
+                                </span>
+                                <FaArrowRight className="h-4 w-4 text-neutral-400 group-hover:translate-x-1 transition-transform" />
+                            </div>
 
-                        {displayActions.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap items-center gap-4 sm:gap-6 text-xs text-neutral-300">
-                                {displayActions.map((action, idx) => {
-                                    const itemBody = (
-                                        <div className="flex items-center gap-2.5 group/item transition-colors hover:text-white">
-                                            <DynamicIcon
-                                                name={action.icon}
-                                                className="h-4 w-4 text-white shrink-0 transition-transform group-hover/item:scale-110"
-                                            />
-                                            <div className="flex items-center gap-1.5 leading-tight">
-                                                {action.label ? (
-                                                    <>
-                                                        <span className="font-semibold text-white/90 whitespace-nowrap">
-                                                            {action.label}:
-                                                        </span>
-                                                        <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[200px]">
+                            {displayActions.length > 0 && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap items-center gap-4 sm:gap-6 text-xs text-neutral-300">
+                                    {displayActions.map((action, idx) => {
+                                        const itemBody = (
+                                            <div className="flex items-center gap-2.5 group/item transition-colors hover:text-white">
+                                                <DynamicIcon
+                                                    name={action.icon}
+                                                    className="h-4 w-4 text-white shrink-0 transition-transform group-hover/item:scale-110"
+                                                />
+                                                <div className="flex items-center gap-1.5 leading-tight">
+                                                    {action.label ? (
+                                                        <>
+                                                            <span className="font-semibold text-white/90 whitespace-nowrap">
+                                                                {action.label}:
+                                                            </span>
+                                                            <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[200px]">
+                                                                {action.texto}
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[220px]">
                                                             {action.texto}
                                                         </span>
-                                                    </>
-                                                ) : (
-                                                    <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[220px]">
-                                                        {action.texto}
-                                                    </span>
-                                                )}
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
+                                        );
 
-                                    if (action.href) {
-                                        return (
+                                        if (action.href) {
+                                            return (
+                                                <a
+                                                    key={idx}
+                                                    href={action.href}
+                                                    target={action.href.startsWith('http') ? '_blank' : '_self'}
+                                                    rel={action.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                                    className="focus:outline-none"
+                                                >
+                                                    {itemBody}
+                                                </a>
+                                            );
+                                        }
+
+                                        return <div key={idx}>{itemBody}</div>;
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* --- 2. CUERPO PRINCIPAL: 4 COLUMNAS LIMPIAS Y EN ESPAÑOL --- */}
+                    <div className="py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 border-b border-neutral-800/80 text-sm">
+
+                        {/* COLUMNA 1: SOBRE NOSOTROS & REDES */}
+                        <div className="space-y-4">
+                            <div className="h-12 flex items-center">
+                                {logoNav || site?.imagen ? (
+                                    <Link
+                                        href={buildUrl(`/${secciones?.[0]?.slug || 'inicio'}`)}
+                                        className="inline-block focus:outline-none group"
+                                    >
+                                        <img
+                                            src={logoNav || site?.imagen}
+                                            alt={siteName}
+                                            width={260}
+                                            height={75}
+                                            decoding="async"
+                                            className="h-10 sm:h-11 md:h-12 w-auto max-h-12 max-w-[220px] sm:max-w-[250px] object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
+                                        />
+                                    </Link>
+                                ) : (
+                                    <h4 className="text-white font-bold text-sm tracking-wide">
+                                        Sobre {siteName}
+                                    </h4>
+                                )}
+                            </div>
+                            <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
+                                Tu tienda de confianza con los mejores productos, calidad garantizada y atención directa para brindarte la mejor experiencia de compra.
+                            </p>
+
+                            {/* Dirección física configurada en Admin */}
+                            {direccion && (
+                                <div className="flex items-start gap-2.5 pt-1 text-xs text-neutral-300">
+                                    <FaLocationDot className="h-4 w-4 mt-0.5 text-neutral-400 shrink-0" />
+                                    <div>
+                                        <span className="block font-semibold text-white">Nuestra Tienda:</span>
+                                        <span className="text-neutral-400 leading-tight">{direccion}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Redes Sociales oficiales en Columna 1 */}
+                            {redesFinales.length > 0 && (
+                                <div className="pt-2">
+                                    <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
+                                        Síguenos
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        {redesFinales.map((red, idx) => (
                                             <a
                                                 key={idx}
-                                                href={action.href}
-                                                target={action.href.startsWith('http') ? '_blank' : '_self'}
-                                                rel={action.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                                className="focus:outline-none"
+                                                href={red.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title={red.nombre}
+                                                className="h-8 w-8 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-200 flex items-center justify-center text-xs"
                                             >
-                                                {itemBody}
+                                                <DynamicIcon name={red.icono} className="h-3.5 w-3.5" />
                                             </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* COLUMNA 2: EXPLORAR (ENLACES EN 2 COLUMNAS) */}
+                        <div className="space-y-4">
+                            <div className="h-12 flex items-center">
+                                <h4 className="text-white font-bold text-sm tracking-wide">
+                                    Explorar
+                                </h4>
+                            </div>
+                            <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs text-neutral-400">
+                                {secciones && secciones.length > 0 ? (
+                                    secciones.map((seccion) => {
+                                        const href = getSectionHref(seccion);
+                                        return (
+                                            <li key={seccion.slug}>
+                                                <a
+                                                    href={href}
+                                                    onClick={(e) => handleSectionClick(e, seccion)}
+                                                    className="hover:text-white transition-colors duration-150 block capitalize truncate"
+                                                    title={seccion.nombre}
+                                                >
+                                                    {seccion.nombre}
+                                                </a>
+                                            </li>
                                         );
-                                    }
+                                    })
+                                ) : (
+                                    <>
+                                        <li><a href="#inicio" className="hover:text-white transition-colors">Inicio</a></li>
+                                        <li><a href="#productos" className="hover:text-white transition-colors">Productos</a></li>
+                                        <li><a href="#servicios" className="hover:text-white transition-colors">Servicios</a></li>
+                                        <li><a href="#contacto" className="hover:text-white transition-colors">Contacto</a></li>
+                                    </>
+                                )}
+                            </ul>
+                        </div>
 
-                                    return <div key={idx}>{itemBody}</div>;
-                                })}
+                        {/* COLUMNA 3: ATENCIÓN AL CLIENTE Y SOPORTE DIRECTO */}
+                        <div className="space-y-4">
+                            <div className="h-12 flex items-center">
+                                <h4 className="text-white font-bold text-sm tracking-wide">
+                                    Atención al Cliente
+                                </h4>
                             </div>
-                        )}
-                    </div>
-                </div>
 
-                {/* --- 2. CUERPO PRINCIPAL: 4 COLUMNAS LIMPIAS Y EN ESPAÑOL --- */}
-                <div className="py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 border-b border-neutral-800/80 text-sm">
-
-                    {/* COLUMNA 1: SOBRE NOSOTROS & UBICACIÓN */}
-                    <div className="space-y-4">
-                        <h4 className="text-white font-bold text-sm tracking-wide">
-                            Sobre {siteName}
-                        </h4>
-                        <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
-                            Tu tienda de confianza con los mejores productos, calidad garantizada y atención directa para brindarte la mejor experiencia de compra.
-                        </p>
-
-                        {/* Dirección física configurada en Admin */}
-                        {direccion && (
-                            <div className="flex items-start gap-2.5 pt-2 text-xs text-neutral-300">
-                                <FaLocationDot className="h-4 w-4 mt-0.5 text-neutral-400 shrink-0" />
-                                <div>
-                                    <span className="block font-semibold text-white">Nuestra Tienda:</span>
-                                    <span className="text-neutral-400 leading-tight">{direccion}</span>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Catálogo PDF si está activo */}
-                        {isCatalogoActivo && (
-                            <div className="pt-2">
-                                <a
-                                    href={catalogoDownloadUrl}
-                                    target={catalogoEnlace ? '_blank' : '_self'}
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-900 border border-neutral-800 text-xs font-semibold text-white hover:bg-neutral-800 hover:border-neutral-700 transition"
-                                >
-                                    <span>{catalogoTitulo}</span>
-                                    <span className="text-[10px] bg-white/20 text-white px-1.5 py-0.5 rounded font-mono">PDF</span>
-                                </a>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* COLUMNA 2: EXPLORAR (ENLACES DINÁMICOS Y FUNCIONALES) */}
-                    <div className="space-y-4">
-                        <h4 className="text-white font-bold text-sm tracking-wide">
-                            Explorar
-                        </h4>
-                        <ul className="space-y-2.5 text-xs text-neutral-400">
-                            {secciones && secciones.length > 0 ? (
-                                secciones.map((seccion) => {
-                                    const href = getSectionHref(seccion);
-                                    return (
-                                        <li key={seccion.slug}>
+                            <div className="space-y-3 text-xs text-neutral-400">
+                                {/* Teléfono */}
+                                {phoneNavTexto && (
+                                    <div className="flex items-start gap-2.5">
+                                        <FaPhone className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
+                                        <div>
                                             <a
-                                                href={href}
-                                                onClick={(e) => handleSectionClick(e, seccion)}
-                                                className="hover:text-white transition-colors duration-150 block capitalize"
+                                                href={`tel:${phoneNavTexto.replace(/[^\d+]/g, '')}`}
+                                                className="text-neutral-200 font-medium hover:text-white transition-colors"
                                             >
-                                                {seccion.nombre}
+                                                {phoneNavTexto}
                                             </a>
-                                        </li>
-                                    );
-                                })
-                            ) : (
-                                <>
-                                    <li><a href="#inicio" className="hover:text-white transition-colors">Inicio</a></li>
-                                    <li><a href="#productos" className="hover:text-white transition-colors">Catálogo de Productos</a></li>
-                                    <li><a href="#contacto" className="hover:text-white transition-colors">Contacto</a></li>
-                                </>
-                            )}
-                        </ul>
-                    </div>
-
-                    {/* COLUMNA 3: CONTACTO Y REDES SOCIALES */}
-                    <div className="space-y-4">
-                        <h4 className="text-white font-bold text-sm tracking-wide">
-                            Atención al Cliente
-                        </h4>
-
-                        <div className="space-y-3 text-xs text-neutral-400">
-                            {/* Teléfono */}
-                            {phoneNavTexto && (
-                                <div className="flex items-start gap-2.5">
-                                    <FaPhone className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
-                                    <div>
-                                        <a
-                                            href={`tel:${phoneNavTexto.replace(/[^\d+]/g, '')}`}
-                                            className="text-neutral-200 font-medium hover:text-white transition-colors"
-                                        >
-                                            {phoneNavTexto}
-                                        </a>
-                                        {horarioTexto && (
-                                            <div className="text-neutral-500 text-[11px]">{horarioTexto}</div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Email */}
-                            {emailNavTexto && (
-                                <div className="flex items-start gap-2.5">
-                                    <FaEnvelope className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
-                                    <div>
-                                        <a
-                                            href={`mailto:${emailNavTexto}`}
-                                            className="text-neutral-200 hover:text-white transition-colors"
-                                        >
-                                            {emailNavTexto}
-                                        </a>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* WhatsApp Directo */}
-                            {whatsappLink && (
-                                <div className="flex items-start gap-2.5">
-                                    <FaComments className="h-3.5 w-3.5 mt-0.5 text-white shrink-0" />
-                                    <div>
-                                        <a
-                                            href={whatsappLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-neutral-200 hover:text-white font-medium transition-colors"
-                                        >
-                                            Chat directo por WhatsApp
-                                        </a>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Redes Sociales en Círculos Oscuros */}
-                        {redesFinales.length > 0 && (
-                            <div className="pt-2">
-                                <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
-                                    Síguenos en Redes
-                                </span>
-                                <div className="flex items-center gap-2">
-                                    {redesFinales.map((red, idx) => (
-                                        <a
-                                            key={idx}
-                                            href={red.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={red.nombre}
-                                            className="h-8 w-8 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-200 flex items-center justify-center text-xs"
-                                        >
-                                            <DynamicIcon name={red.icono} className="h-3.5 w-3.5" />
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* COLUMNA 4: MÉTODOS Y CUENTAS DE PAGO */}
-                    <div className="space-y-4">
-                        <h4 className="text-white font-bold text-sm tracking-wide">
-                            Métodos de Pago
-                        </h4>
-
-                        {/* Cuentas Bancarias / Información para Pagar */}
-                        {cuentasPago.length > 0 && (
-                            <div className="space-y-2">
-                                {cuentasPago.map((item, idx) => {
-                                    const label = item.label || item.Label || 'Cuenta:';
-                                    const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
-                                    const info = item.info || item.Info || item.numero || '';
-
-                                    return (
-                                        <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
-                                            <div className="flex items-center justify-between gap-1 text-[11px]">
-                                                <span className="text-neutral-400 font-semibold">{label}</span>
-                                                <span className="text-white font-extrabold">{metodo}</span>
-                                            </div>
-                                            <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
-                                                {info}
-                                            </div>
+                                            {horarioTexto && (
+                                                <div className="text-neutral-500 text-[11px]">{horarioTexto}</div>
+                                            )}
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                                    </div>
+                                )}
 
-                        {/* Métodos de Pago Aceptados (Insignias) */}
-                        {renderedBadges.length > 0 && (
-                            <div className="pt-1">
-                                <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
-                                    Insignias Aceptadas
-                                </span>
-                                <div className="flex flex-wrap items-center gap-1.5">
-                                    {renderedBadges}
+                                {/* Email */}
+                                {emailNavTexto && (
+                                    <div className="flex items-start gap-2.5">
+                                        <FaEnvelope className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
+                                        <div>
+                                            <a
+                                                href={`mailto:${emailNavTexto}`}
+                                                className="text-neutral-200 hover:text-white transition-colors"
+                                            >
+                                                {emailNavTexto}
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* WhatsApp Directo */}
+                                {whatsappLink && (
+                                    <div className="flex items-start gap-2.5">
+                                        <FaComments className="h-3.5 w-3.5 mt-0.5 text-white shrink-0" />
+                                        <div>
+                                            <a
+                                                href={whatsappLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-neutral-200 hover:text-white font-medium transition-colors"
+                                            >
+                                                Chat directo por WhatsApp
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* COLUMNA 4: MÉTODOS Y CUENTAS DE PAGO */}
+                        <div className="space-y-4">
+                            <div className="h-12 flex items-center">
+                                <h4 className="text-white font-bold text-sm tracking-wide">
+                                    Métodos de Pago
+                                </h4>
+                            </div>
+
+                            {/* Cuentas Bancarias / Información para Pagar */}
+                            {cuentasPago.length > 0 && (
+                                <div className="space-y-2">
+                                    {cuentasPago.map((item, idx) => {
+                                        const label = item.label || item.Label || 'Cuenta:';
+                                        const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
+                                        const info = item.info || item.Info || item.numero || '';
+
+                                        return (
+                                            <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
+                                                <div className="flex items-center justify-between gap-1 text-[11px]">
+                                                    <span className="text-neutral-400 font-semibold">{label}</span>
+                                                    <span className="text-white font-extrabold">{metodo}</span>
+                                                </div>
+                                                <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
+                                                    {info}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                            </div>
-                        )}
-                    </div>
-
-                </div>
-
-                {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */}
-                <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-                    <div>
-                        © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
-                    </div>
-
-                    {hasAnyLegal && (
-                        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
-                            {hasEnvios && (
-                                <a href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                    Política de Envíos
-                                </a>
                             )}
-                            {hasDevoluciones && (
-                                <a href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                    Políticas de Devolución
-                                </a>
-                            )}
-                            {hasPrivacidad && (
-                                <a href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                    Política de Privacidad
-                                </a>
-                            )}
-                            {hasTerminos && (
-                                <a href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                    Términos y Condiciones
-                                </a>
+
+                            {/* Métodos de Pago Aceptados (Insignias) */}
+                            {renderedBadges.length > 0 && (
+                                <div className="pt-1">
+                                    <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
+                                        Insignias Aceptadas
+                                    </span>
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                        {renderedBadges}
+                                    </div>
+                                </div>
                             )}
                         </div>
-                    )}
+
+                    </div>
+
+                    {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */}
+                    <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
+                        <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 text-center sm:text-left">
+                            <span>
+                                © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
+                            </span>
+                            <span className="hidden sm:inline text-neutral-700">•</span>
+                            <a
+                                href="https://www.ccapasistemas.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-neutral-400 hover:text-white transition-colors group/ccapa focus:outline-none"
+                                title="CCAPA TECNOLOGIAS DE INFORMACION SAC"
+                            >
+                                <span>Hecho por</span>
+                                <span className="text-red-500 text-xs group-hover/ccapa:scale-110 transition-transform">♥️</span>
+                                <span className="text-neutral-300 font-semibold tracking-wide group-hover/ccapa:text-white group-hover/ccapa:underline underline-offset-2">
+                                    CCAPA TECNOLOGIAS DE INFORMACION SAC
+                                </span>
+                            </a>
+                        </div>
+
+                        {hasAnyLegal && (
+                            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
+                                {hasEnvios && (
+                                    <a href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                        Política de Envíos
+                                    </a>
+                                )}
+                                {hasDevoluciones && (
+                                    <a href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                        Políticas de Devolución
+                                    </a>
+                                )}
+                                {hasPrivacidad && (
+                                    <a href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                        Política de Privacidad
+                                    </a>
+                                )}
+                                {hasTerminos && (
+                                    <a href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                        Términos y Condiciones
+                                    </a>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
                 </div>
+            </footer>
 
-            </div>
-        </footer>
-
-        {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */}
-        <LegalModal
-            isOpen={legalModalOpen}
-            onClose={() => setLegalModalOpen(false)}
-            defaultTab={legalModalTab}
-            site={site}
-        />
-    </>
-);
+            {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */}
+            <LegalModal
+                isOpen={legalModalOpen}
+                onClose={() => setLegalModalOpen(false)}
+                defaultTab={legalModalTab}
+                site={site}
+            />
+        </>
+    );
 }
