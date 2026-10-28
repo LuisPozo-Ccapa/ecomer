@@ -330,11 +330,21 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                     ? (prod.categoria?.icono || null)
                     : (prod.categoria_icono || prod.categoria_objeto?.icono || null);
 
+                // Prioridad: imagen propia de la Categoría en BD; fallback a imagen del producto
+                const propiaImagenCat = typeof prod.categoria === 'object'
+                    ? (prod.categoria?.imagen ? (prod.categoria.imagen.startsWith('http') ? prod.categoria.imagen : `/storage/${prod.categoria.imagen.replace(/^\/?storage\//, '')}`) : null)
+                    : (prod.categoria_imagen || prod.categoria_objeto?.imagen || null);
+
+                const fallbackImagen = prod.imagen || (Array.isArray(prod.imagenes) && prod.imagenes[0]) || null;
+                const imagenFinal = propiaImagenCat || fallbackImagen;
+
                 if (!catMap.has(cat)) {
                     catMap.set(cat, {
                         nombre: cat,
                         count: 0,
                         icono: propioIcono || null,
+                        imagen: imagenFinal || null,
+                        tienePropiaImagen: Boolean(propiaImagenCat),
                         maxDesc: 0,
                         ofertaBadge: null,
                         subcategoriasMap: new Map(),
@@ -348,6 +358,13 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
                 if (propioIcono && catData.icono !== propioIcono) {
                     catData.icono = propioIcono;
+                }
+
+                if (!catData.tienePropiaImagen && propiaImagenCat) {
+                    catData.imagen = propiaImagenCat;
+                    catData.tienePropiaImagen = true;
+                } else if (!catData.imagen && fallbackImagen) {
+                    catData.imagen = fallbackImagen;
                 }
 
                 const tieneOferta = Boolean(prod.precio_oferta || prod.precio_oferta_soles);
@@ -371,6 +388,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             nombre: catData.nombre,
             count: catData.count,
             icono: catData.icono,
+            imagen: catData.imagen,
             ofertaBadge: catData.ofertaBadge || 'HASTA 30%',
             productos: catData.productos,
             subcategorias: Array.from(catData.subcategoriasMap.entries()).map(([subNombre, subCount]) => ({
@@ -952,10 +970,17 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                             }`}
                                                     >
                                                         <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                                                            {cat.icono && (
+                                                            {cat.imagen ? (
+                                                                <img src={cat.imagen} alt={cat.nombre} className="h-4 w-4 object-contain rounded shrink-0 bg-white" />
+                                                            ) : cat.icono ? (
                                                                 <span className={`p-1.5 rounded-lg transition-colors ${isSelected ? 'bg-[var(--color-primario)]/10 text-[var(--color-primario)]' : 'bg-gray-200/60 text-gray-500 group-hover/cat:text-gray-800'
                                                                     }`}>
                                                                     <DynamicIcon name={cat.icono} className="h-3.5 w-3.5 shrink-0" />
+                                                                </span>
+                                                            ) : (
+                                                                <span className={`p-1.5 rounded-lg transition-colors ${isSelected ? 'bg-[var(--color-primario)]/10 text-[var(--color-primario)]' : 'bg-gray-200/60 text-gray-500'
+                                                                    }`}>
+                                                                    <DynamicIcon name="FaBoxesStacked" className="h-3 w-3 shrink-0" />
                                                                 </span>
                                                             )}
                                                             <span className="truncate">{cat.nombre}</span>
@@ -1158,9 +1183,15 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                             {/* Header de la Categoría Seleccionada */}
                                             <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100">
                                                 <div className="flex items-center gap-3">
-                                                    {activeCategoryData.icono && (
+                                                    {activeCategoryData.imagen ? (
+                                                        <img src={activeCategoryData.imagen} alt={activeCategoryData.nombre} className="h-10 w-10 object-contain rounded-xl p-1 border border-gray-200 bg-white shadow-2xs" />
+                                                    ) : activeCategoryData.icono ? (
                                                         <span className="p-2.5 rounded-xl bg-[var(--color-primario)]/10 text-[var(--color-primario)]">
                                                             <DynamicIcon name={activeCategoryData.icono} className="h-5 w-5" />
+                                                        </span>
+                                                    ) : (
+                                                        <span className="p-2.5 rounded-xl bg-[var(--color-primario)]/10 text-[var(--color-primario)]">
+                                                            <DynamicIcon name="FaBoxesStacked" className="h-5 w-5" />
                                                         </span>
                                                     )}
                                                     <div>
@@ -1173,7 +1204,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                             )}
                                                         </h3>
                                                         <p className="text-xs text-gray-500 font-medium">
-                                                            {activeCategoryData.count} productos disponibles
+                                                            {activeCategoryData.count} {activeCategoryData.count === 1 ? 'producto disponible' : 'productos disponibles'}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -1270,17 +1301,27 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                         <Link
                                                             href={getProductosUrl(cat.nombre, null)}
                                                             onClick={handleMegaMenuClick}
-                                                            className="flex items-center justify-between mb-2"
+                                                            className="flex items-center gap-3 mb-2.5"
                                                         >
-                                                            <span className="text-sm font-bold text-gray-900 group-hover/catcard:text-[var(--color-primario)] transition-colors flex items-center gap-2">
-                                                                {cat.icono && <DynamicIcon name={cat.icono} className="h-4 w-4 text-[var(--color-primario)]" />}
-                                                                <span>{cat.nombre}</span>
-                                                            </span>
-                                                            {cat.ofertaBadge && (
-                                                                <span className="text-[9px] font-black bg-red-600 text-white px-1.5 py-0.5 rounded-full uppercase">
-                                                                    {cat.ofertaBadge}
-                                                                </span>
+                                                            {cat.imagen ? (
+                                                                <img src={cat.imagen} alt={cat.nombre} className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0 group-hover/catcard:scale-105 transition-transform" />
+                                                            ) : (
+                                                                <div className="h-9 w-9 rounded-xl bg-gray-200/80 flex items-center justify-center shrink-0 text-gray-500 group-hover/catcard:text-[var(--color-primario)]">
+                                                                    <DynamicIcon name={cat.icono || "FaBoxesStacked"} className="h-4 w-4" />
+                                                                </div>
                                                             )}
+                                                            <div className="min-w-0 flex-1">
+                                                                <div className="flex items-center justify-between gap-1">
+                                                                    <span className="text-sm font-bold text-gray-900 group-hover/catcard:text-[var(--color-primario)] transition-colors truncate">
+                                                                        {cat.nombre}
+                                                                    </span>
+                                                                    {cat.ofertaBadge && (
+                                                                        <span className="text-[9px] font-black bg-red-600 text-white px-1.5 py-0.5 rounded-full uppercase shrink-0">
+                                                                            {cat.ofertaBadge}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         </Link>
 
                                                         {cat.subcategorias && cat.subcategorias.length > 0 ? (
@@ -1477,7 +1518,11 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                                     onClick={() => setMobileMenuOpen(false)}
                                                                     className="flex items-center gap-2 text-xs font-bold text-gray-800 hover:text-[var(--color-primario)] py-0.5"
                                                                 >
-                                                                    {cat.icono && <DynamicIcon name={cat.icono} className="h-3.5 w-3.5 text-[var(--color-primario)] shrink-0" />}
+                                                                    {cat.imagen ? (
+                                                                        <img src={cat.imagen} alt={cat.nombre} className="h-4 w-4 object-contain rounded shrink-0 bg-white border border-gray-100" />
+                                                                    ) : cat.icono ? (
+                                                                        <DynamicIcon name={cat.icono} className="h-3.5 w-3.5 text-[var(--color-primario)] shrink-0" />
+                                                                    ) : null}
                                                                     <span>{cat.nombre}</span>
                                                                 </Link>
                                                                 {cat.subcategorias?.map((sub) => (
