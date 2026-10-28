@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GaleriaSection({ seccionData }) {
@@ -228,15 +229,16 @@ export default function GaleriaSection({ seccionData }) {
             </div>
 
             {/* Modal Lightbox / Visor a pantalla completa */}
-            <AnimatePresence>
-                {selectedImageIndex !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-                        onClick={() => setSelectedImageIndex(null)}
-                    >
+            {typeof document !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {selectedImageIndex !== null && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+                            onClick={() => setSelectedImageIndex(null)}
+                        >
                         {/* Botón Cerrar */}
                         <button
                             type="button"
@@ -292,7 +294,9 @@ export default function GaleriaSection({ seccionData }) {
                         )}
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence>,
+            document.body
+        )}
         </section>
     );
 }

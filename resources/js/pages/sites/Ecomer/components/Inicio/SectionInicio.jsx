@@ -94,10 +94,8 @@ export default function SectionInicio({
                 />
             </div>
             <Suspense fallback={null}>
-                <div className="content-auto">
-                    <TikTokSection seccionData={tiktok} />
-                    <BanerPieSection seccionData={banerpie} />
-                </div>
+                <TikTokSection seccionData={tiktok} />
+                <BanerPieSection seccionData={banerpie} />
             </Suspense>
         </main>
     );

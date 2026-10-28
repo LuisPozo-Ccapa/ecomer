@@ -22,13 +22,6 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         initialProductos
     );
 
-    const [cargandoPantalla, setCargandoPantalla] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setCargandoPantalla(false), 350);
-        return () => clearTimeout(timer);
-    }, []);
-
     const [busqueda, setBusqueda] = useState(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -472,7 +465,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         });
     }, [productos, busqueda, filtrosSeleccionados, rangoPrecio, soloOfertas, soloLiquidacion, isCatalogoMode, catalogoConfig]);
 
-    if (loading || cargandoPantalla) {
+    if (loading) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
                 <div className="flex flex-col items-center gap-4">
