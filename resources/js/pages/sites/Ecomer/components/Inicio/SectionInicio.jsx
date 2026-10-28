@@ -1,12 +1,14 @@
+import { lazy, Suspense } from 'react';
 import { useInicioData } from './hooks/useInicioData';
 import HeroSection from './subcomponents/HeroSection';
 import GaleriaSection from './subcomponents/GaleriaSection';
 import OfertasSection from './subcomponents/OfertasSection';
 import MarcasSection from './subcomponents/MarcasSection';
 import CategoriaSection from './subcomponents/CategoriaSection';
-import TikTokSection from './subcomponents/TikTokSection';
 import ProductosDestacadosSection from './subcomponents/ProductosDestacadosSection';
-import BanerPieSection from './subcomponents/BanerPieSection';
+
+const TikTokSection = lazy(() => import('./subcomponents/TikTokSection'));
+const BanerPieSection = lazy(() => import('./subcomponents/BanerPieSection'));
 
 export default function SectionInicio({
     dominio,
@@ -68,25 +70,35 @@ export default function SectionInicio({
                 productos={productos}
                 onSeleccionarProducto={onSeleccionarProducto}
             />
-            <OfertasSection
-                seccionData={ofertas}
-                productos={initialProductos.length > 0 ? initialProductos : productos}
-                onSeleccionarProducto={onSeleccionarProducto}
-            />
-            <MarcasSection
-                seccionData={marcas}
-                productos={initialProductos.length > 0 ? initialProductos : productos}
-                marcasSitio={marcasSitio}
-                onSeleccionarProducto={onSeleccionarProducto}
-            />
-            <CategoriaSection
-                productos={initialProductos.length > 0 ? initialProductos : productos}
-                dominio={dominio}
-                siteSlug={siteSlug}
-                onSeleccionarProducto={onSeleccionarProducto}
-            />
-            <TikTokSection seccionData={tiktok} />
-            <BanerPieSection seccionData={banerpie} />
+            <div className="content-auto">
+                <OfertasSection
+                    seccionData={ofertas}
+                    productos={initialProductos.length > 0 ? initialProductos : productos}
+                    onSeleccionarProducto={onSeleccionarProducto}
+                />
+            </div>
+            <div className="content-auto">
+                <MarcasSection
+                    seccionData={marcas}
+                    productos={initialProductos.length > 0 ? initialProductos : productos}
+                    marcasSitio={marcasSitio}
+                    onSeleccionarProducto={onSeleccionarProducto}
+                />
+            </div>
+            <div className="content-auto">
+                <CategoriaSection
+                    productos={initialProductos.length > 0 ? initialProductos : productos}
+                    dominio={dominio}
+                    siteSlug={siteSlug}
+                    onSeleccionarProducto={onSeleccionarProducto}
+                />
+            </div>
+            <Suspense fallback={null}>
+                <div className="content-auto">
+                    <TikTokSection seccionData={tiktok} />
+                    <BanerPieSection seccionData={banerpie} />
+                </div>
+            </Suspense>
         </main>
     );
 }

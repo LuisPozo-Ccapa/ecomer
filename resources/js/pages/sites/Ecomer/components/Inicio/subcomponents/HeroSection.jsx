@@ -150,19 +150,19 @@ export default function HeroSection({ seccionData }) {
         if (!fallbackUrl) return null;
 
         return (
-            <picture className="w-full h-auto block aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9]">
+            <picture className="w-full h-auto block aspect-[1221/2161] sm:aspect-[16/9]">
                 {slide.pc && <source media="(min-width: 1024px)" srcSet={slide.pc} />}
                 {slide.tablet && <source media="(min-width: 640px)" srcSet={slide.tablet} />}
                 <img
                     src={fallbackUrl}
                     alt={`Hero slide ${idx + 1}`}
                     width={1920}
-                    height={640}
+                    height={1080}
                     fetchPriority={idx === 0 ? "high" : "low"}
                     decoding="async"
                     loading={idx === 0 ? "eager" : "lazy"}
-                    className="w-full h-auto block object-cover brightness-105 aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9]"
-                    style={{ width: '100%', height: 'auto', aspectRatio: '16/7' }}
+                    className="w-full h-auto block object-cover brightness-105 aspect-[1221/2161] sm:aspect-[16/9]"
+                    style={{ width: '100%', height: 'auto' }}
                 />
             </picture>
         );
@@ -171,9 +171,9 @@ export default function HeroSection({ seccionData }) {
     const hasTextContent = Boolean(tituloHero || descripcionHero || (botones && botones.length > 0) || (etiquetas && etiquetas.length > 0));
 
     return (
-        <section id="inicio" className="scroll-mt-10 relative w-full overflow-hidden bg-slate-950 aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9] min-h-[220px] sm:min-h-[360px]">
+        <section id="inicio" className="scroll-mt-10 relative w-full overflow-hidden bg-slate-950 aspect-[1221/2161] sm:aspect-[16/9]">
             {/* Contenedor de imágenes / carrusel */}
-            <div className={`w-full h-full ${hasTextContent ? 'relative' : 'relative h-auto'}`}>
+            <div className={`w-full ${hasTextContent ? 'relative' : 'relative h-auto'}`}>
                 {slides.length > 1 ? (
                     <Swiper
                         modules={[Autoplay, Pagination, EffectFade]}
@@ -182,10 +182,10 @@ export default function HeroSection({ seccionData }) {
                         loop={slides.length >= 3}
                         autoplay={{ delay: 4500, disableOnInteraction: false }}
                         pagination={{ clickable: true }}
-                        className="hero-swiper w-full h-full"
+                        className="hero-swiper w-full h-auto"
                     >
                         {slides.map((slide, idx) => (
-                            <SwiperSlide key={idx} className="relative w-full h-full overflow-hidden bg-slate-950">
+                            <SwiperSlide key={idx} className="relative w-full h-auto overflow-hidden bg-slate-950">
                                 {renderResponsiveImage(slide, idx)}
                             </SwiperSlide>
                         ))}
@@ -195,7 +195,7 @@ export default function HeroSection({ seccionData }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.6, ease: 'easeOut' }}
-                        className="w-full h-full"
+                        className="w-full h-auto"
                     >
                         {renderResponsiveImage(slides[0], 0)}
                     </motion.div>
@@ -204,12 +204,11 @@ export default function HeroSection({ seccionData }) {
                 <style>{`
                     .hero-swiper, .hero-swiper .swiper-wrapper, .hero-swiper .swiper-slide {
                         width: 100% !important;
-                        height: 100% !important;
+                        height: auto !important;
                     }
                     .hero-swiper img {
                         width: 100% !important;
-                        height: 100% !important;
-                        object-fit: cover !important;
+                        height: auto !important;
                         display: block !important;
                     }
                     .hero-swiper .swiper-pagination {
@@ -234,92 +233,97 @@ export default function HeroSection({ seccionData }) {
             </div>
 
             {/* Contenedor de texto si existen datos */}
+            {!hasTextContent && (
+                <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+            )}
             {hasTextContent && (
                 <div className="absolute inset-0 z-20 mx-auto flex w-full max-w-7xl items-center justify-start px-5 sm:px-8 lg:px-12 py-6 sm:py-12 pointer-events-none">
                     <div className="max-w-xl lg:max-w-2xl text-left pointer-events-auto">
-                    {tituloHero && (
-                        <h1
-                            className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl text-white drop-shadow-sm"
-                            style={{
-                                fontFamily: 'var(--tipografia-titulos)',
-                            }}
-                        >
-                            {renderFormattedTitle(tituloHero)}
-                        </h1>
-                    )}
+                        {tituloHero ? (
+                            <h1
+                                className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl text-white drop-shadow-sm"
+                                style={{
+                                    fontFamily: 'var(--tipografia-titulos)',
+                                }}
+                            >
+                                {renderFormattedTitle(tituloHero)}
+                            </h1>
+                        ) : (
+                            <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+                        )}
 
-                    {descripcionHero && (
-                        <p
-                            className="mt-5 text-base sm:text-lg md:text-xl text-gray-100/90 leading-relaxed drop-shadow-sm"
-                            style={{
-                                fontFamily: 'var(--tipografia-texto)',
-                            }}
-                        >
-                            {descripcionHero}
-                        </p>
-                    )}
+                        {descripcionHero && (
+                            <p
+                                className="mt-5 text-base sm:text-lg md:text-xl text-gray-100/90 leading-relaxed drop-shadow-sm"
+                                style={{
+                                    fontFamily: 'var(--tipografia-texto)',
+                                }}
+                            >
+                                {descripcionHero}
+                            </p>
+                        )}
 
-                    {botones.length > 0 && (
-                        <div
-                            className="mt-8 flex flex-wrap"
-                            style={{ gap: 'var(--espaciado)' }}
-                        >
-                            {botones.map((btn, idx) => {
-                                const btnUrl = btn.enlace || defaultEnlace;
-                                return (
-                                    <a
-                                        key={idx}
-                                        href={btnUrl}
-                                        target={btnUrl.startsWith('http') ? '_blank' : '_self'}
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 px-8 py-4 text-base sm:text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] hover:brightness-110 hover:shadow-2xl"
-                                        style={{
-                                            backgroundColor: 'var(--color-primario)',
-                                            borderRadius: 'var(--radio-bordes)',
-                                            fontFamily: 'var(--tipografia-texto)',
-                                        }}
-                                    >
-                                        {renderIcon(btn.icon, 'h-6 w-6 text-white')}
-                                        <span>{btn.texto}</span>
-                                    </a>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {etiquetas.length > 0 && (
-                        <div className="mt-8 w-full border-t border-white/15 pt-6">
-                            <div className="flex flex-wrap items-center justify-start gap-6 md:gap-8">
-                                {etiquetas.map((item, idx) => (
-                                    <div key={idx} className="flex items-center gap-3">
-                                        {renderIcon(item.icon, 'h-6 w-6', {
-                                            color: 'var(--color-primario)',
-                                        })}
-                                        <div className="flex flex-col items-start">
-                                            <span
-                                                className="text-sm font-bold leading-tight text-white"
-                                                style={{
-                                                    fontFamily: 'var(--tipografia-titulos)',
-                                                }}
-                                            >
-                                                {item.span}
-                                            </span>
-                                            <span
-                                                className="text-xs leading-tight text-gray-300"
-                                                style={{
-                                                    fontFamily: 'var(--tipografia-texto)',
-                                                }}
-                                            >
-                                                {item.span_sub}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
+                        {botones.length > 0 && (
+                            <div
+                                className="mt-8 flex flex-wrap"
+                                style={{ gap: 'var(--espaciado)' }}
+                            >
+                                {botones.map((btn, idx) => {
+                                    const btnUrl = btn.enlace || defaultEnlace;
+                                    return (
+                                        <a
+                                            key={idx}
+                                            href={btnUrl}
+                                            target={btnUrl.startsWith('http') ? '_blank' : '_self'}
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-3 px-8 py-4 text-base sm:text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] hover:brightness-110 hover:shadow-2xl"
+                                            style={{
+                                                backgroundColor: 'var(--color-primario)',
+                                                borderRadius: 'var(--radio-bordes)',
+                                                fontFamily: 'var(--tipografia-texto)',
+                                            }}
+                                        >
+                                            {renderIcon(btn.icon, 'h-6 w-6 text-white')}
+                                            <span>{btn.texto}</span>
+                                        </a>
+                                    );
+                                })}
                             </div>
-                        </div>
-                    )}
+                        )}
+
+                        {etiquetas.length > 0 && (
+                            <div className="mt-8 w-full border-t border-white/15 pt-6">
+                                <div className="flex flex-wrap items-center justify-start gap-6 md:gap-8">
+                                    {etiquetas.map((item, idx) => (
+                                        <div key={idx} className="flex items-center gap-3">
+                                            {renderIcon(item.icon, 'h-6 w-6', {
+                                                color: 'var(--color-primario)',
+                                            })}
+                                            <div className="flex flex-col items-start">
+                                                <span
+                                                    className="text-sm font-bold leading-tight text-white"
+                                                    style={{
+                                                        fontFamily: 'var(--tipografia-titulos)',
+                                                    }}
+                                                >
+                                                    {item.span}
+                                                </span>
+                                                <span
+                                                    className="text-xs leading-tight text-gray-300"
+                                                    style={{
+                                                        fontFamily: 'var(--tipografia-texto)',
+                                                    }}
+                                                >
+                                                    {item.span_sub}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
             )}
         </section>
     );

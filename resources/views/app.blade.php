@@ -53,15 +53,22 @@
                 flex-shrink: 0;
                 box-sizing: border-box;
             }
-            .hero-swiper {
-                aspect-ratio: 16 / 7;
-                min-height: 240px;
+
+            /* Responsive exact aspect-ratio to kill CLS without cropping */
+            #inicio {
+                aspect-ratio: 1221 / 2161;
+                width: 100%;
             }
-            @media (max-width: 640px) {
-                .hero-swiper {
+            @media (min-width: 640px) {
+                #inicio {
                     aspect-ratio: 16 / 9;
-                    min-height: 200px;
                 }
+            }
+
+            /* Content visibility for below-the-fold sections to slash TBT */
+            .content-auto {
+                content-visibility: auto;
+                contain-intrinsic-size: 1px 700px;
             }
         </style>
 
@@ -69,6 +76,19 @@
         <link rel="icon" href="/favicon.ico?v=3" type="image/x-icon" sizes="any">
         <link rel="shortcut icon" href="/favicon.ico?v=3">
         <link rel="apple-touch-icon" href="/favicon.png?v=3">
+
+        {{-- LCP Image Preload Scanner --}}
+        @php
+            $heroPreload = $page['props']['_heroPreload'] ?? null;
+        @endphp
+        @if(!empty($heroPreload))
+            @if(!empty($heroPreload['pc']))
+                <link rel="preload" as="image" href="{{ $heroPreload['pc'] }}" media="(min-width: 640px)" fetchpriority="high">
+            @endif
+            @if(!empty($heroPreload['cel']))
+                <link rel="preload" as="image" href="{{ $heroPreload['cel'] }}" media="(max-width: 639.98px)" fetchpriority="high">
+            @endif
+        @endif
 
         @fonts
 

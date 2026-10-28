@@ -89,6 +89,7 @@ export default function OfertasSection({
     return (
         <section id="ofertas" className="scroll-mt-10 py-10 sm:py-14 bg-[#FAFAFA]">
             <div className="mx-auto w-full max-w-[1540px] px-3 sm:px-6 lg:px-8">
+                <h2 className="sr-only">{categoriaNombre ? `Ofertas en ${categoriaNombre}` : 'Ofertas y Promociones'}</h2>
                 {/* Grid principal: 50% la Imagen de la Oferta / 50% los Productos en 2 columnas */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
                     {/* ── LADO IZQUIERDO: IMAGEN DE LA OFERTA (MITAD 50%) ── */}

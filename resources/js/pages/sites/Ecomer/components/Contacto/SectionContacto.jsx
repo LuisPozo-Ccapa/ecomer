@@ -507,56 +507,70 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     {/* Name */}
                                     <div>
+                                        <label htmlFor="contacto-nombre" className="sr-only">Nombre completo</label>
                                         <input
+                                            id="contacto-nombre"
                                             type="text"
                                             name="nombre"
                                             required
                                             placeholder="Nombre completo"
+                                            aria-label="Nombre completo"
                                             className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
                                         />
                                     </div>
 
                                     {/* Email */}
                                     <div>
+                                        <label htmlFor="contacto-email" className="sr-only">Correo electrónico</label>
                                         <input
+                                            id="contacto-email"
                                             type="email"
                                             name="email"
                                             required
                                             placeholder="Correo electrónico"
+                                            aria-label="Correo electrónico"
                                             className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
                                         />
                                     </div>
 
                                     {/* Fecha del evento / entrega */}
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 px-1">
+                                        <label htmlFor="contacto-fecha" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 px-1">
                                             Fecha del evento / entrega
                                         </label>
                                         <input
+                                            id="contacto-fecha"
                                             type="date"
                                             name="fecha"
                                             required
+                                            aria-label="Fecha del evento o entrega"
                                             className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
                                         />
                                     </div>
 
                                     {/* Phone / Text */}
                                     <div>
+                                        <label htmlFor="contacto-telefono" className="sr-only">Teléfono o Celular</label>
                                         <input
+                                            id="contacto-telefono"
                                             type="tel"
                                             name="telefono"
                                             placeholder="Teléfono / Celular"
+                                            aria-label="Teléfono o Celular"
                                             className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
                                         />
                                     </div>
 
                                     {/* Message */}
                                     <div>
+                                        <label htmlFor="contacto-mensaje" className="sr-only">Mensaje</label>
                                         <textarea
+                                            id="contacto-mensaje"
                                             name="mensaje"
                                             required
                                             rows={4}
                                             placeholder="Escribe tu mensaje..."
+                                            aria-label="Escribe tu mensaje"
                                             className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20 resize-none"
                                         />
                                     </div>

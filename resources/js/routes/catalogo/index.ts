@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 export const descargar = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ descargar.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargar.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ descargar.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ descargar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ descargar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
     const descargarForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ descargar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
         descargarForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ descargar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargar
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
         descargarForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ descargar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     descargar.form = descargarForm
 /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 export const descargar1 = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ descargar1.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargar1.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ descargar1.url = (args: { dominio: string | number } | [dominio: string | number
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargar1.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +131,7 @@ descargar1.get = (args: { dominio: string | number } | [dominio: string | number
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargar1.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -141,7 +141,7 @@ descargar1.head = (args: { dominio: string | number } | [dominio: string | numbe
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
     const descargar1Form = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -151,7 +151,7 @@ descargar1.head = (args: { dominio: string | number } | [dominio: string | numbe
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargar1Form.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ descargar1.head = (args: { dominio: string | number } | [dominio: string | numbe
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargar1
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargar1Form.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -176,7 +176,7 @@ descargar1.head = (args: { dominio: string | number } | [dominio: string | numbe
     descargar1.form = descargar1Form
 /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 export const descargar2 = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -191,7 +191,7 @@ descargar2.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargar2.url = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions) => {
@@ -217,7 +217,7 @@ descargar2.url = (args: { param1: string | number, param2: string | number } | [
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargar2.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -226,7 +226,7 @@ descargar2.get = (args: { param1: string | number, param2: string | number } | [
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargar2.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -236,7 +236,7 @@ descargar2.head = (args: { param1: string | number, param2: string | number } | 
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
     const descargar2Form = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -246,7 +246,7 @@ descargar2.head = (args: { param1: string | number, param2: string | number } | 
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargar2Form.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -255,7 +255,7 @@ descargar2.head = (args: { param1: string | number, param2: string | number } | 
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargar2
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargar2Form.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

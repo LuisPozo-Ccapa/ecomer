@@ -13,6 +13,7 @@ use App\Models\Servicio;
 use App\Models\Servicios;
 use App\Models\Site;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -75,7 +76,11 @@ class SitePageController extends Controller
         });
 
         $siteRespuestas = $site->respuestas->keyBy('pregunta_id')->all();
-        $plantillaRespuestas = Respuesta::where('plantilla_id', $site->plantilla_id)->get()->keyBy('pregunta_id')->all();
+        $plantillaRespuestas = Cache::remember(
+            "plantilla_respuestas_{$site->plantilla_id}",
+            300,
+            fn () => Respuesta::where('plantilla_id', $site->plantilla_id)->get()->keyBy('pregunta_id')->all()
+        );
         $respuestas = $siteRespuestas + $plantillaRespuestas;
 
         // Pre-cargar el contenido de TODAS las secciones (activas e inanimadas/ocultas del nav) para renderizado instantáneo
@@ -157,7 +162,7 @@ class SitePageController extends Controller
         $productos = $productosQuery->orderBy('orden')->orderBy('nombre')->get();
         $productosDestacados = $productos->where('destacado', true)->values();
         if ($productosDestacados->isEmpty() && $productos->isNotEmpty()) {
-            $productosDestacados = $productos;
+            $productosDestacados = $productos->take(12)->values();
         }
 
         $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
@@ -336,12 +341,50 @@ class SitePageController extends Controller
 
         $seoDescription = mb_substr(strip_tags($rawDescription), 0, 160);
 
+        // ─── LCP Preload: primer slide del hero para acelerar la carga en móvil y desktop ───
+        $heroPreload = null;
+        $heroSecData = $seccionesData['hero'] ?? $seccionesData['inicio'] ?? null;
+        if ($heroSecData && ! empty($heroSecData['contenido'])) {
+            foreach ($heroSecData['contenido'] as $cItem) {
+                if (in_array(strtolower($cItem['label'] ?? ''), ['imagenes', 'imagen', 'img_seccion1'])) {
+                    $rawVal = $cItem['valor'] ?? null;
+                    $firstSlide = is_array($rawVal) ? ($rawVal[0] ?? null) : $rawVal;
+                    if ($firstSlide) {
+                        $extractUrl = function ($v) {
+                            if (is_string($v)) {
+                                return trim($v);
+                            }
+                            if (is_array($v)) {
+                                return is_string($v[0] ?? null) ? trim($v[0]) : null;
+                            }
+                            return null;
+                        };
+                        if (is_array($firstSlide)) {
+                            $pc = $extractUrl($firstSlide['Imagen_pc'] ?? $firstSlide['imagen_pc'] ?? $firstSlide['pc'] ?? $firstSlide['imagen'] ?? null);
+                            $cel = $extractUrl($firstSlide['Imagen_cel'] ?? $firstSlide['imagen_cel'] ?? $firstSlide['cel'] ?? null);
+                            $heroPreload = [
+                                'pc' => $pc,
+                                'cel' => $cel ?: $pc,
+                            ];
+                        } elseif (is_string($firstSlide)) {
+                            $heroPreload = [
+                                'pc' => trim($firstSlide),
+                                'cel' => trim($firstSlide),
+                            ];
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
         Inertia::share([
             '_seo' => [
                 'title'       => $seoTitle,
                 'description' => $seoDescription,
                 'keywords'    => $seoCustomKeywords,
             ],
+            '_heroPreload' => $heroPreload,
         ]);
         // ─────────────────────────────────────────────────────────────────────────────────
 

@@ -595,6 +595,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                                 }`}
                             title={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                            aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
                         >
                             {mobileMenuOpen ? (
                                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -818,6 +819,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             <input
                                 type="text"
                                 placeholder="Buscar..."
+                                aria-label="Buscar productos"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className={`w-36 lg:w-48 rounded-full py-1.5 pl-8 pr-3 text-xs outline-none transition duration-300 ${isTransparentMode
@@ -827,6 +829,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             />
                             <button
                                 type="submit"
+                                aria-label="Buscar"
                                 className={`absolute left-2.5 top-1/2 -translate-y-1/2 transition cursor-pointer ${isTransparentMode ? 'text-white/80 hover:text-white' : 'text-gray-400 hover:text-[var(--color-primario)]'
                                     }`}
                                 title="Buscar"
@@ -844,6 +847,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                                 }`}
                             title="Buscar productos"
+                            aria-label="Abrir buscador de productos"
                         >
                             <DynamicIcon name="FaMagnifyingGlass" className="h-4 w-4" />
                         </button>
@@ -858,6 +862,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                     : 'border border-gray-200/80 bg-white/90 text-gray-800 hover:bg-gray-100 hover:text-black shadow-2xs'
                                     }`}
                                 title="Ver Carrito de Compras"
+                                aria-label="Ver Carrito de Compras"
                             >
                                 <svg
                                     className={`h-5 w-5 transition-colors fill-current ${isTransparentMode ? 'text-white' : 'text-slate-800'}`}
@@ -1370,12 +1375,14 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 type="text"
                                 autoFocus
                                 placeholder="Buscar productos..."
+                                aria-label="Buscar productos"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full rounded-xl py-2 pl-9 pr-10 text-xs outline-none border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
                             />
                             <button
                                 type="submit"
+                                aria-label="Buscar"
                                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[var(--color-primario)]"
                             >
                                 <DynamicIcon name="FaMagnifyingGlass" className="h-4 w-4" />
@@ -1383,6 +1390,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                             {searchQuery && (
                                 <button
                                     type="button"
+                                    aria-label="Limpiar búsqueda"
                                     onClick={() => setSearchQuery('')}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600"
                                 >
