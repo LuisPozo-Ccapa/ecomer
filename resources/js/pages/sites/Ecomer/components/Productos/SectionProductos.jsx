@@ -1231,6 +1231,10 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
 
                                     const categoriaTexto = typeof prod.categoria === 'object' ? prod.categoria?.nombre : prod.categoria;
 
+                                    const segundaImagen = Array.isArray(prod.imagenes) && prod.imagenes.length > 0
+                                        ? prod.imagenes.find((img) => img && img !== prod.imagen) || null
+                                        : null;
+
                                     return (
                                         <motion.div
                                             key={prod.id || idx}
@@ -1276,16 +1280,34 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                 )}
 
                                                 {prod.imagen ? (
-                                                    <img
-                                                        src={prod.imagen}
-                                                        alt={prod.nombre}
-                                                        width={400}
-                                                        height={400}
-                                                        loading="lazy"
-                                                        decoding="async"
-                                                        className="w-full h-full max-w-full max-h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                        style={{ maxWidth: '100%', maxHeight: '280px', width: '100%', height: '100%', objectFit: 'cover', aspectRatio: '1/1' }}
-                                                    />
+                                                    <div className="relative w-full h-full flex items-center justify-center">
+                                                        <img
+                                                            src={prod.imagen}
+                                                            alt={prod.nombre}
+                                                            width={400}
+                                                            height={400}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                            className={`w-full h-full max-w-full max-h-full object-cover transition-all duration-500 ${
+                                                                segundaImagen
+                                                                    ? 'group-hover:opacity-0 group-hover:scale-95'
+                                                                    : 'group-hover:scale-105'
+                                                            }`}
+                                                            style={{ maxWidth: '100%', maxHeight: '280px', width: '100%', height: '100%', objectFit: 'cover', aspectRatio: '1/1' }}
+                                                        />
+                                                        {segundaImagen && (
+                                                            <img
+                                                                src={segundaImagen}
+                                                                alt={`${prod.nombre} - vista secundaria`}
+                                                                width={400}
+                                                                height={400}
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                                className="absolute inset-0 w-full h-full max-w-full max-h-full object-cover opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 pointer-events-none"
+                                                                style={{ maxWidth: '100%', maxHeight: '280px', width: '100%', height: '100%', objectFit: 'cover', aspectRatio: '1/1' }}
+                                                            />
+                                                        )}
+                                                    </div>
                                                 ) : (
                                                     <div className="flex flex-col items-center justify-center text-gray-300 gap-1.5">
                                                         <DynamicIcon name="FaBoxOpen" className="h-12 w-12 text-gray-300" />
@@ -1389,18 +1411,20 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                     </div>
                                                 )}
 
-                                                {/* Botón 'Agregar' */}
+                                                {/* Botón 'Agregar' con inversión en hover y soporte de colores dinámicos */}
                                                 <button
                                                     type="button"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         addItem(prod);
                                                     }}
-                                                    className="w-full py-2.5 px-4 rounded-full font-bold text-xs sm:text-sm tracking-wide cursor-pointer active:scale-98 border-2 transition-all"
+                                                    className={`w-full py-2.5 px-4 rounded-full font-bold text-xs sm:text-sm tracking-wide cursor-pointer active:scale-98 border-2 transition-all duration-300 ${
+                                                        inCart
+                                                            ? 'bg-[var(--color-primario)] text-[var(--color-secundario,#ffffff)] border-[var(--color-primario)] shadow-sm'
+                                                            : 'bg-[var(--color-secundario,#ffffff)] text-[var(--color-primario)] border-[var(--color-primario)] group-hover:bg-[var(--color-primario)] group-hover:text-[var(--color-secundario,#ffffff)] hover:bg-[var(--color-primario)] hover:text-[var(--color-secundario,#ffffff)]'
+                                                    }`}
                                                     style={{
-                                                        backgroundColor: inCart ? 'var(--color-primario)' : '#ffffff',
                                                         borderColor: 'var(--color-primario)',
-                                                        color: inCart ? '#ffffff' : 'var(--color-primario)',
                                                         fontFamily: 'var(--tipografia-titulos)',
                                                     }}
                                                 >
