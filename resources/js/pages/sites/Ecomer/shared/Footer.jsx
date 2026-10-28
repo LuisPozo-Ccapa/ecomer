@@ -491,6 +491,7 @@ export default function Footer({
                                             alt={siteName}
                                             width={260}
                                             height={75}
+                                            loading="lazy"
                                             decoding="async"
                                             className="h-10 sm:h-11 md:h-12 w-auto max-h-12 max-w-[220px] sm:max-w-[250px] object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
                                         />

@@ -254,7 +254,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CPyOdlyB.js",
+    "file": "assets/app-pyxcYa6t.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -408,7 +408,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-BX40lwCd.js",
+    "file": "assets/Index-C5VyLQf8.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -431,7 +431,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Contacto/SectionContacto.jsx": {
-    "file": "assets/SectionContacto-DrmgNMIy.js",
+    "file": "assets/SectionContacto-CwtpZT5i.js",
     "name": "SectionContacto",
     "src": "resources/js/pages/sites/Ecomer/components/Contacto/SectionContacto.jsx",
     "isDynamicEntry": true,
@@ -647,7 +647,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/Footer.jsx": {
-    "file": "assets/Footer-BjCHfkd-.js",
+    "file": "assets/Footer-CsUv6GtH.js",
     "name": "Footer",
     "src": "resources/js/pages/sites/Ecomer/shared/Footer.jsx",
     "isDynamicEntry": true,

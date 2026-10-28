@@ -408,7 +408,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                                     <DynamicIcon name={iconName} className="h-5 w-5 text-gray-700" />
                                                 </div>
                                                 <div>
-                                                    <span className="block text-xs font-bold uppercase tracking-wider text-gray-400">{label}</span>
+                                                    <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">{label}</span>
                                                     {lines.map((lineStr, lineIdx) => {
                                                         const lineHref = getLineHref(lineStr);
                                                         return lineHref ? (
@@ -440,7 +440,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                             <DynamicIcon name="FaWhatsapp" className="h-5 w-5 text-emerald-600" />
                                         </div>
                                         <div>
-                                            <span className="block text-xs font-bold uppercase tracking-wider text-gray-400">WhatsApp Oficial</span>
+                                            <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">WhatsApp Oficial</span>
                                             <a
                                                 href={`https://wa.me/${waNum}`}
                                                 target="_blank"
@@ -456,7 +456,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                 {/* REDES SOCIALES DESDE GENERAL */}
                                 {redesFinales.length > 0 && (
                                     <div className="pt-4 border-t border-gray-100">
-                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
+                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-3">
                                             Síguenos en nuestras redes
                                         </span>
                                         <div className="flex flex-wrap items-center gap-3">
@@ -467,6 +467,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     title={item.nombre}
+                                                    aria-label={item.nombre || 'Red social'}
                                                     className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 shadow-sm border border-gray-200/80 transition-all duration-300 hover:bg-[var(--color-primario)] hover:text-white hover:border-transparent hover:scale-110"
                                                 >
                                                     <DynamicIcon name={item.icono} className="h-5 w-5" />
@@ -479,7 +480,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                                 {/* INFORMACIÓN DE PAGO Y CUENTAS BANCARIAS */}
                                 {cuentasPago.length > 0 && (
                                     <div className="pt-4 border-t border-gray-100 space-y-3">
-                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-400">
+                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">
                                             Métodos de Pago / Cuentas Bancarias
                                         </span>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
