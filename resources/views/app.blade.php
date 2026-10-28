@@ -53,6 +53,16 @@
                 flex-shrink: 0;
                 box-sizing: border-box;
             }
+            .hero-swiper {
+                aspect-ratio: 16 / 7;
+                min-height: 240px;
+            }
+            @media (max-width: 640px) {
+                .hero-swiper {
+                    aspect-ratio: 16 / 9;
+                    min-height: 200px;
+                }
+            }
         </style>
 
         <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">

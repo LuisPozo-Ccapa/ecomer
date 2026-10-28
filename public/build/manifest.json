@@ -93,8 +93,8 @@
       "_DynamicIcon-x4dDLJ1Q.js"
     ]
   },
-  "_HeroSection-DvtDznSQ.js": {
-    "file": "assets/HeroSection-DvtDznSQ.js",
+  "_HeroSection-HfmLsEZ_.js": {
+    "file": "assets/HeroSection-HfmLsEZ_.js",
     "name": "HeroSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -345,7 +345,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-C4jx35IF.css",
+    "file": "assets/app-CGtqaRB-.css",
     "name": "app",
     "names": [
       "app.css"
@@ -363,7 +363,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BSnJMjBz.js",
+    "file": "assets/app-BZkZAZ1b.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -386,7 +386,7 @@
       "_BanerPieSection-Bboqg2XT.js",
       "_CategoriaSection-CbZmh0VR.js",
       "_GaleriaSection-By-fWXqN.js",
-      "_HeroSection-DvtDznSQ.js",
+      "_HeroSection-HfmLsEZ_.js",
       "_MarcasSection-CggQRnld.js",
       "_OfertasSection-Md5ztBig.js",
       "_ProductosDestacadosSection-BMKe3KEU.js",
@@ -504,7 +504,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-T-uTuTKD.js",
+    "file": "assets/Index-nJIBErU7.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -536,13 +536,13 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-CXLjNuD6.js",
+    "file": "assets/SectionInicio-CqcsclSj.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-framer-motion-Brhgw_zz.js",
-      "_HeroSection-DvtDznSQ.js",
+      "_HeroSection-HfmLsEZ_.js",
       "_GaleriaSection-By-fWXqN.js",
       "_OfertasSection-Md5ztBig.js",
       "_MarcasSection-CggQRnld.js",

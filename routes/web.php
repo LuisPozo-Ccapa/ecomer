@@ -15,7 +15,7 @@ Route::get('/sitemap.php', [SitemapController::class, 'index']);
 
 
 Route::get('/', function () {
-    return redirect()->to('/Inicio');
+    return app(SitePageController::class)->show('Inicio');
 })->name('welcome');
 
 Route::get('/plantillas', [PlantillasController::class, 'index'])->name('plantillas.index');

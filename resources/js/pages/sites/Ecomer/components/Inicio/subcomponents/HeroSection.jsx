@@ -150,17 +150,19 @@ export default function HeroSection({ seccionData }) {
         if (!fallbackUrl) return null;
 
         return (
-            <picture className="w-full h-auto block">
+            <picture className="w-full h-auto block aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9]">
                 {slide.pc && <source media="(min-width: 1024px)" srcSet={slide.pc} />}
                 {slide.tablet && <source media="(min-width: 640px)" srcSet={slide.tablet} />}
                 <img
                     src={fallbackUrl}
                     alt={`Hero slide ${idx + 1}`}
+                    width={1920}
+                    height={640}
                     fetchPriority={idx === 0 ? "high" : "low"}
                     decoding="async"
                     loading={idx === 0 ? "eager" : "lazy"}
-                    className="w-full h-auto block object-cover brightness-105"
-                    style={{ width: '100%', height: 'auto' }}
+                    className="w-full h-auto block object-cover brightness-105 aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9]"
+                    style={{ width: '100%', height: 'auto', aspectRatio: '16/7' }}
                 />
             </picture>
         );
@@ -169,9 +171,9 @@ export default function HeroSection({ seccionData }) {
     const hasTextContent = Boolean(tituloHero || descripcionHero || (botones && botones.length > 0) || (etiquetas && etiquetas.length > 0));
 
     return (
-        <section id="inicio" className="scroll-mt-10 relative w-full overflow-hidden bg-slate-950">
+        <section id="inicio" className="scroll-mt-10 relative w-full overflow-hidden bg-slate-950 aspect-[16/9] sm:aspect-[16/7] lg:aspect-[21/9] min-h-[220px] sm:min-h-[360px]">
             {/* Contenedor de imágenes / carrusel */}
-            <div className={`w-full ${hasTextContent ? 'relative' : 'relative h-auto'}`}>
+            <div className={`w-full h-full ${hasTextContent ? 'relative' : 'relative h-auto'}`}>
                 {slides.length > 1 ? (
                     <Swiper
                         modules={[Autoplay, Pagination, EffectFade]}
@@ -180,10 +182,10 @@ export default function HeroSection({ seccionData }) {
                         loop={slides.length >= 3}
                         autoplay={{ delay: 4500, disableOnInteraction: false }}
                         pagination={{ clickable: true }}
-                        className="hero-swiper w-full h-auto"
+                        className="hero-swiper w-full h-full"
                     >
                         {slides.map((slide, idx) => (
-                            <SwiperSlide key={idx} className="relative w-full h-auto overflow-hidden bg-slate-950">
+                            <SwiperSlide key={idx} className="relative w-full h-full overflow-hidden bg-slate-950">
                                 {renderResponsiveImage(slide, idx)}
                             </SwiperSlide>
                         ))}
@@ -193,7 +195,7 @@ export default function HeroSection({ seccionData }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.6, ease: 'easeOut' }}
-                        className="w-full h-auto"
+                        className="w-full h-full"
                     >
                         {renderResponsiveImage(slides[0], 0)}
                     </motion.div>
@@ -202,11 +204,12 @@ export default function HeroSection({ seccionData }) {
                 <style>{`
                     .hero-swiper, .hero-swiper .swiper-wrapper, .hero-swiper .swiper-slide {
                         width: 100% !important;
-                        height: auto !important;
+                        height: 100% !important;
                     }
                     .hero-swiper img {
                         width: 100% !important;
-                        height: auto !important;
+                        height: 100% !important;
+                        object-fit: cover !important;
                         display: block !important;
                     }
                     .hero-swiper .swiper-pagination {
