@@ -10,8 +10,8 @@
       "_useCartStore-DYXV3J_r.js"
     ]
   },
-  "_CategoriaSection-BUhaDE0A.js": {
-    "file": "assets/CategoriaSection-BUhaDE0A.js",
+  "_CategoriaSection-CjUl56SZ.js": {
+    "file": "assets/CategoriaSection-CjUl56SZ.js",
     "name": "CategoriaSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -85,8 +85,8 @@
       "_vendor-react-icons-C382wOBi.js"
     ]
   },
-  "_MarcasSection-CggQRnld.js": {
-    "file": "assets/MarcasSection-CggQRnld.js",
+  "_MarcasSection-Bp7rHOLU.js": {
+    "file": "assets/MarcasSection-Bp7rHOLU.js",
     "name": "MarcasSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -95,8 +95,8 @@
       "_useCartStore-DYXV3J_r.js"
     ]
   },
-  "_OfertasSection-NbrUE4L9.js": {
-    "file": "assets/OfertasSection-NbrUE4L9.js",
+  "_OfertasSection-vzOTH9fp.js": {
+    "file": "assets/OfertasSection-vzOTH9fp.js",
     "name": "OfertasSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -114,8 +114,8 @@
       "_DynamicIcon-x4dDLJ1Q.js"
     ]
   },
-  "_ProductosDestacadosSection-D_6BMfyt.js": {
-    "file": "assets/ProductosDestacadosSection-D_6BMfyt.js",
+  "_ProductosDestacadosSection-H8f6THZb.js": {
+    "file": "assets/ProductosDestacadosSection-H8f6THZb.js",
     "name": "ProductosDestacadosSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -254,7 +254,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BL9B30SS.js",
+    "file": "assets/app-CPyOdlyB.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -275,12 +275,12 @@
       "resources/js/pages/sites/Ecomer/components/Contacto/SectionContacto.jsx",
       "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/BanerPieSection.jsx",
-      "_CategoriaSection-BUhaDE0A.js",
+      "_CategoriaSection-CjUl56SZ.js",
       "_GaleriaSection-CriZ3GV6.js",
       "_HeroSection-DZERaTK2.js",
-      "_MarcasSection-CggQRnld.js",
-      "_OfertasSection-NbrUE4L9.js",
-      "_ProductosDestacadosSection-D_6BMfyt.js",
+      "_MarcasSection-Bp7rHOLU.js",
+      "_OfertasSection-vzOTH9fp.js",
+      "_ProductosDestacadosSection-H8f6THZb.js",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/AccionSection.jsx",
@@ -408,7 +408,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-skxcoxji.js",
+    "file": "assets/Index-BX40lwCd.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -442,7 +442,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-C3X-xKs8.js",
+    "file": "assets/SectionInicio-Cc8d6O3L.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -452,10 +452,10 @@
       "_vendor-framer-motion-Brhgw_zz.js",
       "_HeroSection-DZERaTK2.js",
       "_GaleriaSection-CriZ3GV6.js",
-      "_OfertasSection-NbrUE4L9.js",
-      "_MarcasSection-CggQRnld.js",
-      "_CategoriaSection-BUhaDE0A.js",
-      "_ProductosDestacadosSection-D_6BMfyt.js"
+      "_OfertasSection-vzOTH9fp.js",
+      "_MarcasSection-Bp7rHOLU.js",
+      "_CategoriaSection-CjUl56SZ.js",
+      "_ProductosDestacadosSection-H8f6THZb.js"
     ],
     "dynamicImports": [
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
@@ -472,7 +472,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx": {
-    "file": "assets/TikTokSection-BOITNmRL.js",
+    "file": "assets/TikTokSection-BP_eTVAs.js",
     "name": "TikTokSection",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
     "isDynamicEntry": true,
@@ -569,7 +569,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Productos/SectionProductos.jsx": {
-    "file": "assets/SectionProductos-kIL1rS3P.js",
+    "file": "assets/SectionProductos-BqtQKJMD.js",
     "name": "SectionProductos",
     "src": "resources/js/pages/sites/Ecomer/components/Productos/SectionProductos.jsx",
     "isDynamicEntry": true,

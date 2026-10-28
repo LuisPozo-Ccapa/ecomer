@@ -339,7 +339,7 @@ export default function TikTokSection({ seccionData }) {
                                     <div className="min-w-0 flex-1">
                                         <p className="font-semibold text-sm line-clamp-1">{selectedVideo.titulo}</p>
                                         {selectedVideo.usuario && (
-                                            <p className="text-xs text-gray-400 mt-0.5">{selectedVideo.usuario}</p>
+                                            <p className="text-xs text-gray-300 mt-0.5">{selectedVideo.usuario}</p>
                                         )}
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">

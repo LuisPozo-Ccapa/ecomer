@@ -259,7 +259,7 @@ export default function OfertasSection({
                                                         </div>
 
                                                         {/* Precio Lista Tachado */}
-                                                        <div className="text-[11px] text-gray-400 line-through leading-none mb-2">
+                                                        <div className="text-[11px] text-gray-500 line-through leading-none mb-2">
                                                             s/ {precioListaReferencial}
                                                         </div>
                                                     </>
@@ -300,7 +300,7 @@ export default function OfertasSection({
                             </div>
                         ) : (
                             <div className="text-center bg-white rounded-xl border border-gray-200 p-12">
-                                <p className="text-gray-400 text-sm">No hay productos disponibles en esta categoría por el momento.</p>
+                                <p className="text-gray-600 text-sm">No hay productos disponibles en esta categoría por el momento.</p>
                             </div>
                         )}
                     </div>

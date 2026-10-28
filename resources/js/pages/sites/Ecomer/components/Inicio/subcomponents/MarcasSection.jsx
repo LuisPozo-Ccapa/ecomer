@@ -501,7 +501,7 @@ export default function MarcasSection({
                                                                 )}
                                                             </div>
 
-                                                            <div className="text-[11px] text-gray-400 line-through leading-none mb-2">
+                                                            <div className="text-[11px] text-gray-500 line-through leading-none mb-2">
                                                                 s/ {precioListaReferencial}
                                                             </div>
                                                         </>

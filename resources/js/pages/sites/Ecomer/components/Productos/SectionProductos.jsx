@@ -1382,7 +1382,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                             </span>
                                                         )}
                                                         {tieneOfertaSoles && pSolesReg > precioSolesEfectivo && (
-                                                            <span className="text-xs text-gray-400 line-through font-semibold ml-1">
+                                                            <span className="text-xs text-gray-500 line-through font-semibold ml-1">
                                                                 S/ {pSolesReg.toFixed(0)}
                                                             </span>
                                                         )}
@@ -1403,7 +1403,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                             </span>
                                                         )}
                                                         {tieneOfertaDolares && pDolReg > precioDolaresEfectivo && (
-                                                            <span className="text-xs text-gray-400 line-through font-normal ml-1">
+                                                            <span className="text-xs text-gray-500 line-through font-normal ml-1">
                                                                 $ {pDolReg}
                                                             </span>
                                                         )}
@@ -1472,7 +1472,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                 )}
                             </div>
                         ) : (
-                            <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100 shadow-sm">
+                            <div className="bg-white rounded-2xl p-12 text-center text-gray-600 border border-gray-100 shadow-sm">
                                 <p className="text-base font-medium mb-1">No se encontraron productos</p>
                                 <p className="text-xs">Intenta desmarcar algunos filtros del panel izquierdo o cambiar tu búsqueda.</p>
                             </div>
