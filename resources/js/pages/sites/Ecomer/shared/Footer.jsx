@@ -491,6 +491,7 @@ export default function Footer({
                                             alt={siteName}
                                             width={260}
                                             height={75}
+                                            loading="lazy"
                                             decoding="async"
                                             className="h-10 sm:h-11 md:h-12 w-auto max-h-12 max-w-[220px] sm:max-w-[250px] object-contain brightness-0 invert opacity-95 group-hover:opacity-100 transition-opacity"
                                         />
@@ -530,6 +531,7 @@ export default function Footer({
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 title={red.nombre}
+                                                aria-label={red.nombre || 'Red social'}
                                                 className="h-8 w-8 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-white hover:text-black hover:border-white transition-all duration-200 flex items-center justify-center text-xs"
                                             >
                                                 <DynamicIcon name={red.icono} className="h-3.5 w-3.5" />

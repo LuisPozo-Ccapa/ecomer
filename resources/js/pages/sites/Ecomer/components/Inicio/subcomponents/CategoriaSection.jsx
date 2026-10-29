@@ -102,7 +102,7 @@ export default function CategoriaSection({
                             Explorar por Categoría
                         </h2>
                     </div>
-                    <span className="text-xs font-semibold text-gray-400 hidden sm:inline-block">
+                    <span className="text-xs font-semibold text-gray-600 hidden sm:inline-block">
                         {categoriasArbol.length} categorías disponibles
                     </span>
                 </div>

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 const descargarCatalogo721d1b776873b25ea5ee3e79d0062a52 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.url = (options?: RouteQueryOpt
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.get = (options?: RouteQueryOpt
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
     const descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
         descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/catalogo/descargar-pdf'
  */
         descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
     descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.form = descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 const descargarCatalogoa0db0def83886227f6725985f3117c4e = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.url = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +131,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.get = (args: { dominio: string
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -141,7 +141,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
     const descargarCatalogoa0db0def83886227f6725985f3117c4eForm = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -151,7 +151,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargarCatalogoa0db0def83886227f6725985f3117c4eForm.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargarCatalogoa0db0def83886227f6725985f3117c4eForm.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -176,7 +176,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
     descargarCatalogoa0db0def83886227f6725985f3117c4e.form = descargarCatalogoa0db0def83886227f6725985f3117c4eForm
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 const descargarCatalogobeeae37e65ef939033903be744aedb4c = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -191,7 +191,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.url = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions) => {
@@ -217,7 +217,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.url = (args: { param1: string 
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -226,7 +226,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.get = (args: { param1: string 
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -236,7 +236,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
     const descargarCatalogobeeae37e65ef939033903be744aedb4cForm = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -246,7 +246,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargarCatalogobeeae37e65ef939033903be744aedb4cForm.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -255,7 +255,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:563
+ * @see app/Http/Controllers/SitePageController.php:606
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargarCatalogobeeae37e65ef939033903be744aedb4cForm.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -284,7 +284,7 @@ export const descargarCatalogo = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
 const show2c247751ad841970c161ef293729ac11 = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -299,7 +299,7 @@ show2c247751ad841970c161ef293729ac11.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
 show2c247751ad841970c161ef293729ac11.url = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -327,7 +327,7 @@ show2c247751ad841970c161ef293729ac11.url = (args: { seccion: string | number } |
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
 show2c247751ad841970c161ef293729ac11.get = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -336,7 +336,7 @@ show2c247751ad841970c161ef293729ac11.get = (args: { seccion: string | number } |
 })
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
 show2c247751ad841970c161ef293729ac11.head = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -346,7 +346,7 @@ show2c247751ad841970c161ef293729ac11.head = (args: { seccion: string | number } 
 
     /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
     const show2c247751ad841970c161ef293729ac11Form = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -356,7 +356,7 @@ show2c247751ad841970c161ef293729ac11.head = (args: { seccion: string | number } 
 
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
         show2c247751ad841970c161ef293729ac11Form.get = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -365,7 +365,7 @@ show2c247751ad841970c161ef293729ac11.head = (args: { seccion: string | number } 
         })
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{seccion}'
  */
         show2c247751ad841970c161ef293729ac11Form.head = (args: { seccion: string | number } | [seccion: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -381,7 +381,7 @@ show2c247751ad841970c161ef293729ac11.head = (args: { seccion: string | number } 
     show2c247751ad841970c161ef293729ac11.form = show2c247751ad841970c161ef293729ac11Form
     /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
 const show0001254fc6f9d86a3e515c910343db99 = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -396,7 +396,7 @@ show0001254fc6f9d86a3e515c910343db99.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
 show0001254fc6f9d86a3e515c910343db99.url = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions) => {
@@ -422,7 +422,7 @@ show0001254fc6f9d86a3e515c910343db99.url = (args: { dominio: string | number, se
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
 show0001254fc6f9d86a3e515c910343db99.get = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -431,7 +431,7 @@ show0001254fc6f9d86a3e515c910343db99.get = (args: { dominio: string | number, se
 })
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
 show0001254fc6f9d86a3e515c910343db99.head = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -441,7 +441,7 @@ show0001254fc6f9d86a3e515c910343db99.head = (args: { dominio: string | number, s
 
     /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
     const show0001254fc6f9d86a3e515c910343db99Form = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -451,7 +451,7 @@ show0001254fc6f9d86a3e515c910343db99.head = (args: { dominio: string | number, s
 
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
         show0001254fc6f9d86a3e515c910343db99Form.get = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -460,7 +460,7 @@ show0001254fc6f9d86a3e515c910343db99.head = (args: { dominio: string | number, s
         })
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{dominio}/{seccion}'
  */
         show0001254fc6f9d86a3e515c910343db99Form.head = (args: { dominio: string | number, seccion: string | number } | [dominio: string | number, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -476,7 +476,7 @@ show0001254fc6f9d86a3e515c910343db99.head = (args: { dominio: string | number, s
     show0001254fc6f9d86a3e515c910343db99.form = show0001254fc6f9d86a3e515c910343db99Form
     /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
 const show0eafefde54f71dc0248fbeba8012a228 = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -491,7 +491,7 @@ show0eafefde54f71dc0248fbeba8012a228.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
 show0eafefde54f71dc0248fbeba8012a228.url = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions) => {
@@ -520,7 +520,7 @@ show0eafefde54f71dc0248fbeba8012a228.url = (args: { param1: string | number, par
 
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
 show0eafefde54f71dc0248fbeba8012a228.get = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -529,7 +529,7 @@ show0eafefde54f71dc0248fbeba8012a228.get = (args: { param1: string | number, par
 })
 /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
 show0eafefde54f71dc0248fbeba8012a228.head = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -539,7 +539,7 @@ show0eafefde54f71dc0248fbeba8012a228.head = (args: { param1: string | number, pa
 
     /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
     const show0eafefde54f71dc0248fbeba8012a228Form = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -549,7 +549,7 @@ show0eafefde54f71dc0248fbeba8012a228.head = (args: { param1: string | number, pa
 
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
         show0eafefde54f71dc0248fbeba8012a228Form.get = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -558,7 +558,7 @@ show0eafefde54f71dc0248fbeba8012a228.head = (args: { param1: string | number, pa
         })
             /**
 * @see \App\Http\Controllers\SitePageController::show
- * @see app/Http/Controllers/SitePageController.php:38
+ * @see app/Http/Controllers/SitePageController.php:39
  * @route '/{param1}/{param2}/{param3}'
  */
         show0eafefde54f71dc0248fbeba8012a228Form.head = (args: { param1: string | number, param2: string | number, param3: string | number } | [param1: string | number, param2: string | number, param3: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

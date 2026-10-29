@@ -259,7 +259,7 @@ export default function ProductosDestacadosSection({
                                                         </span>
                                                     )}
                                                     {tieneOfertaSoles && pSolesReg > precioSolesEfectivo && (
-                                                        <span className="text-xs text-gray-400 line-through font-semibold ml-1">
+                                                        <span className="text-xs text-gray-500 line-through font-semibold ml-1">
                                                             S/ {pSolesReg.toFixed(0)}
                                                         </span>
                                                     )}
@@ -280,7 +280,7 @@ export default function ProductosDestacadosSection({
                                                         </span>
                                                     )}
                                                     {tieneOfertaDolares && pDolReg > precioDolaresEfectivo && (
-                                                        <span className="text-xs text-gray-400 line-through font-normal ml-1">
+                                                        <span className="text-xs text-gray-500 line-through font-normal ml-1">
                                                             $ {pDolReg}
                                                         </span>
                                                     )}
@@ -322,7 +322,7 @@ export default function ProductosDestacadosSection({
                     </Swiper>
                 ) : (
                     <div className="text-center bg-white rounded-xl border border-gray-200 p-12">
-                        <p className="text-gray-400 text-sm">No hay productos disponibles por el momento.</p>
+                        <p className="text-gray-600 text-sm">No hay productos disponibles por el momento.</p>
                     </div>
                 )}
 

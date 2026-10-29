@@ -22,13 +22,6 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         initialProductos
     );
 
-    const [cargandoPantalla, setCargandoPantalla] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setCargandoPantalla(false), 350);
-        return () => clearTimeout(timer);
-    }, []);
-
     const [busqueda, setBusqueda] = useState(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -472,7 +465,21 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         });
     }, [productos, busqueda, filtrosSeleccionados, rangoPrecio, soloOfertas, soloLiquidacion, isCatalogoMode, catalogoConfig]);
 
-    if (loading || cargandoPantalla) {
+    const [paginaActual, setPaginaActual] = useState(1);
+    const ITEMS_POR_PAGINA = 24;
+
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [busqueda, filtrosSeleccionados, soloOfertas, soloLiquidacion, rangoPrecio]);
+
+    const totalPaginas = isCatalogoMode ? 1 : Math.max(1, Math.ceil(productosFiltrados.length / ITEMS_POR_PAGINA));
+    const productosPaginados = useMemo(() => {
+        if (isCatalogoMode) return productosFiltrados;
+        const inicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+        return productosFiltrados.slice(inicio, inicio + ITEMS_POR_PAGINA);
+    }, [productosFiltrados, paginaActual, isCatalogoMode]);
+
+    if (loading) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
                 <div className="flex flex-col items-center gap-4">
@@ -1187,14 +1194,14 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                             </div>
 
                             <span className="text-xs font-semibold text-gray-500">
-                                Mostrando {productosFiltrados.length} de {productos.length} productos
+                                Mostrando {productosPaginados.length} de {productosFiltrados.length} productos
                             </span>
                         </div>
 
                         {/* Grilla de Productos */}
-                        {productosFiltrados.length > 0 ? (
+                        {productosPaginados.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                                {productosFiltrados.map((prod, idx) => {
+                                {productosPaginados.map((prod, idx) => {
                                     const inCart = isInCart(prod);
 
                                     const pSolesReg = prod.precio_soles != null && prod.precio_soles !== '' ? Number(prod.precio_soles) : (prod.precio != null && prod.precio !== '' ? Number(prod.precio) : 0);
@@ -1238,9 +1245,9 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                     return (
                                         <motion.div
                                             key={prod.id || idx}
-                                            initial={{ opacity: 0, y: 20 }}
+                                            initial={{ opacity: 0, y: 15 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.4, delay: idx * 0.04 }}
+                                            transition={{ duration: 0.3, delay: Math.min(idx * 0.02, 0.3) }}
                                             onClick={() => {
                                                 if (onSeleccionarProducto) {
                                                     onSeleccionarProducto(prod);
@@ -1375,7 +1382,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                             </span>
                                                         )}
                                                         {tieneOfertaSoles && pSolesReg > precioSolesEfectivo && (
-                                                            <span className="text-xs text-gray-400 line-through font-semibold ml-1">
+                                                            <span className="text-xs text-gray-500 line-through font-semibold ml-1">
                                                                 S/ {pSolesReg.toFixed(0)}
                                                             </span>
                                                         )}
@@ -1396,7 +1403,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                             </span>
                                                         )}
                                                         {tieneOfertaDolares && pDolReg > precioDolaresEfectivo && (
-                                                            <span className="text-xs text-gray-400 line-through font-normal ml-1">
+                                                            <span className="text-xs text-gray-500 line-through font-normal ml-1">
                                                                 $ {pDolReg}
                                                             </span>
                                                         )}
@@ -1434,9 +1441,38 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                         </motion.div>
                                     );
                                 })}
+                                {totalPaginas > 1 && (
+                                    <div className="col-span-full mt-10 pt-6 border-t border-gray-100 flex items-center justify-center gap-3">
+                                        <button
+                                            type="button"
+                                            disabled={paginaActual <= 1}
+                                            onClick={() => {
+                                                setPaginaActual((prev) => Math.max(1, prev - 1));
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}
+                                            className="px-4 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                        >
+                                            ← Anterior
+                                        </button>
+                                        <span className="text-xs font-bold text-gray-700 px-3">
+                                            Página {paginaActual} de {totalPaginas}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            disabled={paginaActual >= totalPaginas}
+                                            onClick={() => {
+                                                setPaginaActual((prev) => Math.min(totalPaginas, prev + 1));
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}
+                                            className="px-4 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 shadow-2xs disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                        >
+                                            Siguiente →
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
-                            <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100 shadow-sm">
+                            <div className="bg-white rounded-2xl p-12 text-center text-gray-600 border border-gray-100 shadow-sm">
                                 <p className="text-base font-medium mb-1">No se encontraron productos</p>
                                 <p className="text-xs">Intenta desmarcar algunos filtros del panel izquierdo o cambiar tu búsqueda.</p>
                             </div>

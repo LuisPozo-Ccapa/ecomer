@@ -210,6 +210,7 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                         <button
                             type="button"
                             onClick={() => setViewState('closed')}
+                            aria-label="Cerrar selección de contactos"
                             className="rounded-full p-1 hover:bg-white/10 transition text-white/80 hover:text-white cursor-pointer"
                         >
                             <DynamicIcon name="FaXmark" className="h-5 w-5" />
@@ -222,6 +223,7 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                                 key={idx}
                                 type="button"
                                 onClick={() => handleSelectWa(wa)}
+                                aria-label={`Conversar con ${wa.label || 'Asesor'} al ${wa.numero}`}
                                 className="w-full text-left bg-white p-3.5 rounded-xl border border-gray-200/80 shadow-xs hover:border-[#25D366] hover:shadow-md hover:scale-[1.01] transition-all flex items-center justify-between group cursor-pointer"
                             >
                                 <div className="flex items-center gap-3 min-w-0">
@@ -252,6 +254,7 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                                 <button
                                     type="button"
                                     onClick={() => setViewState('selector')}
+                                    aria-label="Volver a lista de contactos"
                                     className="p-1 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition cursor-pointer shrink-0"
                                     title="Volver a contactos"
                                 >
@@ -263,6 +266,10 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                                     <img
                                         src={site.imagen}
                                         alt={site?.nombre || 'WhatsApp'}
+                                        width={40}
+                                        height={40}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="h-10 w-10 rounded-full object-cover border-2 border-white/20"
                                     />
                                 ) : (
@@ -280,6 +287,7 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                         <button
                             type="button"
                             onClick={() => setViewState('closed')}
+                            aria-label="Cerrar chat de WhatsApp"
                             className="rounded-full p-1 hover:bg-white/10 transition text-white/80 hover:text-white cursor-pointer shrink-0"
                             title="Cerrar chat"
                         >
@@ -303,11 +311,13 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                             value={mensaje}
                             onChange={(e) => setMensaje(e.target.value)}
                             placeholder="Escribe tu mensaje..."
+                            aria-label="Escribe tu mensaje de WhatsApp"
                             className="flex-1 rounded-full bg-gray-100 px-4 py-2.5 text-xs text-gray-800 outline-none focus:ring-2 focus:ring-[#128C7E]/40 transition placeholder-gray-400"
                             autoFocus
                         />
                         <button
                             type="submit"
+                            aria-label="Enviar mensaje a WhatsApp"
                             className="flex h-9 w-9 items-center justify-center rounded-full bg-[#128C7E] text-white shadow-md hover:bg-[#075E54] transition cursor-pointer shrink-0"
                             title="Enviar a WhatsApp"
                         >

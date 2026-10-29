@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function TikTokSection({ seccionData }) {
@@ -249,123 +250,126 @@ export default function TikTokSection({ seccionData }) {
             </div>
 
             {/* Modal Reproductor de Video con Portada y Fallback Anti-503 */}
-            <AnimatePresence>
-                {selectedVideo && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
-                        onClick={() => setSelectedVideo(null)}
-                    >
-                        <div
-                            className="relative w-full max-w-lg bg-gray-950 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 flex flex-col"
-                            onClick={(e) => e.stopPropagation()}
+            {typeof document !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {selectedVideo && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+                            onClick={() => setSelectedVideo(null)}
                         >
-                            {/* Botón Cerrar */}
-                            <button
-                                type="button"
-                                onClick={() => setSelectedVideo(null)}
-                                className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-[#ff0050] transition cursor-pointer border border-white/20 shadow-lg"
-                                aria-label="Cerrar modal"
+                            <div
+                                className="relative w-full max-w-lg bg-gray-950 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 flex flex-col"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                ✕
-                            </button>
+                                {/* Botón Cerrar */}
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedVideo(null)}
+                                    className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-[#ff0050] transition cursor-pointer border border-white/20 shadow-lg"
+                                    aria-label="Cerrar modal"
+                                >
+                                    ✕
+                                </button>
 
-                            {/* Área Principal del Reproductor / Portada */}
-                            <div className="relative aspect-[9/16] w-full max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
-                                {showIframe && selectedVideo.idVideo ? (
-                                    <iframe
-                                        src={`https://www.tiktok.com/player/v1/${selectedVideo.idVideo}?autoplay=1&muted=0&description=1&music_info=1`}
-                                        className="w-full h-full rounded-2xl border-0"
-                                        allowFullScreen
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                    />
-                                ) : (
-                                    /* Vista de Portada Principal con Reproducción en TikTok */
-                                    <div className="relative w-full h-full flex flex-col items-center justify-center bg-slate-950 text-white">
-                                        {selectedVideo.imagen ? (
-                                            <img
-                                                src={selectedVideo.imagen}
-                                                alt={selectedVideo.titulo || 'TikTok'}
-                                                className="w-full h-full object-cover opacity-90"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-900 via-gray-900 to-black text-center">
-                                                <div className="w-20 h-20 rounded-full bg-[#ff0050]/20 border border-[#ff0050]/40 flex items-center justify-center text-[#ff0050] text-3xl font-bold mb-4 shadow-lg animate-pulse">
-                                                    ♪
+                                {/* Área Principal del Reproductor / Portada */}
+                                <div className="relative aspect-[9/16] w-full max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
+                                    {showIframe && selectedVideo.idVideo ? (
+                                        <iframe
+                                            src={`https://www.tiktok.com/player/v1/${selectedVideo.idVideo}?autoplay=1&muted=0&description=1&music_info=1`}
+                                            className="w-full h-full rounded-2xl border-0"
+                                            allowFullScreen
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                        />
+                                    ) : (
+                                        /* Vista de Portada Principal con Reproducción en TikTok */
+                                        <div className="relative w-full h-full flex flex-col items-center justify-center bg-slate-950 text-white">
+                                            {selectedVideo.imagen ? (
+                                                <img
+                                                    src={selectedVideo.imagen}
+                                                    alt={selectedVideo.titulo || 'TikTok'}
+                                                    className="w-full h-full object-cover opacity-90"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-900 via-gray-900 to-black text-center">
+                                                    <div className="w-20 h-20 rounded-full bg-[#ff0050]/20 border border-[#ff0050]/40 flex items-center justify-center text-[#ff0050] text-3xl font-bold mb-4 shadow-lg animate-pulse">
+                                                        ♪
+                                                    </div>
+                                                    <h3 className="text-lg font-bold text-white max-w-xs line-clamp-3">
+                                                        {selectedVideo.titulo || 'Vídeo de TikTok'}
+                                                    </h3>
                                                 </div>
-                                                <h3 className="text-lg font-bold text-white max-w-xs line-clamp-3">
-                                                    {selectedVideo.titulo || 'Vídeo de TikTok'}
-                                                </h3>
+                                            )}
+
+                                            {/* Overlay de gradiente */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40 flex flex-col items-center justify-center p-6 text-center">
+                                                {/* Botón Principal: Ver/Reproducir en TikTok (Garantiza 0 Errores 503) */}
+                                                {selectedVideo.url && (
+                                                    <a
+                                                        href={selectedVideo.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="px-6 py-3.5 rounded-full bg-[#ff0050] hover:bg-[#e00047] text-white text-sm sm:text-base font-extrabold shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 border border-white/20"
+                                                    >
+                                                        <span className="text-xl leading-none">▶</span>
+                                                        Reproducir en TikTok ↗
+                                                    </a>
+                                                )}
+
+                                                {/* Botón Secundario: Probar Reproductor Embebido */}
+                                                {selectedVideo.idVideo && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowIframe(true)}
+                                                        className="mt-4 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-gray-200 transition-all cursor-pointer"
+                                                    >
+                                                        📺 Cargar reproductor embebido
+                                                    </button>
+                                                )}
                                             </div>
-                                        )}
-
-                                        {/* Overlay de gradiente */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40 flex flex-col items-center justify-center p-6 text-center">
-                                            {/* Botón Principal: Ver/Reproducir en TikTok (Garantiza 0 Errores 503) */}
-                                            {selectedVideo.url && (
-                                                <a
-                                                    href={selectedVideo.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="px-6 py-3.5 rounded-full bg-[#ff0050] hover:bg-[#e00047] text-white text-sm sm:text-base font-extrabold shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 border border-white/20"
-                                                >
-                                                    <span className="text-xl leading-none">▶</span>
-                                                    Reproducir en TikTok ↗
-                                                </a>
-                                            )}
-
-                                            {/* Botón Secundario: Probar Reproductor Embebido */}
-                                            {selectedVideo.idVideo && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setShowIframe(true)}
-                                                    className="mt-4 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-xs font-semibold text-gray-200 transition-all cursor-pointer"
-                                                >
-                                                    📺 Cargar reproductor embebido
-                                                </button>
-                                            )}
                                         </div>
-                                    </div>
-                                )}
-                            </div>
+                                    )}
+                                </div>
 
-                            {/* Barra Inferior del Modal */}
-                            <div className="bg-gray-950 p-4 border-t border-white/10 flex items-center justify-between gap-3 text-white">
-                                <div className="min-w-0 flex-1">
-                                    <p className="font-semibold text-sm line-clamp-1">{selectedVideo.titulo}</p>
-                                    {selectedVideo.usuario && (
-                                        <p className="text-xs text-gray-400 mt-0.5">{selectedVideo.usuario}</p>
-                                    )}
-                                </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                    {showIframe && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowIframe(false)}
-                                            className="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-semibold hover:bg-white/20 transition"
-                                        >
-                                            ↩ Volver
-                                        </button>
-                                    )}
-                                    {selectedVideo.url && (
-                                        <a
-                                            href={selectedVideo.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="px-3.5 py-1.5 rounded-xl bg-[#ff0050] text-white text-xs font-bold hover:bg-[#e00047] transition flex items-center gap-1 shadow-sm"
-                                        >
-                                            Abrir ↗
-                                        </a>
-                                    )}
+                                {/* Barra Inferior del Modal */}
+                                <div className="bg-gray-950 p-4 border-t border-white/10 flex items-center justify-between gap-3 text-white">
+                                    <div className="min-w-0 flex-1">
+                                        <p className="font-semibold text-sm line-clamp-1">{selectedVideo.titulo}</p>
+                                        {selectedVideo.usuario && (
+                                            <p className="text-xs text-gray-300 mt-0.5">{selectedVideo.usuario}</p>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        {showIframe && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowIframe(false)}
+                                                className="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 text-xs font-semibold hover:bg-white/20 transition"
+                                            >
+                                                ↩ Volver
+                                            </button>
+                                        )}
+                                        {selectedVideo.url && (
+                                            <a
+                                                href={selectedVideo.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="px-3.5 py-1.5 rounded-xl bg-[#ff0050] text-white text-xs font-bold hover:bg-[#e00047] transition flex items-center gap-1 shadow-sm"
+                                            >
+                                                Abrir ↗
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        </motion.div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </section>
     );
 }

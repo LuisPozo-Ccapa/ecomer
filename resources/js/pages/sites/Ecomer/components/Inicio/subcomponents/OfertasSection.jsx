@@ -89,6 +89,7 @@ export default function OfertasSection({
     return (
         <section id="ofertas" className="scroll-mt-10 py-10 sm:py-14 bg-[#FAFAFA]">
             <div className="mx-auto w-full max-w-[1540px] px-3 sm:px-6 lg:px-8">
+                <h2 className="sr-only">{categoriaNombre ? `Ofertas en ${categoriaNombre}` : 'Ofertas y Promociones'}</h2>
                 {/* Grid principal: 50% la Imagen de la Oferta / 50% los Productos en 2 columnas */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
                     {/* ── LADO IZQUIERDO: IMAGEN DE LA OFERTA (MITAD 50%) ── */}
@@ -258,7 +259,7 @@ export default function OfertasSection({
                                                         </div>
 
                                                         {/* Precio Lista Tachado */}
-                                                        <div className="text-[11px] text-gray-400 line-through leading-none mb-2">
+                                                        <div className="text-[11px] text-gray-500 line-through leading-none mb-2">
                                                             s/ {precioListaReferencial}
                                                         </div>
                                                     </>
@@ -299,7 +300,7 @@ export default function OfertasSection({
                             </div>
                         ) : (
                             <div className="text-center bg-white rounded-xl border border-gray-200 p-12">
-                                <p className="text-gray-400 text-sm">No hay productos disponibles en esta categoría por el momento.</p>
+                                <p className="text-gray-600 text-sm">No hay productos disponibles en esta categoría por el momento.</p>
                             </div>
                         )}
                     </div>

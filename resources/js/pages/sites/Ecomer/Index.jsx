@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { Head } from '@inertiajs/react';
 import Header from './shared/Header';
 import Footer from './shared/Footer';
 import FloatingWhatsApp from './shared/FloatingWhatsApp';
 import SectionInicio from './components/Inicio/SectionInicio';
-import SectionProductos from './components/Productos/SectionProductos';
-import SectionServicios from './components/Servicios/SectionServicios';
-import SectionNosotros from './components/Nosotros/SectionNosotros';
-import SectionContacto from './components/Contacto/SectionContacto';
-import SectionProductoDetalle from './components/Productos/SectionProductoDetalle';
-import LegalPage from '@/components/LegalPage';
+
+const SectionProductos = lazy(() => import('./components/Productos/SectionProductos'));
+const SectionServicios = lazy(() => import('./components/Servicios/SectionServicios'));
+const SectionNosotros = lazy(() => import('./components/Nosotros/SectionNosotros'));
+const SectionContacto = lazy(() => import('./components/Contacto/SectionContacto'));
+const SectionProductoDetalle = lazy(() => import('./components/Productos/SectionProductoDetalle'));
+const LegalPage = lazy(() => import('@/components/LegalPage'));
 
 export default function Ecomer({
     site,
@@ -237,40 +238,48 @@ export default function Ecomer({
                     esDetalleProducto={Boolean(productoSeleccionado)}
                 />
 
-                {seccionActiva?.is_legal ? (
-                    <LegalPage
-                        site={site}
-                        dominio={dominio}
-                        siteSlug={siteSlug}
-                        legalType={seccionActiva.legal_type || 'terminos'}
-                        estilos={estilos}
-                    />
-                ) : productoSeleccionado ? (
-                    <SectionProductoDetalle
-                        producto={productoSeleccionado}
-                        onVolver={() => handleSeleccionarProducto(null)}
-                        onSeleccionarProducto={handleSeleccionarProducto}
-                        productosRelacionados={productos}
-                        site={site}
-                        seccionesData={seccionesData}
-                        estilos={estilos}
-                    />
-                ) : (
-                    <ActiveComponent
-                        site={site}
-                        dominio={dominio}
-                        siteSlug={siteSlug}
-                        seccion={seccionActiva}
-                        seccionesData={seccionesData}
-                        productos={productos}
-                        productosDestacados={productosDestacados}
-                        serviciosSitio={serviciosSitio}
-                        marcasSitio={marcasSitio}
-                        styles={styles}
-                        estilos={estilos}
-                        onSeleccionarProducto={handleSeleccionarProducto}
-                    />
-                )}
+                <Suspense
+                    fallback={
+                        <div className="w-full min-h-[50vh] flex items-center justify-center">
+                            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-[var(--color-primario)]" />
+                        </div>
+                    }
+                >
+                    {seccionActiva?.is_legal ? (
+                        <LegalPage
+                            site={site}
+                            dominio={dominio}
+                            siteSlug={siteSlug}
+                            legalType={seccionActiva.legal_type || 'terminos'}
+                            estilos={estilos}
+                        />
+                    ) : productoSeleccionado ? (
+                        <SectionProductoDetalle
+                            producto={productoSeleccionado}
+                            onVolver={() => handleSeleccionarProducto(null)}
+                            onSeleccionarProducto={handleSeleccionarProducto}
+                            productosRelacionados={productos}
+                            site={site}
+                            seccionesData={seccionesData}
+                            estilos={estilos}
+                        />
+                    ) : (
+                        <ActiveComponent
+                            site={site}
+                            dominio={dominio}
+                            siteSlug={siteSlug}
+                            seccion={seccionActiva}
+                            seccionesData={seccionesData}
+                            productos={productos}
+                            productosDestacados={productosDestacados}
+                            serviciosSitio={serviciosSitio}
+                            marcasSitio={marcasSitio}
+                            styles={styles}
+                            estilos={estilos}
+                            onSeleccionarProducto={handleSeleccionarProducto}
+                        />
+                    )}
+                </Suspense>
 
                 <Footer
                     site={site}

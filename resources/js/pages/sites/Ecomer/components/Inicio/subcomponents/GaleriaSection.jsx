@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GaleriaSection({ seccionData }) {
@@ -146,6 +147,8 @@ export default function GaleriaSection({ seccionData }) {
                                     <img
                                         src={item.url}
                                         alt={`Promoción ${item.posicion}`}
+                                        width={800}
+                                        height={400}
                                         loading="lazy"
                                         decoding="async"
                                         className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -171,6 +174,8 @@ export default function GaleriaSection({ seccionData }) {
                                 <img
                                     src={itemPos5.url}
                                     alt={`Promoción ${itemPos5.posicion}`}
+                                    width={600}
+                                    height={600}
                                     loading="lazy"
                                     decoding="async"
                                     className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -192,6 +197,8 @@ export default function GaleriaSection({ seccionData }) {
                                             <img
                                                 src={item.url}
                                                 alt={`Producto ${item.posicion}`}
+                                                width={400}
+                                                height={400}
                                                 loading="lazy"
                                                 decoding="async"
                                                 className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -217,6 +224,8 @@ export default function GaleriaSection({ seccionData }) {
                             <img
                                 src={itemPos12.url}
                                 alt={`Promoción ${itemPos12.posicion}`}
+                                width={1400}
+                                height={400}
                                 loading="lazy"
                                 decoding="async"
                                 className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -228,15 +237,16 @@ export default function GaleriaSection({ seccionData }) {
             </div>
 
             {/* Modal Lightbox / Visor a pantalla completa */}
-            <AnimatePresence>
-                {selectedImageIndex !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-                        onClick={() => setSelectedImageIndex(null)}
-                    >
+            {typeof document !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {selectedImageIndex !== null && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+                            onClick={() => setSelectedImageIndex(null)}
+                        >
                         {/* Botón Cerrar */}
                         <button
                             type="button"
@@ -292,7 +302,9 @@ export default function GaleriaSection({ seccionData }) {
                         )}
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence>,
+            document.body
+        )}
         </section>
     );
 }
