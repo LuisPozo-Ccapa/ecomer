@@ -16,6 +16,8 @@ export default function BanerPieSection({ seccionData }) {
             <img
                 src={imagenUrl}
                 alt={seccionData.nombre || 'Banner Pie'}
+                width={1200}
+                height={400}
                 className="w-full h-auto max-w-full object-cover block"
                 loading="lazy"
                 decoding="async"

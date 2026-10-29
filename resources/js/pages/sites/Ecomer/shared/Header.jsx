@@ -976,7 +976,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                     >
                                                         <div className="flex items-center gap-2.5 min-w-0 pr-2">
                                                             {cat.imagen ? (
-                                                                <img src={cat.imagen} alt={cat.nombre} className="h-4 w-4 object-contain rounded shrink-0 bg-white" />
+                                                                <img src={cat.imagen} alt={cat.nombre} width={16} height={16} loading="lazy" decoding="async" className="h-4 w-4 object-contain rounded shrink-0 bg-white" />
                                                             ) : cat.icono ? (
                                                                 <span className={`p-1.5 rounded-lg transition-colors ${isSelected ? 'bg-[var(--color-primario)]/10 text-[var(--color-primario)]' : 'bg-gray-200/60 text-gray-500 group-hover/cat:text-gray-800'
                                                                     }`}>
@@ -1039,7 +1039,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                     >
                                                         <div className="flex items-center gap-2.5 min-w-0 pr-2">
                                                             {m.imagen ? (
-                                                                <img src={m.imagen} alt={m.nombre} className="h-4 w-4 object-contain rounded shrink-0 bg-white" />
+                                                                <img src={m.imagen} alt={m.nombre} width={16} height={16} loading="lazy" decoding="async" className="h-4 w-4 object-contain rounded shrink-0 bg-white" />
                                                             ) : (
                                                                 <span className={`p-1.5 rounded-lg transition-colors ${isSelected ? 'bg-[var(--color-primario)]/10 text-[var(--color-primario)]' : 'bg-gray-200/60 text-gray-500'
                                                                     }`}>
@@ -1072,7 +1072,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                 <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100">
                                                     <div className="flex items-center gap-3">
                                                         {activeMarcaData.imagen ? (
-                                                            <img src={activeMarcaData.imagen} alt={activeMarcaData.nombre} className="h-10 w-10 object-contain rounded-xl p-1 border border-gray-200 bg-white shadow-2xs" />
+                                                            <img src={activeMarcaData.imagen} alt={activeMarcaData.nombre} width={40} height={40} loading="lazy" decoding="async" className="h-10 w-10 object-contain rounded-xl p-1 border border-gray-200 bg-white shadow-2xs" />
                                                         ) : (
                                                             <span className="p-2.5 rounded-xl bg-[var(--color-primario)]/10 text-[var(--color-primario)]">
                                                                 <DynamicIcon name="FaAward" className="h-5 w-5" />
@@ -1112,7 +1112,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                                     className="group/prod p-2.5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all flex items-center gap-2.5 bg-gray-50/50 hover:bg-white"
                                                                 >
                                                                     {p.imagen ? (
-                                                                        <img src={p.imagen} alt={p.nombre} className="h-10 w-10 object-cover rounded-lg shrink-0 bg-white" />
+                                                                        <img src={p.imagen} alt={p.nombre} width={40} height={40} loading="lazy" decoding="async" className="h-10 w-10 object-cover rounded-lg shrink-0 bg-white" />
                                                                     ) : (
                                                                         <div className="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center shrink-0 text-gray-400">
                                                                             <DynamicIcon name="FaBox" className="h-4 w-4" />
@@ -1164,7 +1164,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                             className="group/marcard bg-gray-50/70 p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-white hover:shadow-md transition-all flex items-center gap-3"
                                                         >
                                                             {m.imagen ? (
-                                                                <img src={m.imagen} alt={m.nombre} className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
+                                                                <img src={m.imagen} alt={m.nombre} width={36} height={36} loading="lazy" decoding="async" className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
                                                             ) : (
                                                                 <div className="h-9 w-9 rounded-xl bg-gray-200/80 flex items-center justify-center shrink-0 text-gray-500 group-hover/marcard:text-[var(--color-primario)]">
                                                                     <DynamicIcon name="FaAward" className="h-4 w-4" />
@@ -1189,7 +1189,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                             <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100">
                                                 <div className="flex items-center gap-3">
                                                     {activeCategoryData.imagen ? (
-                                                        <img src={activeCategoryData.imagen} alt={activeCategoryData.nombre} className="h-10 w-10 object-contain rounded-xl p-1 border border-gray-200 bg-white shadow-2xs" />
+                                                        <img src={activeCategoryData.imagen} alt={activeCategoryData.nombre} width={40} height={40} loading="lazy" decoding="async" className="h-10 w-10 object-contain rounded-xl p-1 border border-gray-200 bg-white shadow-2xs" />
                                                     ) : activeCategoryData.icono ? (
                                                         <span className="p-2.5 rounded-xl bg-[var(--color-primario)]/10 text-[var(--color-primario)]">
                                                             <DynamicIcon name={activeCategoryData.icono} className="h-5 w-5" />
@@ -1262,7 +1262,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                                 className="group/prod p-2.5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all flex items-center gap-2.5 bg-gray-50/50 hover:bg-white"
                                                             >
                                                                 {p.imagen ? (
-                                                                    <img src={p.imagen} alt={p.nombre} className="h-10 w-10 object-cover rounded-lg shrink-0 bg-white" />
+                                                                    <img src={p.imagen} alt={p.nombre} width={40} height={40} loading="lazy" decoding="async" className="h-10 w-10 object-cover rounded-lg shrink-0 bg-white" />
                                                                 ) : (
                                                                     <div className="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center shrink-0 text-gray-400">
                                                                         <DynamicIcon name="FaBox" className="h-4 w-4" />
@@ -1309,7 +1309,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                             className="flex items-center gap-3 mb-2.5"
                                                         >
                                                             {cat.imagen ? (
-                                                                <img src={cat.imagen} alt={cat.nombre} className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0 group-hover/catcard:scale-105 transition-transform" />
+                                                                <img src={cat.imagen} alt={cat.nombre} width={36} height={36} loading="lazy" decoding="async" className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0 group-hover/catcard:scale-105 transition-transform" />
                                                             ) : (
                                                                 <div className="h-9 w-9 rounded-xl bg-gray-200/80 flex items-center justify-center shrink-0 text-gray-500 group-hover/catcard:text-[var(--color-primario)]">
                                                                     <DynamicIcon name={cat.icono || "FaBoxesStacked"} className="h-4 w-4" />
@@ -1508,6 +1508,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                             <button
                                                 type="button"
                                                 onClick={() => setMobileSubmenuOpen(!mobileSubmenuOpen)}
+                                                aria-label="Desplegar submenú de categorías"
                                                 className="p-2 text-gray-500 hover:text-gray-900 cursor-pointer"
                                             >
                                                 <DynamicIcon name="FaChevronDown" className={`h-4 w-4 transition-transform ${mobileSubmenuOpen ? 'rotate-180' : ''}`} />
@@ -1527,7 +1528,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                                     className="flex items-center gap-2 text-xs font-bold text-gray-800 hover:text-[var(--color-primario)] py-0.5"
                                                                 >
                                                                     {cat.imagen ? (
-                                                                        <img src={cat.imagen} alt={cat.nombre} className="h-4 w-4 object-contain rounded shrink-0 bg-white border border-gray-100" />
+                                                                        <img src={cat.imagen} alt={cat.nombre} width={16} height={16} loading="lazy" decoding="async" className="h-4 w-4 object-contain rounded shrink-0 bg-white border border-gray-100" />
                                                                     ) : cat.icono ? (
                                                                         <DynamicIcon name={cat.icono} className="h-3.5 w-3.5 text-[var(--color-primario)] shrink-0" />
                                                                     ) : null}
@@ -1561,7 +1562,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                                     className="flex items-center gap-1.5 text-xs font-medium text-gray-700 hover:text-[var(--color-primario)] p-1 rounded-md hover:bg-gray-100"
                                                                 >
                                                                     {m.imagen ? (
-                                                                        <img src={m.imagen} alt={m.nombre} className="h-3.5 w-3.5 object-contain rounded shrink-0" />
+                                                                        <img src={m.imagen} alt={m.nombre} width={14} height={14} loading="lazy" decoding="async" className="h-3.5 w-3.5 object-contain rounded shrink-0" />
                                                                     ) : (
                                                                         <DynamicIcon name="FaTag" className="h-3 w-3 text-[var(--color-primario)] shrink-0" />
                                                                     )}
@@ -1592,6 +1593,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                             <button
                                                 type="button"
                                                 onClick={() => setMobileMarcasSubmenuOpen(!mobileMarcasSubmenuOpen)}
+                                                aria-label="Desplegar submenú de marcas"
                                                 className="p-2 text-gray-500 hover:text-gray-900 cursor-pointer"
                                             >
                                                 <DynamicIcon name="FaChevronDown" className={`h-4 w-4 transition-transform ${mobileMarcasSubmenuOpen ? 'rotate-180' : ''}`} />
@@ -1608,7 +1610,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                             className="flex items-center gap-2 text-xs font-semibold text-gray-800 hover:text-[var(--color-primario)] p-2 rounded-xl bg-gray-50 border border-gray-100 hover:bg-white transition shadow-2xs"
                                                         >
                                                             {m.imagen ? (
-                                                                <img src={m.imagen} alt={m.nombre} className="h-6 w-6 object-contain rounded-lg shrink-0 bg-white p-0.5 border border-gray-200" />
+                                                                <img src={m.imagen} alt={m.nombre} width={24} height={24} loading="lazy" decoding="async" className="h-6 w-6 object-contain rounded-lg shrink-0 bg-white p-0.5 border border-gray-200" />
                                                             ) : (
                                                                 <DynamicIcon name="FaTag" className="h-4 w-4 text-[var(--color-primario)] shrink-0" />
                                                             )}

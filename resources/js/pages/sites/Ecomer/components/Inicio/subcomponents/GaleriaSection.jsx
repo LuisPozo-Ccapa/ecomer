@@ -147,6 +147,8 @@ export default function GaleriaSection({ seccionData }) {
                                     <img
                                         src={item.url}
                                         alt={`Promoción ${item.posicion}`}
+                                        width={800}
+                                        height={400}
                                         loading="lazy"
                                         decoding="async"
                                         className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -172,6 +174,8 @@ export default function GaleriaSection({ seccionData }) {
                                 <img
                                     src={itemPos5.url}
                                     alt={`Promoción ${itemPos5.posicion}`}
+                                    width={600}
+                                    height={600}
                                     loading="lazy"
                                     decoding="async"
                                     className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -193,6 +197,8 @@ export default function GaleriaSection({ seccionData }) {
                                             <img
                                                 src={item.url}
                                                 alt={`Producto ${item.posicion}`}
+                                                width={400}
+                                                height={400}
                                                 loading="lazy"
                                                 decoding="async"
                                                 className="w-full h-auto block rounded-xl sm:rounded-2xl"
@@ -218,6 +224,8 @@ export default function GaleriaSection({ seccionData }) {
                             <img
                                 src={itemPos12.url}
                                 alt={`Promoción ${itemPos12.posicion}`}
+                                width={1400}
+                                height={400}
                                 loading="lazy"
                                 decoding="async"
                                 className="w-full h-auto block rounded-xl sm:rounded-2xl"

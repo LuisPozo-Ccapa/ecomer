@@ -48,8 +48,8 @@
       "_vendor-react-icons-C382wOBi.js"
     ]
   },
-  "_GaleriaSection-CriZ3GV6.js": {
-    "file": "assets/GaleriaSection-CriZ3GV6.js",
+  "_GaleriaSection-GmyGbe5A.js": {
+    "file": "assets/GaleriaSection-GmyGbe5A.js",
     "name": "GaleriaSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -254,7 +254,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-pyxcYa6t.js",
+    "file": "assets/app-BfvhIL0r.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -276,7 +276,7 @@
       "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/BanerPieSection.jsx",
       "_CategoriaSection-CjUl56SZ.js",
-      "_GaleriaSection-CriZ3GV6.js",
+      "_GaleriaSection-GmyGbe5A.js",
       "_HeroSection-DZERaTK2.js",
       "_MarcasSection-Bp7rHOLU.js",
       "_OfertasSection-vzOTH9fp.js",
@@ -408,7 +408,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-C5VyLQf8.js",
+    "file": "assets/Index-BImVMRkR.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -442,7 +442,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-Cc8d6O3L.js",
+    "file": "assets/SectionInicio-Bkd4PH0w.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -451,7 +451,7 @@
       "_vendor-inertia-BCyGzrYZ.js",
       "_vendor-framer-motion-Brhgw_zz.js",
       "_HeroSection-DZERaTK2.js",
-      "_GaleriaSection-CriZ3GV6.js",
+      "_GaleriaSection-GmyGbe5A.js",
       "_OfertasSection-vzOTH9fp.js",
       "_MarcasSection-Bp7rHOLU.js",
       "_CategoriaSection-CjUl56SZ.js",
@@ -463,7 +463,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/BanerPieSection.jsx": {
-    "file": "assets/BanerPieSection-DkJzJiQe.js",
+    "file": "assets/BanerPieSection-BgN4KiJj.js",
     "name": "BanerPieSection",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/BanerPieSection.jsx",
     "isDynamicEntry": true,
@@ -636,7 +636,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/FloatingWhatsApp.jsx": {
-    "file": "assets/FloatingWhatsApp-icataqSt.js",
+    "file": "assets/FloatingWhatsApp-RTnWl3OZ.js",
     "name": "FloatingWhatsApp",
     "src": "resources/js/pages/sites/Ecomer/shared/FloatingWhatsApp.jsx",
     "isDynamicEntry": true,
@@ -661,7 +661,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/Header.jsx": {
-    "file": "assets/Header-iwF0kFna.js",
+    "file": "assets/Header-D9sp-CwD.js",
     "name": "Header",
     "src": "resources/js/pages/sites/Ecomer/shared/Header.jsx",
     "isDynamicEntry": true,
@@ -765,7 +765,7 @@
     ]
   },
   "resources/js/pages/sites/Tortas/shared/FloatingWhatsApp.jsx": {
-    "file": "assets/FloatingWhatsApp-BgQw8Zz4.js",
+    "file": "assets/FloatingWhatsApp-icataqSt.js",
     "name": "FloatingWhatsApp",
     "src": "resources/js/pages/sites/Tortas/shared/FloatingWhatsApp.jsx",
     "isDynamicEntry": true,
