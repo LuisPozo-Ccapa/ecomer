@@ -66,6 +66,14 @@ export default function SectionInicio({
         <main className="flex-1">
             <HeroSection seccionData={inicio} />
             <GaleriaSection seccionData={galeria} />
+            <div className="content-auto">
+                <MarcasSection
+                    seccionData={marcas}
+                    productos={initialProductos.length > 0 ? initialProductos : productos}
+                    marcasSitio={marcasSitio}
+                    onSeleccionarProducto={onSeleccionarProducto}
+                />
+            </div>
             <ProductosDestacadosSection
                 productos={productos}
                 onSeleccionarProducto={onSeleccionarProducto}
@@ -74,14 +82,6 @@ export default function SectionInicio({
                 <OfertasSection
                     seccionData={ofertas}
                     productos={initialProductos.length > 0 ? initialProductos : productos}
-                    onSeleccionarProducto={onSeleccionarProducto}
-                />
-            </div>
-            <div className="content-auto">
-                <MarcasSection
-                    seccionData={marcas}
-                    productos={initialProductos.length > 0 ? initialProductos : productos}
-                    marcasSitio={marcasSitio}
                     onSeleccionarProducto={onSeleccionarProducto}
                 />
             </div>
