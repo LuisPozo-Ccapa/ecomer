@@ -3,6 +3,7 @@ import { useNosotrosData } from './hooks/useNosotrosData';
 import PortadaSection from './subcomponents/PortadaSection';
 import HistoriaSection from './subcomponents/HistoriaSection';
 import MisionVisionSection from './subcomponents/MisionVisionSection';
+import ValoresSection from './subcomponents/ValoresSection';
 import ElegirnosSection from './subcomponents/ElegirnosSection';
 import AccionSection from './subcomponents/AccionSection';
 
@@ -18,6 +19,7 @@ export default function SectionNosotros({
         portada,
         historia,
         misionVision,
+        valores,
         elegirnos,
         accion,
         loading,
@@ -44,23 +46,38 @@ export default function SectionNosotros({
             />
 
             {/* Seccion 2: Historia (Línea de tiempo cronológica) */}
-            <HistoriaSection seccionData={historia} />
+            <div className="content-auto">
+                <HistoriaSection seccionData={historia} />
+            </div>
 
             {/* Seccion 3: Misión / Visión (Tarjetas oscuras con iconos flotantes) */}
-            <MisionVisionSection seccionData={misionVision} />
+            <div className="content-auto">
+                <MisionVisionSection seccionData={misionVision} />
+            </div>
 
-            {/* Seccion 4: Elegirnos (Cuadrícula de tarjetas blancas con insignia numérica 01, 02...) */}
-            <ElegirnosSection seccionData={elegirnos} />
+            {/* Seccion 4: Valores y Compromiso (Cuadrícula de tarjetas con números 01, 02...) */}
+            {valores?.valor && (
+                <div className="content-auto">
+                    <ValoresSection seccionData={valores} />
+                </div>
+            )}
 
-            {/* Seccion 5: Acción (Llamado a la acción de cierre) */}
-            <AccionSection
-                seccionData={accion}
-                site={site}
-                estilos={estilos}
-                dominio={dominio}
-                siteSlug={siteSlug}
-                seccionesData={seccionesData}
-            />
+            {/* Seccion 5: Elegirnos (Cuadrícula de tarjetas blancas con insignia numérica) */}
+            <div className="content-auto">
+                <ElegirnosSection seccionData={elegirnos} />
+            </div>
+
+            {/* Seccion 6: Acción (Llamado a la acción de cierre) */}
+            <div className="content-auto">
+                <AccionSection
+                    seccionData={accion}
+                    site={site}
+                    estilos={estilos}
+                    dominio={dominio}
+                    siteSlug={siteSlug}
+                    seccionesData={seccionesData}
+                />
+            </div>
         </main>
     );
 }

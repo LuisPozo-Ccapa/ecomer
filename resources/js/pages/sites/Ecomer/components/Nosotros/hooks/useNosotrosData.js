@@ -34,10 +34,11 @@ export function useNosotrosData(seccion, seccionesData) {
             (item) => item.label?.toLowerCase() === label.toLowerCase()
         );
     };
-    console.log(nosotros)
+
     const portada = useMemo(() => getItem('portada'), [nosotros]);
     const historia = useMemo(() => getItem('historia'), [nosotros]);
     const misionVision = useMemo(() => getItem('mision/vision') || getItem('misionvision') || getItem('mision_vision'), [nosotros]);
+    const valores = useMemo(() => getItem('valores') || getItem('diferencia') || getItem('compromiso'), [nosotros]);
     const elegirnos = useMemo(() => getItem('elegirnos'), [nosotros]);
     const accion = useMemo(() => getItem('accion'), [nosotros]);
 
@@ -46,6 +47,7 @@ export function useNosotrosData(seccion, seccionesData) {
         portada,
         historia,
         misionVision,
+        valores,
         elegirnos,
         accion,
         loading: false,

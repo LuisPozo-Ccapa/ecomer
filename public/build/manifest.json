@@ -236,7 +236,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B0Y6D0l3.css",
+    "file": "assets/app-BlbtTNk1.css",
     "name": "app",
     "names": [
       "app.css"
@@ -254,7 +254,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CIM-AFPf.js",
+    "file": "assets/app-BF5xMqFI.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -288,6 +288,7 @@
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/HistoriaSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/MisionVisionSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/PortadaSection.jsx",
+      "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/ValoresSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Productos/SectionProductoDetalle.jsx",
       "resources/js/pages/sites/Ecomer/components/Productos/SectionProductos.jsx",
       "resources/js/pages/sites/Ecomer/components/Servicios/SectionServicios.jsx",
@@ -408,7 +409,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-C9KQBD0I.js",
+    "file": "assets/Index-2atwaGIB.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -483,7 +484,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx": {
-    "file": "assets/SectionNosotros-DExUgs1K.js",
+    "file": "assets/SectionNosotros-DwNV6ch1.js",
     "name": "SectionNosotros",
     "src": "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx",
     "isDynamicEntry": true,
@@ -493,6 +494,7 @@
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/PortadaSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/HistoriaSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/MisionVisionSection.jsx",
+      "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/ValoresSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/ElegirnosSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/AccionSection.jsx"
     ]
@@ -551,6 +553,17 @@
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
       "_vendor-inertia-BCyGzrYZ.js",
+      "_vendor-framer-motion-Brhgw_zz.js",
+      "_DynamicIcon-x4dDLJ1Q.js"
+    ]
+  },
+  "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/ValoresSection.jsx": {
+    "file": "assets/ValoresSection-DLvUiz75.js",
+    "name": "ValoresSection",
+    "src": "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/ValoresSection.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-BWaJ3C7D.js",
       "_vendor-framer-motion-Brhgw_zz.js",
       "_DynamicIcon-x4dDLJ1Q.js"
     ]
