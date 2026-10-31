@@ -236,7 +236,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CodGDq97.css",
+    "file": "assets/app-B0Y6D0l3.css",
     "name": "app",
     "names": [
       "app.css"
@@ -254,7 +254,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-jQQhOBqX.js",
+    "file": "assets/app-CIM-AFPf.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -408,7 +408,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-DclPqaXa.js",
+    "file": "assets/Index-C9KQBD0I.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -582,7 +582,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Servicios/SectionServicios.jsx": {
-    "file": "assets/SectionServicios-eoKEA0_i.js",
+    "file": "assets/SectionServicios-DaCGGAlY.js",
     "name": "SectionServicios",
     "src": "resources/js/pages/sites/Ecomer/components/Servicios/SectionServicios.jsx",
     "isDynamicEntry": true,
@@ -605,7 +605,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Servicios/subcomponents/ProcesosGroup.jsx": {
-    "file": "assets/ProcesosGroup-CsiIYFp5.js",
+    "file": "assets/ProcesosGroup-B5Ti5nqt.js",
     "name": "ProcesosGroup",
     "src": "resources/js/pages/sites/Ecomer/components/Servicios/subcomponents/ProcesosGroup.jsx",
     "isDynamicEntry": true,

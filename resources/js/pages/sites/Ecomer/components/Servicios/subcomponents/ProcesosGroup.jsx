@@ -60,22 +60,27 @@ export default function ProcesosGroup({ procesosBlock }) {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: idx * 0.1 }}
-                            className="relative rounded-2xl p-8 sm:p-9 shadow-xs border border-gray-200/70 flex flex-col justify-between transition-all duration-300 hover:shadow-md hover:-translate-y-1 min-h-[210px]"
+                            className="group relative rounded-2xl p-8 sm:p-9 shadow-xs border border-gray-200/70 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 hover:!bg-[var(--color-primario)] hover:border-transparent min-h-[210px] cursor-default"
                             style={{ backgroundColor: 'color-mix(in srgb, var(--color-primario) 5%, white)' }}
                         >
                             {/* Círculo con Número ("01", "02", "03") en la esquina superior derecha */}
                             <div
-                                className="absolute top-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-white border-2 text-lg font-bold shadow-sm"
+                                className="absolute top-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-white border-2 text-lg font-bold shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:border-white"
                                 style={{ borderColor: 'color-mix(in srgb, var(--color-primario) 30%, transparent)' }}
                             >
-                                <span style={{ fontFamily: 'var(--tipografia-titulos)', color: 'var(--color-primario)' }}>{item.numero}</span>
+                                <span
+                                    className="transition-colors duration-300"
+                                    style={{ fontFamily: 'var(--tipografia-titulos)', color: 'var(--color-primario)' }}
+                                >
+                                    {item.numero}
+                                </span>
                             </div>
 
                             {/* Contenido: Título + Descripción */}
                             <div className="pr-16">
                                 {item.titulo && (
                                     <h3
-                                        className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-snug tracking-tight"
+                                        className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-white mb-3 leading-snug tracking-tight transition-colors duration-300"
                                         style={{ fontFamily: 'var(--tipografia-titulos)' }}
                                     >
                                         {item.titulo}
@@ -84,7 +89,7 @@ export default function ProcesosGroup({ procesosBlock }) {
 
                                 {item.descripcion && (
                                     <p
-                                        className="text-xs sm:text-sm text-gray-600 leading-relaxed font-normal"
+                                        className="text-xs sm:text-sm text-gray-600 group-hover:text-white/90 leading-relaxed font-normal transition-colors duration-300"
                                         style={{ fontFamily: 'var(--tipografia-texto)' }}
                                     >
                                         {item.descripcion}
