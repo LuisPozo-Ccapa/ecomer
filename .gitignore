@@ -42,3 +42,8 @@ Thumbs.db
 /deploy
 /.agents
 /.agents/
+
+# Favicons locales
+/public/favicon.ico
+/public/favicon.png
+/public/favicon.svg

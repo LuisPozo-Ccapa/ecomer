@@ -67,11 +67,6 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
-        <link rel="icon" href="/favicon.ico?v=3" type="image/x-icon" sizes="any">
-        <link rel="shortcut icon" href="/favicon.ico?v=3">
-        <link rel="apple-touch-icon" href="/favicon.png?v=3">
-
         {{-- LCP Image Preload Scanner --}}
         @php
             $heroPreload = $page['props']['_heroPreload'] ?? null;
@@ -89,6 +84,10 @@
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx', "resources/js/pages/{$page['component']}.jsx"])
+
+        <link rel="icon" type="image/png" href="/favicon.png">
+        <link rel="alternate icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" href="/favicon.png">
         <x-inertia::head>
             @php
                 $seoData = $page['props']['_seo'] ?? [];
