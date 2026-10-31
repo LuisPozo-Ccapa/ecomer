@@ -76,12 +76,11 @@ export function parseWaContactLine(line, defaultItemLabel = 'WhatsApp', lIdx = 0
 }
 
 export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesData, estilos }) {
-    const [viewState, setViewState] = useState('closed'); // 'closed' | 'selector' | 'chat'
-    const [mensaje, setMensaje] = useState('');
-    const [selectedWa, setSelectedWa] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(0);
 
-    // Extraer lista completa de contactos de WhatsApp (Datos de Contacto Globales + CMS)
-    const whatsappList = useMemo(() => {
+    // 1. Extraer contactos de WhatsApp y Teléfonos desde la configuración global
+    const { contactList, horarioTexto } = useMemo(() => {
         const initialNav = seccionesData?.nav || seccionesData?.['nav'] || null;
         const initialContacto = seccionesData?.contacto || seccionesData?.['contacto'] || null;
 
@@ -94,10 +93,15 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
             index === self.findIndex((t) => (t.texto || t.Texto) === (item.texto || item.Texto) && (t.icono || t.icon) === (item.icono || item.icon))
         );
 
+        // Detectar horario configurado si existe
+        const clockAction = accionesNav.find((a) => (a.icono || a.icon || '').toLowerCase().includes('clock'));
+        const horario = clockAction?.texto || clockAction?.Texto || 'Disponible de 9 a 20 horas, de lunes a viernes.';
+
+        // Filtrar acciones de tipo WhatsApp o Teléfono
         const waItems = accionesNav.filter((a) => {
             const ico = (a.icon || a.icono || '').toLowerCase();
             const txt = (a.texto || a.Texto || '').toLowerCase();
-            return ico.includes('whatsapp') || ico.includes('phone') || txt.includes('wa.me');
+            return ico.includes('whatsapp') || ico.includes('phone') || txt.includes('wa.me') || txt.includes('tel:');
         });
 
         const list = [];
@@ -150,232 +154,177 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
             }
         }
 
-        return list;
+        // Si no hay ninguno configurado, fallback genérico
+        if (list.length === 0) {
+            list.push({
+                label: 'Atención al Cliente',
+                name: 'Atención',
+                numero: '+51 970 665 124',
+                cleanNum: '51970665124',
+                url: 'https://wa.me/51970665124',
+            });
+        }
+
+        return { contactList: list, horarioTexto: horario };
     }, [seccionesData, estilos, site]);
 
-    const handleMainButtonClick = () => {
-        if (viewState === 'chat' || viewState === 'selector') {
-            setViewState('closed');
-        } else {
-            if (whatsappList.length >= 2) {
-                setViewState('selector');
-            } else if (whatsappList.length === 1) {
-                setSelectedWa(whatsappList[0]);
-                setViewState('chat');
-            } else {
-                setViewState('chat');
-            }
+    const activeContact = contactList[selectedIndex] || contactList[0];
+
+    // Formatear número visible
+    const numeroFormateado = useMemo(() => {
+        const raw = activeContact?.numero || activeContact?.cleanNum || '';
+        const digits = raw.replace(/\D/g, '');
+        if (digits.length === 9) {
+            return `+51 ${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+        } else if (digits.length === 11 && digits.startsWith('51')) {
+            const local = digits.slice(2);
+            return `+51 ${local.slice(0, 3)} ${local.slice(3, 6)} ${local.slice(6)}`;
         }
-    };
+        return activeContact?.numero || activeContact?.cleanNum || '+51 970 665 124';
+    }, [activeContact]);
 
-    const handleSelectWa = (wa) => {
-        setSelectedWa(wa);
-        setViewState('chat');
-    };
+    const telLink = `tel:${activeContact?.cleanNum ? (activeContact.cleanNum.startsWith('51') ? '+' + activeContact.cleanNum : '+51' + activeContact.cleanNum) : '+51970665124'}`;
+    const waLink = activeContact?.url || `https://wa.me/${activeContact?.cleanNum || '51970665124'}?text=${encodeURIComponent('Hola, quisiera más información.')}`;
 
-    const handleEnviar = (e) => {
-        e.preventDefault();
-        const textoEnvio = mensaje.trim() || 'Hola';
-
-        let baseUrl = selectedWa?.url || whatsappList[0]?.url || 'https://wa.me/';
-        if (!baseUrl.includes('wa.me') && !baseUrl.includes('whatsapp.com')) {
-            baseUrl = 'https://wa.me/';
+    // Color para el botón de mensaje: si el color secundario es blanco (#ffffff) o vacío, usamos el tono dorado cálido fiel a la referencia
+    const colorBotonMensaje = useMemo(() => {
+        const sec = (estilos?.color_secundario || site?.estilos?.color_secundario || '').trim().toLowerCase();
+        if (!sec || sec === '#ffffff' || sec === '#fff' || sec === 'white' || sec === 'rgb(255, 255, 255)') {
+            return '#B88A38'; // Tono dorado de la imagen de referencia
         }
-
-        const separator = baseUrl.includes('?') ? '&' : '?';
-        const finalUrl = `${baseUrl}${separator}text=${encodeURIComponent(textoEnvio)}`;
-
-        window.open(finalUrl, '_blank', 'noopener,noreferrer');
-        setViewState('closed');
-        setMensaje('');
-    };
-
-    const currentWa = selectedWa || whatsappList[0];
+        return estilos?.color_secundario || site?.estilos?.color_secundario || '#B88A38';
+    }, [estilos, site]);
 
     return (
         <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
-            {/* 1. CARD SELECTOR: Cuando hay 2 o más números de WhatsApp */}
-            {viewState === 'selector' && (
-                <div className="mb-3 w-[calc(100vw-2rem)] max-w-[340px] overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-200 transition-all duration-300">
-                    <div className="bg-[#075E54] p-4 text-white flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white shrink-0">
-                                <DynamicIcon name="FaWhatsapp" className="h-6 w-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-sm leading-tight text-white">Elige un contacto</h4>
-                                <p className="text-[11px] text-emerald-100">Selecciona con quién deseas hablar</p>
-                            </div>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => setViewState('closed')}
-                            aria-label="Cerrar selección de contactos"
-                            className="rounded-full p-1 hover:bg-white/10 transition text-white/80 hover:text-white cursor-pointer"
-                        >
-                            <DynamicIcon name="FaXmark" className="h-5 w-5" />
-                        </button>
-                    </div>
-
-                    <div className="p-3.5 bg-gray-50/80 space-y-2.5 max-h-[320px] overflow-y-auto">
-                        {whatsappList.map((wa, idx) => (
-                            <button
-                                key={idx}
-                                type="button"
-                                onClick={() => handleSelectWa(wa)}
-                                aria-label={`Conversar con ${wa.label || 'Asesor'} al ${wa.numero}`}
-                                className="w-full text-left bg-white p-3.5 rounded-xl border border-gray-200/80 shadow-xs hover:border-[#25D366] hover:shadow-md hover:scale-[1.01] transition-all flex items-center justify-between group cursor-pointer"
-                            >
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <div className="h-10 w-10 rounded-full bg-emerald-50 text-[#075E54] flex items-center justify-center font-bold border border-emerald-100 group-hover:bg-[#25D366] group-hover:text-white transition-colors shrink-0">
-                                        <DynamicIcon name="FaWhatsapp" className="h-5 w-5" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <h5 className="font-bold text-xs text-gray-900 group-hover:text-[#075E54] transition-colors truncate">{wa.label}</h5>
-                                        <p className="text-xs text-gray-500 font-medium truncate">{wa.numero}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center text-gray-400 group-hover:text-[#25D366] transition-colors shrink-0 pl-2">
-                                    <DynamicIcon name="FaChevronRight" className="h-4 w-4" />
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* 2. CHAT FLOTANTE: Cuando el usuario selecciona una Card o solo hay 1 número */}
-            {viewState === 'chat' && (
-                <div className="mb-3 w-[calc(100vw-2rem)] max-w-[340px] overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-200 transition-all duration-300">
-                    {/* Header del Chat */}
-                    <div className="bg-[#075E54] p-3.5 text-white flex items-center justify-between">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                            {whatsappList.length > 1 && (
+            {/* ── MODAL FLOTANTE (ESTILO TARJETA EXACTA DE REFERENCIA) ── */}
+            {isOpen && (
+                <div
+                    className="mb-4 w-[calc(100vw-2rem)] max-w-[340px] overflow-hidden rounded-[28px] bg-white p-6 shadow-2xl border border-gray-100/90 transition-all duration-300 animate-in fade-in zoom-in-95"
+                    style={{ fontFamily: 'var(--tipografia-texto)' }}
+                >
+                    {/* Selector de Asesores si hay 2 o más números configurados */}
+                    {contactList.length > 1 && (
+                        <div className="mb-4 flex flex-wrap gap-1.5 p-1 bg-gray-100/80 rounded-2xl">
+                            {contactList.map((c, i) => (
                                 <button
+                                    key={i}
                                     type="button"
-                                    onClick={() => setViewState('selector')}
-                                    aria-label="Volver a lista de contactos"
-                                    className="p-1 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition cursor-pointer shrink-0"
-                                    title="Volver a contactos"
+                                    onClick={() => setSelectedIndex(i)}
+                                    className={`flex-1 text-[11px] font-bold py-1.5 px-2.5 rounded-xl transition-all cursor-pointer truncate ${
+                                        selectedIndex === i
+                                            ? 'bg-white text-gray-900 shadow-2xs'
+                                            : 'text-gray-500 hover:text-gray-900'
+                                    }`}
                                 >
-                                    <DynamicIcon name="FaArrowLeft" className="h-4 w-4" />
+                                    {c.label || c.name || `Contacto ${i + 1}`}
                                 </button>
-                            )}
-                            <div className="relative shrink-0">
-                                {site?.imagen ? (
-                                    <img
-                                        src={site.imagen}
-                                        alt={site?.nombre || 'WhatsApp'}
-                                        width={40}
-                                        height={40}
-                                        loading="lazy"
-                                        decoding="async"
-                                        className="h-10 w-10 rounded-full object-cover border-2 border-white/20"
-                                    />
-                                ) : (
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white font-bold text-sm">
-                                        <DynamicIcon name="FaStore" className="h-5 w-5" />
-                                    </div>
-                                )}
-                                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-400 border-2 border-[#075E54]"></span>
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <h4 className="font-bold text-sm leading-tight text-white truncate">{currentWa?.label || site?.nombre || 'Atención al Cliente'}</h4>
-                                <p className="text-[11px] text-emerald-100 truncate">{currentWa?.numero || 'En línea'}</p>
-                            </div>
+                            ))}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => setViewState('closed')}
-                            aria-label="Cerrar chat de WhatsApp"
-                            className="rounded-full p-1 hover:bg-white/10 transition text-white/80 hover:text-white cursor-pointer shrink-0"
-                            title="Cerrar chat"
-                        >
-                            <DynamicIcon name="FaXmark" className="h-5 w-5" />
-                        </button>
-                    </div>
+                    )}
 
-                    {/* Cuerpo del Chat / Mensaje de Bienvenida */}
-                    <div className="p-4 bg-[#efeae2] min-h-[140px] max-h-[220px] overflow-y-auto space-y-3">
-                        <div className="max-w-[85%] rounded-lg bg-white p-3 shadow-xs text-xs text-gray-800 rounded-tl-none relative">
-                            <p className="font-semibold text-[11px] text-[#075E54] mb-1">{currentWa?.label || 'Soporte'}</p>
-                            <p className="leading-relaxed">¡Hola! 👋 ¿En qué podemos ayudarte hoy? Escríbenos tu consulta aquí abajo.</p>
-                            <span className="block text-[9px] text-gray-400 text-right mt-1">Ahora</span>
+                    {/* ── SECCIÓN 1: LLÁMANOS ── */}
+                    <div className="space-y-1.5">
+                        <h3
+                            className="text-base sm:text-lg font-extrabold text-gray-900 tracking-tight"
+                            style={{ fontFamily: 'var(--tipografia-titulos)' }}
+                        >
+                            Llámanos
+                        </h3>
+                        <p className="text-xs text-gray-500 leading-snug">
+                            {horarioTexto}
+                        </p>
+
+                        <div className="pt-2">
+                            <a
+                                href={telLink}
+                                className="group relative w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl font-extrabold text-sm sm:text-base shadow-sm hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all duration-200"
+                                style={{ backgroundColor: 'var(--color-primario, #1c355e)', color: '#ffffff' }}
+                            >
+                                <DynamicIcon name="FaPhone" className="h-4 w-4 shrink-0 text-white transition-transform duration-200 group-hover:rotate-12" />
+                                <span className="tracking-wide font-mono text-white">{numeroFormateado}</span>
+                            </a>
                         </div>
                     </div>
 
-                    {/* Formulario / Campo de Texto */}
-                    <form onSubmit={handleEnviar} className="p-3 bg-white border-t border-gray-100 flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={mensaje}
-                            onChange={(e) => setMensaje(e.target.value)}
-                            placeholder="Escribe tu mensaje..."
-                            aria-label="Escribe tu mensaje de WhatsApp"
-                            className="flex-1 rounded-full bg-gray-100 px-4 py-2.5 text-xs text-gray-800 outline-none focus:ring-2 focus:ring-[#128C7E]/40 transition placeholder-gray-400"
-                            autoFocus
-                        />
-                        <button
-                            type="submit"
-                            aria-label="Enviar mensaje a WhatsApp"
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#128C7E] text-white shadow-md hover:bg-[#075E54] transition cursor-pointer shrink-0"
-                            title="Enviar a WhatsApp"
+                    {/* Divisor sutil */}
+                    <div className="my-5 border-t border-gray-100" />
+
+                    {/* ── SECCIÓN 2: ENVÍANOS UN MENSAJE ── */}
+                    <div className="space-y-1.5">
+                        <h3
+                            className="text-base sm:text-lg font-extrabold text-gray-900 tracking-tight"
+                            style={{ fontFamily: 'var(--tipografia-titulos)' }}
                         >
-                            <DynamicIcon name="FaChevronRight" className="h-4 w-4" />
-                        </button>
-                    </form>
+                            Envíanos un mensaje
+                        </h3>
+                        <p className="text-xs text-gray-500 leading-snug">
+                            Disponible las 24 horas del día.
+                        </p>
+
+                        <div className="pt-2">
+                            <a
+                                href={waLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group relative w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl font-extrabold text-sm sm:text-base shadow-sm hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all duration-200"
+                                style={{ backgroundColor: colorBotonMensaje, color: '#ffffff' }}
+                            >
+                                <DynamicIcon name="FaWhatsapp" className="h-5 w-5 shrink-0 text-white transition-transform duration-200 group-hover:scale-110" />
+                                <span className="tracking-wide font-mono text-white">{numeroFormateado}</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* ── PIE: TIEMPO DE RESPUESTA ── */}
+                    <div className="mt-5 pt-3.5 border-t border-gray-100/70 flex items-center justify-center gap-2 text-xs text-gray-500">
+                        <DynamicIcon name="FaClockRotateLeft" className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+                        <span>
+                            Nuestro tiempo de respuesta: <strong className="font-extrabold text-gray-800">1 hora</strong>
+                        </span>
+                    </div>
                 </div>
             )}
 
-
-
-            {/* ESTILOS DE ANIMACIÓN DE PULSO Y VIBRACIÓN / MENSAJE EN VIVO */}
+            {/* ESTILOS DE ANIMACIÓN DE PULSO SUAVE */}
             <style>{`
                 @keyframes waPulseGlow {
                     0% {
-                        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.8), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primario) 70%, transparent), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
                     }
                     70% {
-                        box-shadow: 0 0 0 20px rgba(37, 211, 102, 0), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                        box-shadow: 0 0 0 18px color-mix(in srgb, var(--color-primario) 0%, transparent), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
                     }
                     100% {
-                        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primario) 0%, transparent), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
                     }
                 }
-
-                @keyframes waVibrateShake {
-                    0%, 100% { transform: rotate(0deg) scale(1); }
-                    3% { transform: rotate(-14deg) scale(1.12); }
-                    6% { transform: rotate(14deg) scale(1.12); }
-                    9% { transform: rotate(-12deg) scale(1.08); }
-                    12% { transform: rotate(12deg) scale(1.08); }
-                    15% { transform: rotate(-6deg) scale(1.04); }
-                    18% { transform: rotate(6deg) scale(1.04); }
-                    21% { transform: rotate(0deg) scale(1); }
-                }
-
                 .wa-pulse-active {
-                    animation: waPulseGlow 2s infinite, waVibrateShake 4.2s infinite ease-in-out;
+                    animation: waPulseGlow 2.4s infinite ease-out;
                 }
             `}</style>
 
-            {/* BOTÓN FLOTANTE TRIGGER */}
+            {/* ── BOTÓN FLOTANTE TRIGGER ── */}
             <button
                 type="button"
-                onClick={handleMainButtonClick}
-                className={`relative flex items-center justify-center rounded-full bg-[#25D366] p-3.5 text-white shadow-xl transition-all duration-300 hover:bg-[#20ba5a] hover:scale-110 cursor-pointer ${viewState === 'closed' ? 'wa-pulse-active' : ''
-                    }`}
-                title={viewState !== 'closed' ? "Cerrar" : "Abrir chat de WhatsApp"}
-                aria-label="Chat de WhatsApp"
+                onClick={() => setIsOpen(!isOpen)}
+                className={`relative flex items-center justify-center rounded-full p-4 text-white shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer ${
+                    !isOpen ? 'wa-pulse-active' : ''
+                }`}
+                style={{
+                    backgroundColor: isOpen ? '#22c55e' : 'var(--color-primario)',
+                }}
+                title={isOpen ? 'Cerrar opciones de contacto' : 'Abrir opciones de contacto'}
+                aria-label="Opciones de contacto"
             >
                 <div className="relative flex items-center justify-center">
-                    {viewState !== 'closed' ? (
-                        <DynamicIcon name="FaXmark" className="h-7 w-7 text-white" />
+                    {isOpen ? (
+                        <DynamicIcon name="FaXmark" className="h-6 w-6 text-white" />
                     ) : (
                         <>
                             <DynamicIcon name="FaWhatsapp" className="h-7 w-7 text-white" />
-                            {/* BADGE DE NOTIFICACIÓN DE MENSAJE NO LEÍDO */}
-                            <span className="absolute -top-3 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-extrabold text-white shadow-md border-2 border-white animate-bounce">
+                            {/* BADGE DE NOTIFICACIÓN */}
+                            <span className="absolute -top-3.5 -right-3.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-extrabold text-white shadow-md border-2 border-white">
                                 1
                             </span>
                         </>
