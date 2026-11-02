@@ -13,6 +13,7 @@ import {
     FaGlobe,
     FaArrowRight,
     FaLocationDot,
+    FaClock,
     FaBook
 } from 'react-icons/fa6';
 
@@ -364,9 +365,82 @@ export default function Footer({
         };
     };
 
-    const displayActions = accionesNav
-        .map(getActionInfo)
-        .filter(Boolean);
+    // 1. Acciones para la barra superior (SOLO números y ubicación)
+    const displayActions = useMemo(() => {
+        const numerosItems = accionesNav
+            .filter((item) => {
+                const ico = (item?.icono || item?.icon || '').toLowerCase();
+                const txt = String(item?.texto || item?.Texto || '').toLowerCase();
+                const isPhoneOrWa = ico.includes('whatsapp') || ico.includes('phone') || ico.includes('headset') || txt.includes('wa.me');
+                const isEmail = ico.includes('envelope') || ico.includes('mail') || txt.includes('@');
+                const isClock = ico.includes('clock') || ico.includes('calendar');
+                const isLocation = ico.includes('location') || ico.includes('store') || ico.includes('map');
+                return isPhoneOrWa && !isEmail && !isClock && !isLocation;
+            })
+            .map(getActionInfo)
+            .filter(Boolean);
+
+        // Ubicación a la derecha de "Compra oficial"
+        const ubicacionItem = direccion ? {
+            icon: 'FaLocationDot',
+            label: 'Nuestra Tienda',
+            texto: direccion,
+            href: `https://maps.google.com/maps?q=${encodeURIComponent(direccion)}`,
+        } : null;
+
+        return ubicacionItem ? [...numerosItems, ubicacionItem] : numerosItems;
+    }, [accionesNav, direccion]);
+
+    // 2. Correos para Atención al Cliente (Columna 3)
+    const emailsList = useMemo(() => {
+        const fromNav = accionesNav.filter((item) => {
+            const ico = (item?.icono || item?.icon || '').toLowerCase();
+            const txt = String(item?.texto || item?.Texto || '').toLowerCase();
+            return ico.includes('envelope') || ico.includes('mail') || txt.includes('@');
+        });
+
+        if (fromNav.length > 0) {
+            return fromNav.map((item) => {
+                const raw = String(item?.texto || item?.Texto || '').trim();
+                const first = raw.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)[0] || raw;
+                return {
+                    label: item?.Label || item?.label || 'Correo',
+                    email: first,
+                };
+            });
+        }
+
+        if (emailNavTexto) {
+            return [{ label: 'Correo', email: emailNavTexto }];
+        }
+
+        return [];
+    }, [accionesNav, emailNavTexto]);
+
+    // 3. Horarios para Atención al Cliente (Columna 3)
+    const horariosList = useMemo(() => {
+        const fromNav = accionesNav.filter((item) => {
+            const ico = (item?.icono || item?.icon || '').toLowerCase();
+            return ico.includes('clock') || ico.includes('calendar');
+        });
+
+        if (fromNav.length > 0) {
+            return fromNav.map((item) => {
+                const raw = String(item?.texto || item?.Texto || '').trim();
+                const first = raw.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)[0] || raw;
+                return {
+                    label: item?.Label || item?.label || 'Horario de Atención',
+                    texto: first,
+                };
+            });
+        }
+
+        if (horarioTexto) {
+            return [{ label: 'Horario de Atención', texto: horarioTexto }];
+        }
+
+        return [];
+    }, [accionesNav, horarioTexto]);
 
     // --- ESTADO Y MANEJO DEL MODAL DE POLÍTICAS Y TÉRMINOS ---
     const rawPoliticas = estilos?.politicas || site?.estilos?.politicas;
@@ -418,7 +492,7 @@ export default function Footer({
 
                     {/* --- 1. BARRA SUPERIOR: VALOR Y BENEFICIOS BASADOS EN NAV / ACCIONES --- */}
                     <div className="pb-10 border-b border-neutral-800/80">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-start gap-6 lg:gap-10">
                             <div className="flex items-center gap-2 group cursor-pointer shrink-0">
                                 <span className="text-lg md:text-xl font-bold tracking-tight text-white group-hover:text-neutral-200 transition-colors">
                                     Compra oficial en {siteName}
@@ -427,7 +501,7 @@ export default function Footer({
                             </div>
 
                             {displayActions.length > 0 && (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap items-center gap-4 sm:gap-6 text-xs text-neutral-300">
+                                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-neutral-300">
                                     {displayActions.map((action, idx) => {
                                         const itemBody = (
                                             <div className="flex items-center gap-2.5 group/item transition-colors hover:text-white">
@@ -441,12 +515,12 @@ export default function Footer({
                                                             <span className="font-semibold text-white/90 whitespace-nowrap">
                                                                 {action.label}:
                                                             </span>
-                                                            <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[200px]">
+                                                            <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors max-w-xs md:max-w-md truncate">
                                                                 {action.texto}
                                                             </span>
                                                         </>
                                                     ) : (
-                                                        <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors truncate max-w-[220px]">
+                                                        <span className="font-medium text-neutral-300 group-hover/item:text-white transition-colors max-w-xs md:max-w-md truncate">
                                                             {action.texto}
                                                         </span>
                                                     )}
@@ -505,17 +579,6 @@ export default function Footer({
                             <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
                                 Tu tienda de confianza con los mejores productos, calidad garantizada y atención directa para brindarte la mejor experiencia de compra.
                             </p>
-
-                            {/* Dirección física configurada en Admin */}
-                            {direccion && (
-                                <div className="flex items-start gap-2.5 pt-1 text-xs text-neutral-300">
-                                    <FaLocationDot className="h-4 w-4 mt-0.5 text-neutral-400 shrink-0" />
-                                    <div>
-                                        <span className="block font-semibold text-white">Nuestra Tienda:</span>
-                                        <span className="text-neutral-400 leading-tight">{direccion}</span>
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Redes Sociales oficiales en Columna 1 */}
                             {redesFinales.length > 0 && (
@@ -577,7 +640,7 @@ export default function Footer({
                             </ul>
                         </div>
 
-                        {/* COLUMNA 3: ATENCIÓN AL CLIENTE Y SOPORTE DIRECTO */}
+                        {/* COLUMNA 3: ATENCIÓN AL CLIENTE (CORREOS, HORARIOS Y WHATSAPP) */}
                         <div className="space-y-4">
                             <div className="h-12 flex items-center">
                                 <h4 className="text-white font-bold text-sm tracking-wide">
@@ -586,162 +649,166 @@ export default function Footer({
                             </div>
 
                             <div className="space-y-3 text-xs text-neutral-400">
-                                {/* Teléfono */}
-                                {phoneNavTexto && (
-                                    <div className="flex items-start gap-2.5">
-                                        <FaPhone className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
-                                        <div>
-                                            <a
-                                                href={`tel:${phoneNavTexto.replace(/[^\d+]/g, '')}`}
-                                                className="text-neutral-200 font-medium hover:text-white transition-colors"
-                                            >
-                                                {phoneNavTexto}
-                                            </a>
-                                            {horarioTexto && (
-                                                <div className="text-neutral-500 text-[11px]">{horarioTexto}</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
+                                        {/* Correos Electrónicos */}
+                                        {emailsList.map((item, idx) => (
+                                            <div key={`email-${idx}`} className="flex items-start gap-2.5">
+                                                <FaEnvelope className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
+                                                <div>
+                                                    {item.label && item.label.toLowerCase() !== 'correo' && item.label.toLowerCase() !== 'email' && (
+                                                        <span className="block text-[11px] text-neutral-400 font-medium">
+                                                            {item.label}:
+                                                        </span>
+                                                    )}
+                                                    <a
+                                                        href={`mailto:${item.email}`}
+                                                        className="text-neutral-200 hover:text-white transition-colors break-all"
+                                                    >
+                                                        {item.email}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                ))}
 
-                                {/* Email */}
-                                {emailNavTexto && (
-                                    <div className="flex items-start gap-2.5">
-                                        <FaEnvelope className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
-                                        <div>
-                                            <a
-                                                href={`mailto:${emailNavTexto}`}
-                                                className="text-neutral-200 hover:text-white transition-colors"
-                                            >
-                                                {emailNavTexto}
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
+                                                {/* Horarios de Atención */}
+                                                {horariosList.map((item, idx) => (
+                                                    <div key={`horario-${idx}`} className="flex items-start gap-2.5">
+                                                        <FaClock className="h-3.5 w-3.5 mt-0.5 text-neutral-300 shrink-0" />
+                                                        <div>
+                                                            {item.label && (
+                                                                <span className="block text-[11px] text-neutral-400 font-medium">
+                                                                    {item.label}:
+                                                                </span>
+                                                            )}
+                                                            <span className="text-neutral-200 leading-tight">
+                                                                {item.texto}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                ))}
 
-                                {/* WhatsApp Directo */}
-                                {whatsappLink && (
-                                    <div className="flex items-start gap-2.5">
-                                        <FaComments className="h-3.5 w-3.5 mt-0.5 text-white shrink-0" />
-                                        <div>
-                                            <a
-                                                href={whatsappLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-neutral-200 hover:text-white font-medium transition-colors"
-                                            >
-                                                Chat directo por WhatsApp
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                                                {/* WhatsApp Directo */}
+                                                {whatsappLink && (
+                                                    <div className="flex items-start gap-2.5">
+                                                        <FaComments className="h-3.5 w-3.5 mt-0.5 text-white shrink-0" />
+                                                        <div>
+                                                            <a
+                                                                href={whatsappLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-neutral-200 hover:text-white font-medium transition-colors"
+                                                            >
+                                                                Chat directo por WhatsApp
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                         </div>
 
                         {/* COLUMNA 4: MÉTODOS Y CUENTAS DE PAGO */}
-                        <div className="space-y-4">
-                            <div className="h-12 flex items-center">
-                                <h4 className="text-white font-bold text-sm tracking-wide">
-                                    Métodos de Pago
-                                </h4>
-                            </div>
-
-                            {/* Cuentas Bancarias / Información para Pagar */}
-                            {cuentasPago.length > 0 && (
-                                <div className="space-y-2">
-                                    {cuentasPago.map((item, idx) => {
-                                        const label = item.label || item.Label || 'Cuenta:';
-                                        const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
-                                        const info = item.info || item.Info || item.numero || '';
-
-                                        return (
-                                            <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
-                                                <div className="flex items-center justify-between gap-1 text-[11px]">
-                                                    <span className="text-neutral-400 font-semibold">{label}</span>
-                                                    <span className="text-white font-extrabold">{metodo}</span>
-                                                </div>
-                                                <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
-                                                    {info}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
-
-                            {/* Métodos de Pago Aceptados (Insignias) */}
-                            {renderedBadges.length > 0 && (
-                                <div className="pt-1">
-                                    <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
-                                        Insignias Aceptadas
-                                    </span>
-                                    <div className="flex flex-wrap items-center gap-1.5">
-                                        {renderedBadges}
+                                <div className="space-y-4">
+                                    <div className="h-12 flex items-center">
+                                        <h4 className="text-white font-bold text-sm tracking-wide">
+                                            Métodos de Pago
+                                        </h4>
                                     </div>
+
+                                    {/* Cuentas Bancarias / Información para Pagar */}
+                                    {cuentasPago.length > 0 && (
+                                        <div className="space-y-2">
+                                            {cuentasPago.map((item, idx) => {
+                                                const label = item.label || item.Label || 'Cuenta:';
+                                                const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
+                                                const info = item.info || item.Info || item.numero || '';
+
+                                                return (
+                                                    <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
+                                                        <div className="flex items-center justify-between gap-1 text-[11px]">
+                                                            <span className="text-neutral-400 font-semibold">{label}</span>
+                                                            <span className="text-white font-extrabold">{metodo}</span>
+                                                        </div>
+                                                        <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
+                                                            {info}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {/* Métodos de Pago Aceptados (Insignias) */}
+                                    {renderedBadges.length > 0 && (
+                                        <div className="pt-1">
+                                            <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
+                                                Insignias Aceptadas
+                                            </span>
+                                            <div className="flex flex-wrap items-center gap-1.5">
+                                                {renderedBadges}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
 
-                    </div>
+                            </div>
 
-                    {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */}
-                    <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-                        <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 text-center sm:text-left">
-                            <span>
-                                © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
-                            </span>
-                            <span className="hidden sm:inline text-neutral-700">•</span>
-                            <a
-                                href="https://www.ccapasistemas.com/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-neutral-400 hover:text-white transition-colors group/ccapa focus:outline-none"
-                                title="CCAPA TECNOLOGIAS DE INFORMACION SAC"
-                            >
-                                <span>Hecho por</span>
-                                <span className="text-red-500 text-xs group-hover/ccapa:scale-110 transition-transform">♥️</span>
-                                <span className="text-neutral-300 font-semibold tracking-wide group-hover/ccapa:text-white group-hover/ccapa:underline underline-offset-2">
-                                    CCAPA TECNOLOGIAS DE INFORMACION SAC
-                                </span>
-                            </a>
-                        </div>
+                            {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */}
+                            <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
+                                <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 text-center sm:text-left">
+                                    <span>
+                                        © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
+                                    </span>
+                                    <span className="hidden sm:inline text-neutral-700">•</span>
+                                    <a
+                                        href="https://www.ccapasistemas.com/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 text-neutral-400 hover:text-white transition-colors group/ccapa focus:outline-none"
+                                        title="CCAPA TECNOLOGIAS DE INFORMACION SAC"
+                                    >
+                                        <span>Hecho por</span>
+                                        <span className="text-red-500 text-xs group-hover/ccapa:scale-110 transition-transform">♥️</span>
+                                        <span className="text-neutral-300 font-semibold tracking-wide group-hover/ccapa:text-white group-hover/ccapa:underline underline-offset-2">
+                                            CCAPA TECNOLOGIAS DE INFORMACION SAC
+                                        </span>
+                                    </a>
+                                </div>
 
-                        {hasAnyLegal && (
-                            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
-                                {hasEnvios && (
-                                    <a href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                        Política de Envíos
-                                    </a>
-                                )}
-                                {hasDevoluciones && (
-                                    <a href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                        Políticas de Devolución
-                                    </a>
-                                )}
-                                {hasPrivacidad && (
-                                    <a href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                        Política de Privacidad
-                                    </a>
-                                )}
-                                {hasTerminos && (
-                                    <a href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                        Términos y Condiciones
-                                    </a>
+                                {hasAnyLegal && (
+                                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
+                                        {hasEnvios && (
+                                            <a href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                                Política de Envíos
+                                            </a>
+                                        )}
+                                        {hasDevoluciones && (
+                                            <a href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                                Políticas de Devolución
+                                            </a>
+                                        )}
+                                        {hasPrivacidad && (
+                                            <a href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                                Política de Privacidad
+                                            </a>
+                                        )}
+                                        {hasTerminos && (
+                                            <a href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                                                Términos y Condiciones
+                                            </a>
+                                        )}
+                                    </div>
                                 )}
                             </div>
-                        )}
-                    </div>
 
-                </div>
-            </footer>
+                        </div>
+                    </footer>
 
-            {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */}
-            <LegalModal
-                isOpen={legalModalOpen}
-                onClose={() => setLegalModalOpen(false)}
-                defaultTab={legalModalTab}
-                site={site}
-            />
-        </>
-    );
+                    {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */}
+                    <LegalModal
+                        isOpen={legalModalOpen}
+                        onClose={() => setLegalModalOpen(false)}
+                        defaultTab={legalModalTab}
+                        site={site}
+                    />
+                </>
+                );
 }
