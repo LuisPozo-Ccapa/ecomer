@@ -19,38 +19,97 @@ Route::options('{any}', function () {
 
 Route::post('/contacto', function (Request $request) {
     $validated = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'telefono' => 'nullable|string|max:50',
-        'fecha' => 'nullable|string|max:50',
-        'mensaje' => 'required|string|max:2000',
+        'nombre'       => 'required|string|max:255',
+        'empresa'      => 'nullable|string|max:255',
+        'telefono'     => 'required|string|max:50',
+        'email'        => 'nullable|email|max:255',
+        'sector'       => 'nullable|string|max:100',
+        'producto'     => 'nullable|string|max:255',
+        'mensaje'      => 'required|string|max:5000',
+        'site_id'      => 'nullable|integer',
+        'sitio_nombre' => 'nullable|string|max:255',
+        'sitio_logo'   => 'nullable|string|max:1000',
     ]);
 
-    $nombre = $validated['nombre'];
-    $email = $validated['email'] ?? 'No especificado';
-    $telefono = $validated['telefono'] ?? 'No especificado';
-    $fecha = $validated['fecha'] ?? 'No especificado';
-    $mensaje = $validated['mensaje'];
+    $site = !empty($validated['site_id']) ? \App\Models\Site::with(['respuestas.pregunta'])->find($validated['site_id']) : null;
+    $sitioNombre = $validated['sitio_nombre'] ?? $site?->nombre ?? config('app.name');
+    $destinatario = $site?->email ?: (config('mail.from.address') ?: env('MAIL_FROM_ADDRESS'));
 
-    $cuerpo = "Has recibido un nuevo mensaje desde el formulario de contacto de tu sitio web:\n\n"
-        . "👤 Nombre: {$nombre}\n"
-        . "📧 Correo del cliente: {$email}\n"
-        . "📱 Teléfono: {$telefono}\n"
-        . "📅 Fecha del evento/entrega: {$fecha}\n"
-        . "💬 Mensaje:\n{$mensaje}\n";
+    if (!$destinatario) {
+        return response()->json(['success' => false, 'error' => 'No se ha configurado la dirección de correo receptora.'], 500);
+    }
 
-    try {
-        $destinatario = config('mail.from.address') ?: env('MAIL_FROM_ADDRESS');
+    // Logo dinámico del CMS según el proyecto
+    $sitioLogo = $validated['sitio_logo'] ?? null;
+    if (!$sitioLogo && $site) {
+        $sitioLogo = $site->imagen;
+        if (!$sitioLogo && $site->relationLoaded('respuestas')) {
+            $logoRespuesta = $site->respuestas->first(function ($r) {
+                $lbl = strtolower($r->pregunta?->label ?? '');
+                return $lbl === 'logo' || $lbl === 'logo_nav' || str_contains($lbl, 'logo');
+            });
+            $sitioLogo = $logoRespuesta?->valor;
+        }
+        if (!$sitioLogo && !empty($site->estilos['logo'])) {
+            $sitioLogo = $site->estilos['logo'];
+        }
+    }
 
-        if (! $destinatario) {
-            throw new \Exception('No se ha configurado MAIL_FROM_ADDRESS en el archivo .env');
+    // Resolver ruta física local y URL accesible
+    $sitioLogoPath = null;
+    if ($sitioLogo) {
+        $cleanPath = preg_replace('#^https?://[^/]+/#i', '', $sitioLogo);
+        $cleanPath = ltrim($cleanPath, '/');
+        if (str_starts_with($cleanPath, 'storage/')) {
+            $cleanPath = substr($cleanPath, 8);
         }
 
-        Mail::raw($cuerpo, function ($msg) use ($nombre, $destinatario) {
-            $msg->to($destinatario)
-                ->subject("Nuevo Mensaje de Contacto - {$nombre}");
+        $possibleStoragePath = storage_path('app/public/' . $cleanPath);
+        $possiblePublicPath = public_path('storage/' . $cleanPath);
+
+        if (file_exists($possibleStoragePath)) {
+            $sitioLogoPath = $possibleStoragePath;
+        } elseif (file_exists($possiblePublicPath)) {
+            $sitioLogoPath = $possiblePublicPath;
+        }
+
+        if (!str_starts_with($sitioLogo, 'http://') && !str_starts_with($sitioLogo, 'https://')) {
+            $sitioLogo = asset('storage/' . ltrim($sitioLogo, '/'));
+        }
+    }
+
+    $sitioEstilos = is_array($site?->estilos) ? $site->estilos : (is_string($site?->estilos) ? json_decode($site->estilos, true) : []);
+    $sitioDireccion = $sitioEstilos['direccion'] ?? null;
+
+    $folio = 'COT-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+    $asunto = '[Cotización Web] ' . (!empty($validated['producto']) ? $validated['producto'] : 'Consulta General') . ' — ' . (!empty($validated['empresa']) ? $validated['empresa'] : $validated['nombre']);
+
+    try {
+        Mail::send('emails.contacto', [
+            'folio'           => $folio,
+            'nombre'          => $validated['nombre'],
+            'empresa'         => $validated['empresa'] ?? null,
+            'telefono'        => $validated['telefono'],
+            'email'           => $validated['email'] ?? null,
+            'sector'          => $validated['sector'] ?? null,
+            'producto'        => $validated['producto'] ?? null,
+            'mensaje'         => $validated['mensaje'],
+            'sitio_nombre'    => $sitioNombre,
+            'sitio_logo'      => $sitioLogo,
+            'sitio_logo_path' => $sitioLogoPath,
+            'sitio_direccion' => $sitioDireccion,
+            'fecha_envio'     => now()->translatedFormat('d \d\e F \d\e Y, H:i') . ' hrs',
+        ], function ($msg) use ($destinatario, $asunto, $validated, $sitioNombre) {
+            $msg->from(config('mail.from.address'), $sitioNombre)
+                ->to($destinatario)
+                ->subject($asunto);
+
+            if (!empty($validated['email'])) {
+                $msg->replyTo($validated['email'], $validated['nombre']);
+            }
         });
-        return response()->json(['success' => true, 'message' => 'Correo enviado exitosamente.']);
+
+        return response()->json(['success' => true, 'message' => 'Cotización enviada exitosamente.']);
     } catch (\Throwable $e) {
         \Illuminate\Support\Facades\Log::error("Error enviando correo de contacto: " . $e->getMessage());
         return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
