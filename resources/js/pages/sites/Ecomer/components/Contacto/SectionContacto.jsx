@@ -1,56 +1,32 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
+import LegalModal from '@/components/LegalModal';
 import { useContactoData } from './hooks/useContactoData';
+import {
+    FaArrowUpRightFromSquare,
+    FaLocationDot,
+    FaEnvelope,
+    FaPhone,
+    FaWhatsapp,
+    FaBullhorn,
+    FaCheck,
+    FaSpinner,
+    FaMoneyBillWave,
+    FaBuildingColumns,
+    FaMobileScreenButton,
+    FaCreditCard
+} from 'react-icons/fa6';
 
-function CuentaPagoCard({ item }) {
-    const [copiado, setCopiado] = useState(false);
-    const label = item.label || item.Label || 'Cuenta:';
-    const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
-    const info = item.info || item.Info || item.numero || '';
-
-    const handleCopy = () => {
-        if (info && typeof navigator !== 'undefined' && navigator.clipboard) {
-            navigator.clipboard.writeText(info);
-            setCopiado(true);
-            setTimeout(() => setCopiado(false), 2000);
-        }
-    };
-
-    return (
-        <div className="p-3.5 rounded-2xl bg-gray-50 border border-gray-200/70 hover:border-gray-300 transition-colors shadow-2xs space-y-1">
-            <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider truncate">
-                    {label}
-                </span>
-                <span className="text-xs font-extrabold text-[var(--color-primario)] shrink-0">
-                    {metodo}
-                </span>
-            </div>
-            <div className="flex items-center justify-between gap-2 pt-0.5">
-                <span className="text-sm font-bold text-gray-900 font-mono select-all truncate">
-                    {info}
-                </span>
-                {info && (
-                    <button
-                        type="button"
-                        onClick={handleCopy}
-                        className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-md border transition cursor-pointer shrink-0 ${copiado
-                            ? 'bg-emerald-600 text-white border-emerald-600'
-                            : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-100 shadow-2xs'
-                            }`}
-                        title="Copiar número de cuenta"
-                    >
-                        {copiado ? '¡Copiado!' : 'Copiar'}
-                    </button>
-                )}
-            </div>
-        </div>
-    );
-}
-
-export default function SectionContacto({ site, seccion, seccionesData, estilos }) {
+export default function SectionContacto({ site, seccion, seccionesData, estilos, productos = [] }) {
     const { contacto } = useContactoData(seccion, seccionesData);
+    const [legalModalOpen, setLegalModalOpen] = useState(false);
+    const [aceptoPoliticas, setAceptoPoliticas] = useState(false);
+
+    // Form state
+    const [enviado, setEnviado] = useState(false);
+    const [enviando, setEnviando] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
 
     const memoData = useMemo(() => {
         const rawValor = contacto?.valor || contacto?.contenido?.find((c) => (c.label || '').toLowerCase() === 'contacto')?.valor;
@@ -62,8 +38,9 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
             return l === 'descripcion' || l === 'descripción' || l === 'subtitulo';
         })?.valor;
 
-        const titulo = data?.Titulo || data?.titulo || (typeof directTitulo === 'string' ? directTitulo : null) || 'Contacto';
-        const descripcion = data?.Descripcion || data?.descripcion || (typeof directDesc === 'string' ? directDesc : null) || 'Ponte en contacto con nosotros. Envíanos tu mensaje o consulta y te responderemos a la brevedad.';
+        const titulo = data?.Titulo || data?.titulo || (typeof directTitulo === 'string' ? directTitulo : null) || 'Cotiza con nosotros directo de fábrica';
+        const descripcion = data?.Descripcion || data?.descripcion || (typeof directDesc === 'string' ? directDesc : null) || 'Equipa tu negocio o renueva con la mejor calidad y atención directa. Precios de fábrica y asesoría comercial personalizada.';
+        const referenciaComercial = data?.Referencia || data?.referencia || null;
 
         const extractUrl = (val) => {
             if (!val) return null;
@@ -132,7 +109,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
             site?.imagen
         );
 
-        const imagenHero = responsiveImg?.cel || responsiveImg?.tablet || responsiveImg?.pc || fallbackImg || 'https://images.unsplash.com/photo-1423666639041-f56000c27a9a?q=80&w=1600&auto=format&fit=crop';
+        const imagenHero = responsiveImg?.pc || responsiveImg?.tablet || responsiveImg?.cel || fallbackImg || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1800&auto=format&fit=crop';
 
         const direccion = estilos?.direccion
             || site?.estilos?.direccion
@@ -153,17 +130,18 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
         };
 
         const redesList = [];
-        if (redesConfig.facebook) redesList.push({ nombre: 'Facebook', icono: 'FaFacebook', url: formatSocialUrl(redesConfig.facebook, 'https://facebook.com/') });
-        if (redesConfig.instagram) redesList.push({ nombre: 'Instagram', icono: 'FaInstagram', url: formatSocialUrl(redesConfig.instagram, 'https://instagram.com/') });
-        if (redesConfig.tiktok) redesList.push({ nombre: 'TikTok', icono: 'FaTiktok', url: formatSocialUrl(redesConfig.tiktok, 'https://tiktok.com/@') });
-        if (redesConfig.youtube) redesList.push({ nombre: 'YouTube', icono: 'FaYoutube', url: formatSocialUrl(redesConfig.youtube, 'https://youtube.com/@') });
-        if (redesConfig.twitter) redesList.push({ nombre: 'X (Twitter)', icono: 'FaXTwitter', url: formatSocialUrl(redesConfig.twitter, 'https://x.com/') });
+        if (redesConfig.facebook) redesList.push({ nombre: 'Facebook', icono: 'FaFacebook', url: formatSocialUrl(redesConfig.facebook, 'https://facebook.com/'), handle: redesConfig.facebook });
+        if (redesConfig.instagram) redesList.push({ nombre: 'Instagram', icono: 'FaInstagram', url: formatSocialUrl(redesConfig.instagram, 'https://instagram.com/'), handle: redesConfig.instagram });
+        if (redesConfig.tiktok) redesList.push({ nombre: 'TikTok', icono: 'FaTiktok', url: formatSocialUrl(redesConfig.tiktok, 'https://tiktok.com/@'), handle: redesConfig.tiktok });
+        if (redesConfig.youtube) redesList.push({ nombre: 'YouTube', icono: 'FaYoutube', url: formatSocialUrl(redesConfig.youtube, 'https://youtube.com/@'), handle: redesConfig.youtube });
+        if (redesConfig.twitter) redesList.push({ nombre: 'X (Twitter)', icono: 'FaXTwitter', url: formatSocialUrl(redesConfig.twitter, 'https://x.com/'), handle: redesConfig.twitter });
 
         const cmsRedes = Array.isArray(data?.Redes) ? data.Redes : (Array.isArray(data?.redes) ? data.redes : []);
         const redesFinales = redesList.length > 0 ? redesList : cmsRedes.map(r => ({
             nombre: r.nombre || 'Red Social',
             icono: r.Icono || r.icono || 'FaShareNodes',
-            url: r.Texto || r.texto || '#'
+            url: r.Texto || r.texto || '#',
+            handle: r.Texto || r.texto || ''
         }));
 
         const globalActions = Array.isArray(estilos?.acciones_nav)
@@ -181,6 +159,27 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
         const cleanDigits = firstSegment.replace(/\D/g, '');
         const waNum = cleanDigits ? (cleanDigits.length === 9 ? '51' + cleanDigits : cleanDigits) : null;
 
+        // Teléfono y Correo para fallback
+        const phoneItem = globalActions.find(a => {
+            const ico = (a.icono || a.icon || '').toLowerCase();
+            const txt = (a.texto || a.Texto || '').toLowerCase();
+            return (ico.includes('phone') || ico.includes('headset') || ico.includes('tel')) && !ico.includes('whatsapp');
+        });
+        const phoneNavTexto = phoneItem?.texto || phoneItem?.Texto || null;
+
+        const emailItem = globalActions.find(a => {
+            const ico = (a.icono || a.icon || '').toLowerCase();
+            const txt = (a.texto || a.Texto || '').toLowerCase();
+            return ico.includes('envelope') || ico.includes('mail') || txt.includes('@');
+        });
+        const emailNavTexto = emailItem?.texto || emailItem?.Texto || site?.email || null;
+
+        const horarioItem = globalActions.find(a => {
+            const ico = (a.icono || a.icon || '').toLowerCase();
+            return ico.includes('clock') || ico.includes('calendar');
+        });
+        const horarioTexto = horarioItem?.texto || horarioItem?.Texto || 'Lun a Vie (09:00 am - 07:00 pm)';
+
         const rawCuentas = estilos?.cuentas_pago || site?.estilos?.cuentas_pago || [];
         const cuentasPago = Array.isArray(rawCuentas)
             ? rawCuentas
@@ -190,9 +189,128 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
             ? mapaUrlConfig
             : (direccion ? `https://maps.google.com/maps?q=${encodeURIComponent(direccion)}&t=&z=15&ie=UTF8&iwloc=&output=embed` : null);
 
+        // --- CARDS SUPERIORES: MODIFICABLES DESDE CMS O FALLBACK AUTOMÁTICO ---
+        const rawCards = data?.Cards || data?.cards;
+        let cmsCards = [];
+        if (Array.isArray(rawCards)) {
+            cmsCards = rawCards;
+        } else if (rawCards && typeof rawCards === 'object') {
+            cmsCards = Object.values(rawCards);
+        }
+
+        let cardsList = [];
+        if (cmsCards.length > 0) {
+            cardsList = cmsCards.map((c, idx) => {
+                const img = extractUrl(c.Imagen || c.imagen);
+                const ico = c.Icono || c.icono || (idx === 0 ? 'FaPhone' : idx === 1 ? 'FaEnvelope' : 'FaLocationDot');
+                const title = c.Titulo || c.titulo || '';
+                const desc = c.Descripcion || c.descripcion || '';
+                const btnTxt = c.Boton_Texto || c.boton_texto || c.boton || c.Boton || '';
+                const btnLink = c.Boton_Enlace || c.boton_enlace || c.enlace || c.url || '#';
+
+                return {
+                    id: idx,
+                    icono: ico,
+                    imagen: img,
+                    titulo: title,
+                    descripcion: desc,
+                    botonTexto: btnTxt,
+                    botonEnlace: btnLink,
+                    estilo: idx === 0 ? 'destacado' : 'oscuro'
+                };
+            });
+        } else {
+            // Fallback inteligente fiel a la referencia
+            cardsList = [
+                {
+                    id: 0,
+                    icono: 'FaPhone',
+                    imagen: null,
+                    titulo: 'Llámanos',
+                    descripcion: horarioTexto,
+                    botonTexto: phoneNavTexto || (waNum ? `+${waNum}` : '+51 984 150 060'),
+                    botonEnlace: phoneNavTexto ? `tel:${phoneNavTexto.replace(/[^\d+]/g, '')}` : (waNum ? `tel:${waNum}` : '#'),
+                    estilo: 'destacado'
+                },
+                {
+                    id: 1,
+                    icono: 'FaEnvelope',
+                    imagen: null,
+                    titulo: 'Escríbenos',
+                    descripcion: 'Atención rápida para ventas corporativas y cotizaciones',
+                    botonTexto: 'Enviar correo',
+                    botonEnlace: emailNavTexto ? `mailto:${emailNavTexto}` : '#',
+                    estilo: 'oscuro'
+                },
+                {
+                    id: 2,
+                    icono: 'FaLocationDot',
+                    imagen: null,
+                    titulo: 'Visítanos',
+                    descripcion: direccion ? `Fábrica / Tienda: ${direccion}` : 'Visita nuestro taller y tienda principal',
+                    botonTexto: 'Ver en Maps',
+                    botonEnlace: mapaUrlConfig || (direccion ? `https://maps.google.com/maps?q=${encodeURIComponent(direccion)}` : '#'),
+                    estilo: 'oscuro'
+                }
+            ];
+        }
+
+        // --- TARJETAS DE PAGO INFERIORES: MODIFICABLES DESDE CMS O FALLBACK AUTOMÁTICO ---
+        const rawTarjetasPago = data?.Tarjetas_Pago || data?.tarjetas_pago;
+        let cmsTarjetasPago = [];
+        if (Array.isArray(rawTarjetasPago)) {
+            cmsTarjetasPago = rawTarjetasPago;
+        } else if (rawTarjetasPago && typeof rawTarjetasPago === 'object') {
+            cmsTarjetasPago = Object.values(rawTarjetasPago);
+        }
+
+        let tarjetasPagoList = [];
+        if (cmsTarjetasPago.length > 0) {
+            tarjetasPagoList = cmsTarjetasPago.map((tp, idx) => {
+                const img = extractUrl(tp.Imagen || tp.imagen);
+                const ico = tp.Icono || tp.icono || (idx === 0 ? 'FaMoneyBillWave' : idx === 1 ? 'FaBuildingColumns' : 'FaMobileScreenButton');
+                const title = tp.Titulo || tp.titulo || 'Método de Pago';
+                const desc = tp.Descripcion || tp.descripcion || '';
+
+                return {
+                    id: idx,
+                    icono: ico,
+                    imagen: img,
+                    titulo: title,
+                    descripcion: desc,
+                };
+            });
+        } else {
+            // Fallback idéntico a la referencia
+            tarjetasPagoList = [
+                {
+                    id: 0,
+                    icono: 'FaMoneyBillWave',
+                    imagen: null,
+                    titulo: 'Efectivo',
+                    descripcion: 'Pago en nuestra oficina al momento de la compra',
+                },
+                {
+                    id: 1,
+                    icono: 'FaBuildingColumns',
+                    imagen: null,
+                    titulo: 'Transferencia Bancaria',
+                    descripcion: 'Transferencias desde cualquier entidad bancaria.',
+                },
+                {
+                    id: 2,
+                    icono: 'FaMobileScreenButton',
+                    imagen: null,
+                    titulo: 'Pago Fácil',
+                    descripcion: 'Pago rápido y seguro desde tu aplicativo.',
+                },
+            ];
+        }
+
         return {
             titulo,
             descripcion,
+            referenciaComercial,
             direccion,
             mapaUrlConfig,
             redesFinales,
@@ -201,25 +319,26 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
             globalActions,
             waNum,
             cuentasPago,
-            googleMapEmbedUrl
+            googleMapEmbedUrl,
+            cardsList,
+            tarjetasPagoList
         };
     }, [contacto, seccion, site, estilos]);
 
     const {
         titulo,
         descripcion,
+        referenciaComercial,
         direccion,
-        mapaUrlConfig,
         redesFinales,
         imagenHero,
         responsiveImg,
-        globalActions,
         waNum,
+        cuentasPago,
+        googleMapEmbedUrl,
+        cardsList,
+        tarjetasPagoList
     } = memoData;
-
-    // Form state
-    const [enviado, setEnviado] = useState(false);
-    const [enviando, setEnviando] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -229,12 +348,24 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
         const formData = new FormData(form);
 
         const nombre = formData.get('nombre') || '';
-        const email = formData.get('email') || '';
+        const empresa = formData.get('empresa') || '';
         const telefono = formData.get('telefono') || '';
-        const fecha = formData.get('fecha') || '';
+        const email = formData.get('email') || '';
+        const sector = formData.get('sector') || '';
+        const producto = formData.get('producto') || '';
         const mensaje = formData.get('mensaje') || '';
 
         setEnviando(true);
+        setErrorMsg(null);
+
+        const navContenido = seccionesData?.nav?.contenido || [];
+        const logoNavItem = Array.isArray(navContenido)
+            ? navContenido.find((c) => {
+                const l = (c.label || '').toLowerCase();
+                return l === 'logo' || l === 'logo_nav' || l.includes('logo');
+            })
+            : null;
+        const logoUrl = site?.imagen || logoNavItem?.valor || estilos?.logo || null;
 
         try {
             const res = await fetch('/api/contacto', {
@@ -243,402 +374,566 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos 
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ nombre, email, telefono, fecha, mensaje })
+                body: JSON.stringify({
+                    nombre,
+                    empresa,
+                    telefono,
+                    email,
+                    sector,
+                    producto,
+                    mensaje,
+                    site_id: site?.id || null,
+                    sitio_nombre: site?.nombre || null,
+                    sitio_logo: logoUrl || null
+                })
             });
 
             const data = await res.json();
 
-            if (res.ok && data.success) {
+            if (res.ok) {
                 setEnviado(true);
-                form.reset();
-
-                setTimeout(() => {
-                    setEnviado(false);
-                }, 4000);
             } else {
-                alert('No se pudo enviar el correo: ' + (data.error || 'Error desconocido'));
+                setErrorMsg(data.message || 'Ocurrió un error al enviar tu consulta. Por favor inténtalo de nuevo.');
             }
         } catch (err) {
-            console.error('Error enviando correo de contacto:', err);
-            alert('Error de red al intentar enviar el correo.');
+            setErrorMsg('No pudimos conectar con el servidor. Intenta enviando tu mensaje por WhatsApp.');
         } finally {
             setEnviando(false);
         }
     };
 
-    // Cuentas de pago desde Admin General (estilos.cuentas_pago)
-    const rawCuentas = estilos?.cuentas_pago || site?.estilos?.cuentas_pago || [];
-    const cuentasPago = Array.isArray(rawCuentas)
-        ? rawCuentas
-        : (rawCuentas && typeof rawCuentas === 'object' ? Object.values(rawCuentas) : []);
-
-    // Google Map URL
-    const googleMapEmbedUrl = mapaUrlConfig && (mapaUrlConfig.includes('google.com/maps/embed') || mapaUrlConfig.includes('output=embed'))
-        ? mapaUrlConfig
-        : (direccion ? `https://maps.google.com/maps?q=${encodeURIComponent(direccion)}&t=&z=15&ie=UTF8&iwloc=&output=embed` : null);
+    const redPrincipal = redesFinales[0] || {
+        nombre: 'Facebook',
+        icono: 'FaFacebook',
+        url: 'https://facebook.com',
+        handle: 'facebook.com/empresa'
+    };
 
     return (
-        <main className="flex-1 bg-white">
-            {/* 1. SECCIÓN SUPERIOR: HERO CON IMAGEN DE FONDO */}
-            <section className="relative h-[50vh] min-h-[500px] w-full overflow-hidden bg-slate-950 flex items-center">
-                {imagenHero && (
-                    <div className="absolute inset-0 z-0 h-full w-full">
-                        <picture className="h-full w-full block">
-                            {responsiveImg?.pc && <source media="(min-width: 1024px)" srcSet={responsiveImg.pc} />}
-                            {responsiveImg?.tablet && <source media="(min-width: 640px)" srcSet={responsiveImg.tablet} />}
-                            <img
-                                src={responsiveImg?.cel || responsiveImg?.tablet || responsiveImg?.pc || imagenHero}
-                                alt={titulo}
-                                fetchPriority="high"
-                                decoding="async"
-                                loading="eager"
-                                className="h-full w-full object-cover brightness-90"
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    objectPosition: 'center bottom',
-                                }}
-                            />
-                        </picture>
-                    </div>
-                )}
+        <div className="relative w-full bg-[#f8f9fa] text-gray-900 font-sans antialiased overflow-hidden">
 
-                {/* Dark Gradient Overlay for legibility */}
-                <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/80 via-black/55 to-black/75" />
+            {/* ========================================================
+                1. HERO HEADER CON OVERLAY OSCURO Y CTA DE WHATSAPP
+            ======================================================== */}
+            <section className="relative w-full min-h-[480px] lg:min-h-[520px] flex flex-col justify-center overflow-hidden bg-black pb-36 sm:pb-44 pt-20 sm:pt-28">
+                {/* Background Image con overlay */}
+                <picture className="absolute inset-0 h-full w-full pointer-events-none">
+                    {responsiveImg?.cel && <source media="(max-width: 639.98px)" srcSet={responsiveImg.cel} />}
+                    {responsiveImg?.tablet && <source media="(max-width: 1023.98px)" srcSet={responsiveImg.tablet} />}
+                    <img
+                        src={imagenHero}
+                        alt={titulo}
+                        fetchPriority="high"
+                        decoding="async"
+                        className="h-full w-full object-cover object-center opacity-45 scale-105 transition-transform duration-700"
+                    />
+                </picture>
 
-                {/* Top Header Content Overlaid on Image */}
+                {/* Gradientes oscuros para alto contraste */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/35" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+
                 <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="max-w-xl text-white">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 mb-2 sm:mb-3">
-                                <span className="h-2 w-2 rounded-full bg-[var(--color-primario)] animate-pulse" />
-                                Ubicación & Contacto
-                            </span>
-                            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md mb-2 sm:mb-3">
-                                {titulo}
-                            </h1>
-                            {descripcion && (
-                                <p className="text-xs sm:text-base text-gray-200 font-medium leading-relaxed max-w-lg drop-shadow">
-                                    {descripcion}
-                                </p>
-                            )}
-                        </motion.div>
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="max-w-2xl"
+                    >
+                        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.15] drop-shadow-lg">
+                            {titulo}
+                        </h1>
+
+                        {descripcion && (
+                            <p className="mt-4 text-sm sm:text-base lg:text-lg text-gray-300 font-normal leading-relaxed max-w-xl">
+                                {descripcion}
+                            </p>
+                        )}
+
+                        {/* Botón CTA Cotizar por WhatsApp */}
+                        {waNum && (
+                            <div className="mt-6 sm:mt-8 flex items-center gap-4">
+                                <a
+                                    href={`https://wa.me/${waNum}?text=${encodeURIComponent('Hola, deseo cotizar información y recibir asesoría comercial.')}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2.5 rounded-2xl bg-white hover:bg-neutral-100 text-gray-900 font-extrabold px-6 py-3 text-xs sm:text-sm tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 group border border-white/60"
+                                >
+                                    <span>Cotizar por WhatsApp</span>
+                                    <FaArrowUpRightFromSquare className="h-3.5 w-3.5 text-gray-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                </a>
+                            </div>
+                        )}
+                    </motion.div>
                 </div>
             </section>
 
-            {/* 2. SECCIÓN INTERMEDIA: INFORMACIÓN DE CONTACTO Y FORMULARIO */}
-            <section className="relative z-20 bg-white pb-16 pt-12 sm:pt-16">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* ========================================================
+                2. CARDS FLOTANTES SUPERIORES (LLÁMANOS, ESCRÍBENOS, VISÍTANOS)
+                   Efecto Glassmorphism / Difuminado Translúcido (backdrop-blur)
+            ======================================================== */}
+            <div className="relative z-30 -mt-28 sm:-mt-36 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+                    {cardsList.map((card, idx) => {
+                        const isGold = idx === 0 || card.estilo === 'destacado';
+                        const isNavy = idx === 1;
+                        const isBlack = idx >= 2;
 
-                        {/* COLUMNA IZQUIERDA: DIRECCIÓN, DATOS DE CONTACTO Y REDES SOCIALES */}
-                        <div className="lg:col-span-6 pt-8 sm:pt-12 space-y-8">
+                        return (
                             <motion.div
+                                key={card.id ?? idx}
                                 initial={{ opacity: 0, y: 25 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                                className="space-y-6"
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                className="relative rounded-[2rem] p-6 sm:p-7 bg-white/75 hover:bg-white/85 backdrop-blur-2xl border border-white/90 shadow-[0_20px_45px_-12px_rgba(0,0,0,0.18)] flex flex-col justify-between hover:shadow-[0_25px_55px_-10px_rgba(0,0,0,0.25)] hover:-translate-y-1.5 transition-all duration-300 group"
                             >
-                                {/* Tarjeta Dirección Física (Desde General) */}
-                                {direccion && (
-                                    <div className="flex items-start gap-4">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-800 shadow-xs border border-gray-200/60 mt-0.5">
-                                            <DynamicIcon name="FaLocationDot" className="h-5 w-5 text-gray-700" />
-                                        </div>
-                                        <div>
-                                            <span className="block text-xs font-bold uppercase tracking-wider text-gray-400">Dirección</span>
-                                            <a
-                                                href={mapaUrlConfig || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="block text-base font-bold text-gray-900 hover:text-[var(--color-primario)] transition-colors max-w-md whitespace-pre-line"
-                                            >
-                                                {direccion}
-                                            </a>
-                                        </div>
+                                <div>
+                                    {/* Icono o Imagen personalizada */}
+                                    <div className="h-12 w-12 rounded-2xl bg-black/[0.06] backdrop-blur-md flex items-center justify-center text-gray-900 mb-4 border border-white/60 shadow-2xs">
+                                        {card.imagen ? (
+                                            <img
+                                                src={card.imagen.startsWith('http') || card.imagen.startsWith('/') ? card.imagen : `/storage/${card.imagen}`}
+                                                alt={card.titulo}
+                                                className="h-7 w-7 object-contain"
+                                            />
+                                        ) : (
+                                            <DynamicIcon name={card.icono} className="h-5 w-5 text-gray-900" />
+                                        )}
                                     </div>
-                                )}
 
-                                {/* Dynamic Contact Actions from Admin General (globalActions) */}
-                                {Array.isArray(globalActions) && globalActions.length > 0 && (
-                                    globalActions.map((item, idx) => {
-                                        const iconName = item.icono || item.icon || 'FaInfoCircle';
-                                        const textVal = item.texto || item.Texto || '';
-                                        if (!textVal) return null;
+                                    <h3 className="text-xl font-extrabold text-gray-900 tracking-tight">
+                                        {card.titulo}
+                                    </h3>
 
-                                        const iconLower = iconName.toLowerCase();
-                                        const textLower = textVal.toLowerCase();
+                                    <p className="mt-1.5 text-xs text-gray-600 font-medium leading-relaxed min-h-[36px]">
+                                        {card.descripcion}
+                                    </p>
+                                </div>
 
-                                        const label = item.label || item.Label || (
-                                            iconLower.includes('envelope') || textLower.includes('@') ? 'Correo Electrónico' :
-                                                iconLower.includes('phone') || iconLower.includes('whatsapp') || iconLower.includes('mobile') ? 'Teléfono / WhatsApp' :
-                                                    iconLower.includes('location') || iconLower.includes('map') || iconLower.includes('marker') || iconLower.includes('pin') ? 'Dirección' :
-                                                        'Contacto'
-                                        );
+                                {/* Píldora de acción rápida con sombras de color según la referencia */}
+                                <div className="mt-5 pt-2">
+                                    {isGold ? (
+                                        <a
+                                            href={card.botonEnlace}
+                                            target={card.botonEnlace.startsWith('http') ? '_blank' : '_self'}
+                                            rel={card.botonEnlace.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md shadow-[#B88A38]/30 hover:brightness-110 hover:shadow-lg active:scale-95"
+                                            style={{ backgroundColor: '#B88A38' }}
+                                        >
+                                            <DynamicIcon name={card.icono} className="h-3.5 w-3.5 text-white/95" />
+                                            <span className="truncate">{card.botonTexto}</span>
+                                        </a>
+                                    ) : isNavy ? (
+                                        <a
+                                            href={card.botonEnlace}
+                                            target={card.botonEnlace.startsWith('http') ? '_blank' : '_self'}
+                                            rel={card.botonEnlace.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl bg-[#122238] hover:bg-[#0c1828] text-white px-5 py-2.5 text-xs font-bold transition-all shadow-md shadow-[#122238]/30 hover:shadow-lg hover:scale-[1.02] active:scale-95"
+                                        >
+                                            <DynamicIcon name={card.icono} className="h-3.5 w-3.5 text-neutral-300" />
+                                            <span className="truncate">{card.botonTexto}</span>
+                                        </a>
+                                    ) : (
+                                        <a
+                                            href={card.botonEnlace}
+                                            target={card.botonEnlace.startsWith('http') ? '_blank' : '_self'}
+                                            rel={card.botonEnlace.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl bg-black hover:bg-neutral-800 text-white px-5 py-2.5 text-xs font-bold transition-all shadow-md shadow-black/30 hover:shadow-lg hover:scale-[1.02] active:scale-95"
+                                        >
+                                            <DynamicIcon name={card.icono} className="h-3.5 w-3.5 text-neutral-300" />
+                                            <span className="truncate">{card.botonTexto}</span>
+                                        </a>
+                                    )}
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            </div>
 
-                                        const lines = textVal.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+            {/* ========================================================
+                3. SECCIÓN MEDIA: FORMULARIO B2B/B2C + TARJETA DARK UBICACIÓN
+            ======================================================== */}
+            <section className="relative z-20 py-12 sm:py-16">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
 
-                                        const getLineHref = (lineStr) => {
-                                            const lineLower = lineStr.toLowerCase();
-                                            const isEmail = lineLower.includes('@');
-                                            const clean = lineStr.replace(/\D/g, '');
-                                            const isPhone = (iconLower.includes('whatsapp') || iconLower.includes('phone') || iconLower.includes('mobile')) && clean.length >= 7;
-                                            const isLink = lineLower.includes('.com') || lineLower.includes('.pe') || lineLower.startsWith('http');
+                        {/* COLUMNA IZQUIERDA: FORMULARIO "Cotiza tu pedido aquí" */}
+                        <div className="lg:col-span-7 flex flex-col">
+                            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-200/70 shadow-sm flex-1 flex flex-col justify-between">
+                                <div>
+                                    <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
+                                        Cotiza tu pedido aquí
+                                    </h2>
+                                    <p className="text-xs sm:text-sm text-gray-500 mb-6">
+                                        Completa el formulario y un asesor comercial se pondrá en contacto contigo de inmediato.
+                                    </p>
 
-                                            if (isEmail) return `mailto:${lineStr}`;
-                                            if (isPhone && clean.length >= 7) {
-                                                return iconLower.includes('whatsapp')
-                                                    ? `https://wa.me/${clean.length === 9 ? '51' + clean : clean}`
-                                                    : `tel:${clean}`;
-                                            }
-                                            if (isLink) return lineStr.startsWith('http') ? lineStr : `https://${lineStr}`;
-                                            return null;
-                                        };
-
-                                        return (
-                                            <div key={idx} className="flex items-center gap-4">
-                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-800 shadow-xs border border-gray-200/60">
-                                                    <DynamicIcon name={iconName} className="h-5 w-5 text-gray-700" />
+                                    {enviado ? (
+                                        <div className="py-12 px-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                                            <div className="h-12 w-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md">
+                                                <FaCheck className="h-6 w-6" />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-emerald-950">
+                                                ¡Solicitud Enviada con Éxito!
+                                            </h3>
+                                            <p className="text-xs text-emerald-800 max-w-md mx-auto">
+                                                Gracias por comunicarte con nosotros. Nuestro equipo revisará tus requerimientos y te responderá en el menor tiempo posible.
+                                            </p>
+                                            <button
+                                                type="button"
+                                                onClick={() => setEnviado(false)}
+                                                className="mt-4 inline-block text-xs font-semibold text-emerald-700 underline hover:text-emerald-900 cursor-pointer"
+                                            >
+                                                Enviar otra cotización
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleSubmit} className="space-y-4">
+                                            {errorMsg && (
+                                                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                                                    {errorMsg}
                                                 </div>
+                                            )}
+
+                                            {/* FILA 1: Nombre / Empresa */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div>
-                                                    <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">{label}</span>
-                                                    {lines.map((lineStr, lineIdx) => {
-                                                        const lineHref = getLineHref(lineStr);
-                                                        return lineHref ? (
-                                                            <a
-                                                                key={lineIdx}
-                                                                href={lineHref}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="block text-base font-bold text-gray-900 hover:text-[var(--color-primario)] transition-colors"
-                                                            >
-                                                                {lineStr}
-                                                            </a>
-                                                        ) : (
-                                                            <span key={lineIdx} className="block text-base font-bold text-gray-900">
-                                                                {lineStr}
-                                                            </span>
-                                                        );
-                                                    })}
+                                                    <label htmlFor="form-nombre" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Nombre completo o Razón Social <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <input
+                                                        id="form-nombre"
+                                                        type="text"
+                                                        name="nombre"
+                                                        required
+                                                        placeholder="Ingresa tu nombre"
+                                                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label htmlFor="form-empresa" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Empresa / Institución
+                                                    </label>
+                                                    <input
+                                                        id="form-empresa"
+                                                        type="text"
+                                                        name="empresa"
+                                                        placeholder="Nombre de la Empresa"
+                                                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                    />
                                                 </div>
                                             </div>
-                                        );
-                                    })
-                                )}
 
-                                {/* Tarjeta WhatsApp si no estaba en globalActions */}
-                                {(!globalActions.some(a => (a.icono || a.icon || '').toLowerCase().includes('whatsapp'))) && waNum && (
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-gray-800 shadow-xs border border-gray-200/60">
-                                            <DynamicIcon name="FaWhatsapp" className="h-5 w-5 text-emerald-600" />
-                                        </div>
-                                        <div>
-                                            <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">WhatsApp Oficial</span>
-                                            <a
-                                                href={`https://wa.me/${waNum}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="block text-base font-bold text-gray-900 hover:text-emerald-600 transition-colors"
-                                            >
-                                                +{waNum}
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
+                                            {/* FILA 2: Teléfono / Correo */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label htmlFor="form-telefono" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Teléfono / WhatsApp <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <input
+                                                        id="form-telefono"
+                                                        type="tel"
+                                                        name="telefono"
+                                                        required
+                                                        placeholder="+51 987 654 321"
+                                                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                    />
+                                                </div>
 
-                                {/* REDES SOCIALES DESDE GENERAL */}
-                                {redesFinales.length > 0 && (
-                                    <div className="pt-4 border-t border-gray-100">
-                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-3">
-                                            Síguenos en nuestras redes
-                                        </span>
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            {redesFinales.map((item, idx) => (
-                                                <a
-                                                    key={idx}
-                                                    href={item.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    title={item.nombre}
-                                                    aria-label={item.nombre || 'Red social'}
-                                                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 shadow-sm border border-gray-200/80 transition-all duration-300 hover:bg-[var(--color-primario)] hover:text-white hover:border-transparent hover:scale-110"
+                                                <div>
+                                                    <label htmlFor="form-email" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Correo electrónico
+                                                    </label>
+                                                    <input
+                                                        id="form-email"
+                                                        type="email"
+                                                        name="email"
+                                                        placeholder="correo@ejemplo.com"
+                                                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* FILA 3: Sector / Producto de Interés */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label htmlFor="form-sector" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Sector <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <select
+                                                        id="form-sector"
+                                                        name="sector"
+                                                        required
+                                                        defaultValue=""
+                                                        className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                    >
+                                                        <option value="" disabled>- Seleccione una Opción -</option>
+                                                        <option value="Minorista / Consumo Personal">Minorista / Consumo Personal</option>
+                                                        <option value="Distribuidor / Mayorista">Distribuidor / Mayorista</option>
+                                                        <option value="Empresa / Corporativo">Empresa / Corporativo</option>
+                                                        <option value="Hotelería / Servicios">Hotelería / Servicios</option>
+                                                        <option value="Institución Pública o Educativa">Institución Pública o Educativa</option>
+                                                        <option value="Otro">Otro</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label htmlFor="form-producto" className="block text-xs font-bold text-gray-700 mb-1">
+                                                        Producto de Interés <span className="text-red-500">*</span>
+                                                    </label>
+                                                    {productos && productos.length > 0 ? (
+                                                        <select
+                                                            id="form-producto"
+                                                            name="producto"
+                                                            required
+                                                            defaultValue=""
+                                                            className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                        >
+                                                            <option value="" disabled>- Seleccione un Producto -</option>
+                                                            {productos.map((prod) => (
+                                                                <option key={prod.id || prod.slug} value={prod.nombre}>
+                                                                    {prod.nombre}
+                                                                </option>
+                                                            ))}
+                                                            <option value="Pedido Especial / A Medida">Pedido Especial / A Medida</option>
+                                                            <option value="Catálogo Completo">Catálogo Completo</option>
+                                                        </select>
+                                                    ) : (
+                                                        <input
+                                                            id="form-producto"
+                                                            type="text"
+                                                            name="producto"
+                                                            required
+                                                            placeholder="¿Qué producto buscas?"
+                                                            className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900"
+                                                        />
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* FILA 4: Mensaje */}
+                                            <div>
+                                                <label htmlFor="form-mensaje" className="block text-xs font-bold text-gray-700 mb-1">
+                                                    Mensaje <span className="text-red-500">*</span>
+                                                </label>
+                                                <textarea
+                                                    id="form-mensaje"
+                                                    name="mensaje"
+                                                    required
+                                                    rows={4}
+                                                    placeholder="Cuéntanos qué necesitas..."
+                                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-3 text-xs text-gray-900 placeholder-gray-400 outline-none transition focus:border-gray-900 focus:bg-white focus:ring-1 focus:ring-gray-900 resize-none"
+                                                />
+                                            </div>
+
+                                            {/* FILA 5: Checkbox Políticas de Privacidad */}
+                                            <div className="flex items-center gap-2 pt-1">
+                                                <input
+                                                    id="form-politicas"
+                                                    type="checkbox"
+                                                    required
+                                                    checked={aceptoPoliticas}
+                                                    onChange={(e) => setAceptoPoliticas(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 cursor-pointer"
+                                                />
+                                                <label htmlFor="form-politicas" className="text-xs text-gray-600 select-none cursor-pointer">
+                                                    He leído y acepto las{' '}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setLegalModalOpen(true)}
+                                                        className="text-gray-900 font-bold underline hover:text-black cursor-pointer"
+                                                    >
+                                                        Políticas de Privacidad
+                                                    </button>
+                                                </label>
+                                            </div>
+
+                                            {/* Botón Submit */}
+                                            <div className="pt-2">
+                                                <button
+                                                    type="submit"
+                                                    disabled={enviando}
+                                                    className="w-full rounded-xl py-3.5 px-6 text-xs sm:text-sm font-bold text-white bg-[#10223b] hover:bg-[#0b1728] shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70"
                                                 >
-                                                    <DynamicIcon name={item.icono} className="h-5 w-5" />
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* INFORMACIÓN DE PAGO Y CUENTAS BANCARIAS */}
-                                {cuentasPago.length > 0 && (
-                                    <div className="pt-4 border-t border-gray-100 space-y-3">
-                                        <span className="block text-xs font-bold uppercase tracking-wider text-gray-600">
-                                            Métodos de Pago / Cuentas Bancarias
-                                        </span>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            {cuentasPago.map((item, idx) => (
-                                                <CuentaPagoCard key={idx} item={item} />
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </motion.div>
+                                                    {enviando ? (
+                                                        <>
+                                                            <FaSpinner className="h-4 w-4 animate-spin text-white" />
+                                                            <span>Enviando solicitud...</span>
+                                                        </>
+                                                    ) : (
+                                                        <span>Solicitar información</span>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
-                        {/* COLUMNA DERECHA: FORMULARIO "Envíanos un mensaje" (Flotante sobre la imagen superior) */}
-                        <div className="lg:col-span-6">
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.7, delay: 0.1 }}
-                                className="relative lg:-mt-48 z-30 rounded-[2rem] bg-white p-8 sm:p-10 shadow-2xl border border-gray-100"
-                            >
-                                <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-6">
-                                    Envíanos un mensaje
-                                </h2>
+                        {/* COLUMNA DERECHA: TARJETA OSCURA "NUESTRA UBICACIÓN" */}
+                        <div className="lg:col-span-5 flex flex-col">
+                            <div className="bg-[#181926] text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-gray-800 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-2xl font-bold text-white tracking-tight">
+                                        Nuestra <span className="font-extrabold text-white">Ubicación</span>
+                                    </h3>
 
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    {/* Name */}
-                                    <div>
-                                        <label htmlFor="contacto-nombre" className="sr-only">Nombre completo</label>
-                                        <input
-                                            id="contacto-nombre"
-                                            type="text"
-                                            name="nombre"
-                                            required
-                                            placeholder="Nombre completo"
-                                            aria-label="Nombre completo"
-                                            className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
-                                        />
-                                    </div>
-
-                                    {/* Email */}
-                                    <div>
-                                        <label htmlFor="contacto-email" className="sr-only">Correo electrónico</label>
-                                        <input
-                                            id="contacto-email"
-                                            type="email"
-                                            name="email"
-                                            required
-                                            placeholder="Correo electrónico"
-                                            aria-label="Correo electrónico"
-                                            className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
-                                        />
-                                    </div>
-
-                                    {/* Fecha del evento / entrega */}
-                                    <div>
-                                        <label htmlFor="contacto-fecha" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 px-1">
-                                            Fecha del evento / entrega
-                                        </label>
-                                        <input
-                                            id="contacto-fecha"
-                                            type="date"
-                                            name="fecha"
-                                            required
-                                            aria-label="Fecha del evento o entrega"
-                                            className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
-                                        />
-                                    </div>
-
-                                    {/* Phone / Text */}
-                                    <div>
-                                        <label htmlFor="contacto-telefono" className="sr-only">Teléfono o Celular</label>
-                                        <input
-                                            id="contacto-telefono"
-                                            type="tel"
-                                            name="telefono"
-                                            placeholder="Teléfono / Celular"
-                                            aria-label="Teléfono o Celular"
-                                            className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20"
-                                        />
-                                    </div>
-
-                                    {/* Message */}
-                                    <div>
-                                        <label htmlFor="contacto-mensaje" className="sr-only">Mensaje</label>
-                                        <textarea
-                                            id="contacto-mensaje"
-                                            name="mensaje"
-                                            required
-                                            rows={4}
-                                            placeholder="Escribe tu mensaje..."
-                                            aria-label="Escribe tu mensaje"
-                                            className="w-full rounded-2xl border border-gray-200/80 bg-gray-50/50 px-5 py-3.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-[var(--color-primario)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primario)]/20 resize-none"
-                                        />
-                                    </div>
-
-                                    {/* Submit Button */}
-                                    <button
-                                        type="submit"
-                                        disabled={enviando || enviado}
-                                        className={`w-full rounded-2xl py-4 px-6 text-sm font-bold text-white shadow-xl transition-all duration-300 cursor-pointer mt-2 flex items-center justify-center gap-2 ${enviado
-                                            ? 'bg-emerald-600 border border-emerald-500'
-                                            : 'hover:scale-[1.01] active:scale-[0.98] hover:brightness-110'
-                                            }`}
-                                        style={{ backgroundColor: enviado ? '#059669' : 'var(--color-primario)' }}
-                                    >
-                                        {enviando ? (
-                                            <>
-                                                <DynamicIcon name="FaSpinner" className="h-4 w-4 animate-spin text-white" />
-                                                <span>Enviando mensaje...</span>
-                                            </>
-                                        ) : enviado ? (
-                                            <>
-                                                <DynamicIcon name="FaCheck" className="h-4 w-4 text-white" />
-                                                <span>¡Mensaje Enviado con Éxito!</span>
-                                            </>
+                                    {/* Mapa interactivo embebido */}
+                                    <div className="mt-5 h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-white/10 shadow-lg relative bg-neutral-900">
+                                        {googleMapEmbedUrl ? (
+                                            <iframe
+                                                src={googleMapEmbedUrl}
+                                                title={`Ubicación de ${site?.nombre || 'la tienda'}`}
+                                                className="h-full w-full border-0"
+                                                loading="lazy"
+                                                allowFullScreen
+                                            />
                                         ) : (
-                                            <span>Enviar mensaje</span>
+                                            <div className="h-full w-full flex flex-col items-center justify-center p-6 text-center text-neutral-400 space-y-2">
+                                                <FaLocationDot className="h-8 w-8 text-neutral-500" />
+                                                <span className="text-xs font-medium">Ubicación disponible en tienda física</span>
+                                                {direccion && (
+                                                    <span className="text-xs text-white/90 font-semibold">{direccion}</span>
+                                                )}
+                                            </div>
                                         )}
-                                    </button>
-                                </form>
-                            </motion.div>
+                                    </div>
+
+                                    {/* Referencia Comercial */}
+                                    <div className="mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+                                        <div className="h-8 w-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white mt-0.5">
+                                            <FaBullhorn className="h-4 w-4 text-white" />
+                                        </div>
+                                        <div>
+                                            <span className="block text-[11px] font-bold text-white uppercase tracking-wider">
+                                                Referencia comercial
+                                            </span>
+                                            <p className="text-xs text-neutral-300 mt-0.5 leading-relaxed">
+                                                {referenciaComercial || (direccion ? `Visítanos en nuestra tienda: ${direccion}` : 'Visítanos en nuestra tienda central para atención presencial.')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Enlace Oficial a Red Social */}
+                                <div className="mt-5 pt-2">
+                                    <a
+                                        href={redPrincipal.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full rounded-2xl bg-white hover:bg-neutral-100 text-gray-900 py-3 px-4 font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
+                                    >
+                                        <DynamicIcon name={redPrincipal.icono} className="h-4 w-4 text-blue-600 shrink-0" />
+                                        <span className="truncate">{redPrincipal.handle || redPrincipal.nombre}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
                 </div>
             </section>
 
-            {/* 3. SECCIÓN INFERIOR: MAPA ABAJO DE TODOS ("el mapa abajo de todos") */}
-            {googleMapEmbedUrl && (
-                <section className="relative w-full bg-gray-50 border-t border-gray-200/80 py-12 sm:py-16">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="mb-8 text-center max-w-2xl mx-auto">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#075E54] border border-emerald-200/80 mb-2">
-                                <DynamicIcon name="FaLocationDot" className="h-3.5 w-3.5 text-[var(--color-primario)]" />
-                                Ubicación
-                            </span>
-                            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                                Encuéntranos en el mapa
-                            </h2>
-                            {direccion && (
-                                <p className="text-sm text-gray-600 font-medium mt-1">
-                                    {direccion}
-                                </p>
-                            )}
+            {/* ========================================================
+                4. SECCIÓN INFERIOR: MÉTODOS DE PAGO SEGUROS & ASESOR WHATSAPP
+                   Todas las 4 cards con el mismo tamaño y diseño alineado
+            ======================================================== */}
+            <section className="relative z-20 pb-16 sm:pb-20">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="bg-[#122238] text-white rounded-[2rem] p-5 sm:p-6 lg:p-7 shadow-2xl border border-white/10 flex flex-col xl:flex-row items-center gap-6">
+
+                        {/* Bloque Izquierdo: Información y Título */}
+                        <div className="shrink-0 w-full xl:w-52 space-y-1 text-center xl:text-left">
+                            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-neutral-300 uppercase tracking-wider">
+                                <FaCreditCard className="h-3.5 w-3.5 text-neutral-300" />
+                                <span>Forma de Pago</span>
+                            </div>
+                            <h4 className="text-lg sm:text-xl font-black text-white leading-tight">
+                                Métodos de Pago Seguros
+                            </h4>
+                            <p className="text-[11px] text-neutral-300/80 leading-snug">
+                                Elige la opción que mejor se adecue a ti.
+                            </p>
                         </div>
 
-                        <div className="h-[400px] sm:h-[480px] w-full overflow-hidden rounded-3xl shadow-xl border border-gray-200 relative bg-gray-200">
-                            <iframe
-                                src={googleMapEmbedUrl}
-                                title={`Mapa de ${titulo}`}
-                                className="h-full w-full border-0"
-                                loading="lazy"
-                                allowFullScreen
-                            />
+                        {/* Grid de 4 Cards del mismo tamaño exacto */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 flex-1 w-full items-stretch">
+
+                            {/* Tarjetas de Métodos de Pago dinámicas y editables desde el Admin */}
+                            {tarjetasPagoList.map((tp, idx) => {
+                                const bgIcon = idx === 0 ? 'bg-emerald-100 text-emerald-600' : idx === 1 ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600';
+
+                                return (
+                                    <div
+                                        key={tp.id ?? idx}
+                                        className="h-full min-h-[115px] flex flex-col justify-between p-4 rounded-2xl bg-[#fafafa] text-gray-900 border border-white/20 shadow-sm hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="flex items-center gap-2.5">
+                                            <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${bgIcon}`}>
+                                                {tp.imagen ? (
+                                                    <img
+                                                        src={tp.imagen.startsWith('http') || tp.imagen.startsWith('/') ? tp.imagen : `/storage/${tp.imagen}`}
+                                                        alt={tp.titulo}
+                                                        className="h-5 w-5 object-contain"
+                                                    />
+                                                ) : (
+                                                    <DynamicIcon name={tp.icono} className="h-4 w-4" />
+                                                )}
+                                            </div>
+                                            <span className="text-sm font-extrabold text-gray-900 leading-tight">
+                                                {tp.titulo}
+                                            </span>
+                                        </div>
+                                        <p className="text-[11px] text-gray-500 font-medium leading-tight mt-2">
+                                            {tp.descripcion}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Card 4: Asesor WhatsApp (Mismo tamaño exacto) */}
+                            <div className="h-full min-h-[115px] flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-[#B88A38] text-white shadow-md">
+                                <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-xs">
+                                        <FaWhatsapp className="h-5 w-5 text-emerald-600" />
+                                    </div>
+                                    <span className="text-[11px] font-bold text-white leading-tight">
+                                        ¿Prefieres Hablar con Asesor?
+                                    </span>
+                                </div>
+                                <div className="mt-2 pt-1">
+                                    {waNum ? (
+                                        <a
+                                            href={`https://wa.me/${waNum}?text=${encodeURIComponent('Hola, deseo comunicarme directamente con un asesor comercial.')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-black hover:bg-neutral-900 text-white py-2 px-3 text-[11px] font-bold transition-all shadow-sm active:scale-95"
+                                        >
+                                            <FaPhone className="h-3 w-3 text-white" />
+                                            <span>Hablar por WhatsApp</span>
+                                        </a>
+                                    ) : (
+                                        <span className="text-[11px] font-bold text-white/90">Atención personalizada</span>
+                                    )}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </section>
-            )}
-        </main>
+                </div>
+            </section>
+
+            {/* Modal de Políticas de Privacidad */}
+            <LegalModal
+                isOpen={legalModalOpen}
+                onClose={() => setLegalModalOpen(false)}
+                defaultTab="privacidad"
+                site={site}
+            />
+
+        </div>
     );
 }
