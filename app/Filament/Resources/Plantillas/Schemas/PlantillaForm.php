@@ -478,7 +478,7 @@ class PlantillaForm
     public static function respuestasFields(Plantilla $plantilla): array
     {
         if (! $plantilla->relationLoaded('secciones')) {
-            $plantilla->load(['secciones.preguntas' => fn ($q) => $q->orderBy('orden')->with('children')]);
+            $plantilla->load(['secciones.preguntas' => fn ($q) => $q->orderBy('orden')->with('children.children')]);
         }
 
         $secciones = $plantilla->secciones->sortBy('orden');
