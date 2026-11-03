@@ -868,9 +868,13 @@ class PlantillaForm
     {
         return Section::make('Redes Sociales')
             ->icon('heroicon-o-share')
-            ->description('Enlaces a los perfiles oficiales de redes sociales para el pie de página y cabecera.')
+            ->description('Enlaces a los perfiles oficiales de redes sociales para el pie de página, cabecera y barra lateral.')
             ->collapsible()
             ->schema([
+                Toggle::make('estilos.barra_lateral_redes.activo')
+                    ->label('Mostrar barra lateral flotante de redes sociales (Borde Izquierdo)')
+                    ->helperText('Muestra una barra fija en el borde izquierdo con acceso directo a Instagram, Facebook, WhatsApp y TikTok consumiendo el color principal.')
+                    ->default(true),
                 Grid::make(3)->schema([
                     TextInput::make('estilos.redes_sociales.facebook')
                         ->label('Facebook')

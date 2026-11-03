@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import Header from './shared/Header';
 import Footer from './shared/Footer';
 import FloatingWhatsApp from './shared/FloatingWhatsApp';
+import FloatingSocialBar from './shared/FloatingSocialBar';
 import SectionInicio from './components/Inicio/SectionInicio';
 
 const SectionProductos = lazy(() => import('./components/Productos/SectionProductos'));
@@ -293,6 +294,7 @@ export default function Ecomer({
                 />
 
                 <FloatingWhatsApp site={site} dominio={dominio} siteSlug={siteSlug} seccionesData={seccionesData} estilos={estilos} />
+                <FloatingSocialBar site={site} dominio={dominio} siteSlug={siteSlug} seccionesData={seccionesData} estilos={estilos} />
             </div>
         </>
     );

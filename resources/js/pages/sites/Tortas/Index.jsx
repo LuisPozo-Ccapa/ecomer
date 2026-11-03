@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import Header from './shared/Header';
 import Footer from './shared/Footer';
 import FloatingWhatsApp from './shared/FloatingWhatsApp';
+import FloatingSocialBar from '@/components/FloatingSocialBar';
 import SectionInicio from './components/Inicio/SectionInicio';
 import SectionProductos from './components/Productos/SectionProductos';
 import SectionServicios from './components/Servicios/SectionServicios';
@@ -163,6 +164,7 @@ export default function Tortas({
                 />
 
                 <FloatingWhatsApp site={site} dominio={dominio} siteSlug={siteSlug} seccionesData={seccionesData} estilos={estilos} />
+                <FloatingSocialBar site={site} dominio={dominio} siteSlug={siteSlug} seccionesData={seccionesData} estilos={estilos} />
             </div>
         </>
     );
