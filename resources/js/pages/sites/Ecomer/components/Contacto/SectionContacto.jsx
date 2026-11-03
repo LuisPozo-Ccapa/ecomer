@@ -12,7 +12,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos,
         titulo,
         descripcion,
         referenciaComercial,
-        redPrincipal,
+        redesFinales,
         imagenHero,
         responsiveImg,
         waNum,
@@ -21,7 +21,7 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos,
         tarjetasPagoList,
         sedesList,
         lineasLlamanos
-} = useContactoData(seccion, seccionesData, site, estilos);
+    } = useContactoData(seccion, seccionesData, site, estilos);
 
     // Switches interactivos sincronizados: Selección de Sede física y Línea telefónica
     const [sedeActivaIndex, setSedeActivaIndex] = useState(0);
@@ -35,16 +35,16 @@ export default function SectionContacto({ site, seccion, seccionesData, estilos,
         );
     }
 
-return (
-    <div className="relative w-full bg-[#f8f9fa] text-gray-900 font-sans antialiased overflow-hidden">
-        {/* 1. Hero Principal con imagen responsiva y CTA a WhatsApp */}
-        <HeroContactoSection
-            titulo={titulo}
-            descripcion={descripcion}
-            imagenHero={imagenHero}
-            responsiveImg={responsiveImg}
-            waNum={waNum}
-        />
+    return (
+        <div className="relative w-full bg-[#f8f9fa] text-gray-900 font-sans antialiased overflow-hidden">
+            {/* 1. Hero Principal con imagen responsiva y CTA a WhatsApp */}
+            <HeroContactoSection
+                titulo={titulo}
+                descripcion={descripcion}
+                imagenHero={imagenHero}
+                responsiveImg={responsiveImg}
+                waNum={waNum}
+            />
 
             {/* 2. Tarjetas Flotantes Superiores (Llámanos, Escríbenos, Visítanos con sus switches) */}
             <CardsContactoSection
@@ -79,7 +79,7 @@ return (
                                 setSedeActivaIndex={setSedeActivaIndex}
                                 googleMapEmbedUrl={googleMapEmbedUrl}
                                 referenciaComercial={referenciaComercial}
-                                redPrincipal={redPrincipal}
+                                redesFinales={redesFinales}
                                 site={site}
                             />
                         </div>
@@ -94,6 +94,6 @@ return (
                     waNum={waNum}
                 />
             </div>
-    </div>
-);
+        </div>
+    );
 }
