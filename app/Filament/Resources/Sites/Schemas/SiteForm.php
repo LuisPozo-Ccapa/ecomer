@@ -479,7 +479,7 @@ class SiteForm
             return [];
         }
 
-        $plantilla = Plantilla::with('secciones.preguntas.children.children')->find($plantillaId);
+        $plantilla = Plantilla::with('secciones.preguntas.children.children.children')->find($plantillaId);
 
         if (! $plantilla) {
             return [];

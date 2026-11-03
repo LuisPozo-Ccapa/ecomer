@@ -478,7 +478,7 @@ class PlantillaForm
     public static function respuestasFields(Plantilla $plantilla): array
     {
         if (! $plantilla->relationLoaded('secciones')) {
-            $plantilla->load(['secciones.preguntas' => fn ($q) => $q->orderBy('orden')->with('children.children')]);
+            $plantilla->load(['secciones.preguntas' => fn ($q) => $q->orderBy('orden')->with('children.children.children')]);
         }
 
         $secciones = $plantilla->secciones->sortBy('orden');
@@ -625,6 +625,41 @@ class PlantillaForm
                                             'color' => ColorPicker::make($gcPath),
                                             'icono' => IconPicker::make($gcPath),
                                             'enlace' => TextInput::make($gcPath)->placeholder('https://ejemplo.com'),
+
+                                            // ── Bisnieto tipo grupo (ej. Cards -> Lineas) → Sub-Repeater ──
+                                            'grupo' => Repeater::make($gcPath)
+                                                ->schema(function () use ($grandChild, $contentDirectory) {
+                                                    $greatGrandChildren = $grandChild->children;
+                                                    if ($greatGrandChildren->isEmpty() && isset($grandChild->id)) {
+                                                        $greatGrandChildren = Pregunta::where('parent_id', $grandChild->id)->orderBy('orden')->get();
+                                                    }
+
+                                                    return $greatGrandChildren->map(function (Pregunta $ggc) use ($contentDirectory) {
+                                                        $ggcPath = $ggc->label;
+                                                        $ggcField = match ($ggc->tipo) {
+                                                            'area' => Textarea::make($ggcPath)->rows(2),
+                                                            'color' => ColorPicker::make($ggcPath),
+                                                            'icono' => IconPicker::make($ggcPath),
+                                                            'enlace' => TextInput::make($ggcPath)->placeholder('https://ejemplo.com'),
+                                                            default => TextInput::make($ggcPath),
+                                                        };
+
+                                                        $ggcField = $ggcField->label($ggc->label);
+                                                        if ($ggc->ayuda) {
+                                                            $ggcField->helperText($ggc->ayuda);
+                                                        }
+
+                                                        return $ggcField->required((bool) $ggc->requerida);
+                                                    })->all();
+                                                })
+                                                ->label($grandChild->label)
+                                                ->itemLabel(fn (array $state): ?string => $state['Etiqueta'] ?? $state['Numero'] ?? $state['etiqueta'] ?? $state['numero'] ?? null)
+                                                ->defaultItems(0)
+                                                ->addable(true)
+                                                ->deletable(true)
+                                                ->reorderable(true)
+                                                ->collapsible(),
+
                                             default => TextInput::make($gcPath),
                                         };
 
