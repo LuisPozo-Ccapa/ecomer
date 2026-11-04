@@ -21,6 +21,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
     const openCart = useCartStore((state) => state.openCart);
     const cartCount = useCartStore((state) => state.getItemCount());
+    const isCartOpen = useCartStore((state) => state.isOpen);
     const hasStore = Boolean(site?.tiene_tienda ?? tieneTienda ?? (productos && productos.length > 0) ?? true);
 
     const catalogoConfig = estilos?.catalogo || {};
@@ -242,7 +243,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             <CartOffcanvas site={site} estilos={estilos} seccionesData={seccionesData} />
 
             {/* BOTÓN FLOTANTE DE CATÁLOGO — lado derecho */}
-            {isCatalogoActivo && (
+            {isCatalogoActivo && !isCartOpen && (
                 catalogoEnlace ? (
                     <a
                         href={catalogoEnlace}
