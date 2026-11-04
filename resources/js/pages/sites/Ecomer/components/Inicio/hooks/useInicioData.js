@@ -50,6 +50,7 @@ export function useInicioData(
     const tiktok = findSeccion('tik tok') || null;
     const banerpie = findSeccion('banerpie') || findSeccion('baner_pie') || findSeccion('banerPie') || null;
     const banerproductos = findSeccion('banerproductos') || findSeccion('baner_productos') || findSeccion('banerProductos') || findSeccion('banerproducto') || findSeccion('banerProducto') || null;
+    const sectores = findSeccion('sectores') || null;
     const contancto = findSeccion('contacto') || null;
 
     return {
@@ -61,6 +62,7 @@ export function useInicioData(
         tiktok,
         banerpie,
         banerproductos,
+        sectores,
         contacto: contancto,
         productosDestacados: initialProductosDestacados || [],
         loading: false,

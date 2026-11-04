@@ -148,6 +148,15 @@
       "_vendor-swiper-BEV2hobT.js"
     ]
   },
+  "_SectoresSection-CKUFb7nH.js": {
+    "file": "assets/SectoresSection-CKUFb7nH.js",
+    "name": "SectoresSection",
+    "imports": [
+      "_rolldown-runtime-BWaJ3C7D.js",
+      "_vendor-inertia-BCyGzrYZ.js",
+      "_vendor-framer-motion-Brhgw_zz.js"
+    ]
+  },
   "_ServiciosSection-CDLogyRR.js": {
     "file": "assets/ServiciosSection-CDLogyRR.js",
     "name": "ServiciosSection",
@@ -246,7 +255,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-AS-3dI1e.css",
+    "file": "assets/app-D9MvDRAQ.css",
     "name": "app",
     "names": [
       "app.css"
@@ -264,7 +273,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-7muEpNFx.js",
+    "file": "assets/app--ARxeCTd.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -296,6 +305,7 @@
       "_MarcasSection-Bi8RVySg.js",
       "_OfertasSection-BZJc2-zx.js",
       "_ProductosDestacadosSection-Q7n2RRi7.js",
+      "_SectoresSection-CKUFb7nH.js",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/subcomponents/AccionSection.jsx",
@@ -425,7 +435,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-U72nDvb6.js",
+    "file": "assets/Index-BhJa1fKQ.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -523,7 +533,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-U_oWlbMQ.js",
+    "file": "assets/SectionInicio-BU8f3MmB.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -536,7 +546,8 @@
       "_OfertasSection-BZJc2-zx.js",
       "_MarcasSection-Bi8RVySg.js",
       "_CategoriaSection-BuhOdRR0.js",
-      "_ProductosDestacadosSection-Q7n2RRi7.js"
+      "_ProductosDestacadosSection-Q7n2RRi7.js",
+      "_SectoresSection-CKUFb7nH.js"
     ],
     "dynamicImports": [
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
