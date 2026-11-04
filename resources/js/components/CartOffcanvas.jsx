@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePage } from '@inertiajs/react';
 import { useCartStore } from '@/stores/useCartStore';
 import DynamicIcon from '@/components/DynamicIcon';
+import MetodosPagoCarrito from './cart/MetodosPagoCarrito';
 import { fetchSectionData } from '@/pages/sites/Ecomer/shared/apiBase';
 
 export default function CartOffcanvas({ site: propSite, estilos: propEstilos, seccionesData: propSeccionesData }) {
@@ -20,6 +21,7 @@ export default function CartOffcanvas({ site: propSite, estilos: propEstilos, se
     const [numero, setNumero] = useState('');
     const [fecha, setFecha] = useState('');
     const [idea, setIdea] = useState('');
+    const [metodoPago, setMetodoPago] = useState('transferencia');
 
     const [whatsappUrl, setWhatsappUrl] = useState('https://wa.me/');
 
@@ -132,6 +134,21 @@ export default function CartOffcanvas({ site: propSite, estilos: propEstilos, se
         if (numero) mensaje += `*Teléfono / WhatsApp:* ${numero}\n`;
         if (fecha) mensaje += `*Fecha del evento:* ${fecha}\n`;
         if (idea) mensaje += `*Idea / Detalles:* ${idea}\n`;
+
+        // Detalle del método de pago elegido
+        const cfg = estilos?.metodos_pago_carrito || site?.estilos?.metodos_pago_carrito || {};
+        const cuentasGenerales = estilos?.cuentas_pago || site?.estilos?.cuentas_pago || [];
+        const tieneTransferencia = cfg?.transferencia?.activo !== false && ((cfg?.transferencia?.cuentas && cfg.transferencia.cuentas.length > 0) || cuentasGenerales.length > 0);
+        const tieneYape = cfg?.yape?.activo !== false && (Boolean(cfg?.yape?.numero) || Boolean(cfg?.yape?.qr_imagen));
+
+        if (tieneTransferencia || tieneYape) {
+            if (metodoPago === 'transferencia' && tieneTransferencia) {
+                mensaje += `*Método de pago:* Transferencia / Depósito Bancario\n`;
+            } else if (metodoPago === 'yape' && tieneYape) {
+                const yapeNum = cfg?.yape?.numero ? ` (${cfg.yape.numero})` : '';
+                mensaje += `*Método de pago:* Pago con QR YAPE${yapeNum}\n`;
+            }
+        }
 
         let urlBase = whatsappUrl || 'https://wa.me/';
         const cleanNumberOnly = urlBase.replace(/^https?:\/\/(wa\.me|api\.whatsapp\.com\/send\?phone=)\/?/, '').replace(/\D/g, '');
@@ -367,6 +384,14 @@ export default function CartOffcanvas({ site: propSite, estilos: propEstilos, se
                                                 style={{ borderRadius: 'var(--radio-bordes)' }}
                                             />
                                         </div>
+
+                                        {/* MÉTODOS DE PAGO EN CARRITO (TRANSFERENCIA & YAPE QR) */}
+                                        <MetodosPagoCarrito
+                                            estilos={estilos}
+                                            site={site}
+                                            metodoSeleccionado={metodoPago}
+                                            setMetodoSeleccionado={setMetodoPago}
+                                        />
                                     </form>
                                 </>
                             )}

@@ -942,13 +942,13 @@ class PlantillaForm
 
     public static function metodosPagoSection(): Section
     {
-        return Section::make('Métodos de Pago y Cuentas Bancarias')
+        return Section::make('Métodos de Pago y Carrito de Compras')
             ->icon('heroicon-o-credit-card')
-            ->description('Selecciona las insignias de pago aceptadas e ingresa las cuentas bancarias o billeteras digitales para información de pago.')
+            ->description('Configura los métodos de pago mostrados en el carrito lateral (Transferencia y YAPE QR) y las insignias del pie de página.')
             ->collapsible()
             ->schema([
                 CheckboxList::make('estilos.metodos_pago')
-                    ->label('Insignias de pago aceptadas')
+                    ->label('Insignias de pago aceptadas (Pie de página)')
                     ->options([
                         'visa' => 'Visa',
                         'mastercard' => 'Mastercard',
@@ -973,28 +973,99 @@ class PlantillaForm
                     ])
                     ->default(['visa', 'mastercard', 'amex', 'paypal', 'apple_pay', 'google_pay', 'yape', 'plin']),
 
-                Repeater::make('estilos.cuentas_pago')
-                    ->label('Información de Pago / Cuentas Bancarias')
-                    ->helperText('Agrega los datos de pago para transferencia bancaria o pago directo (ej. Label: Cuenta corriente:, Método: BCP en nuevos soles, Info: 116544651432132).')
-                    ->schema([
-                        Grid::make(3)->schema([
-                            TextInput::make('label')
-                                ->label('Etiqueta')
-                                ->placeholder('Ej. Cuenta corriente:')
-                                ->required(),
-                            TextInput::make('metodo_pago')
-                                ->label('Método de Pago')
-                                ->placeholder('Ej. BCP en nuevos soles')
-                                ->required(),
-                            TextInput::make('info')
-                                ->label('Información / N° Cuenta')
-                                ->placeholder('Ej. 116544651432132')
-                                ->required(),
-                        ]),
-                    ])
+                Section::make('Método 1: Transferencia / Depósito Bancario en Carrito')
+                    ->description('Muestra tarjetas oscuras con número de cuenta corriente, CCI y banco para que el cliente deposite.')
                     ->collapsible()
-                    ->itemLabel(fn (array $state): ?string => (filled($state['metodo_pago'] ?? null) || filled($state['label'] ?? null)) ? (($state['label'] ?? '').' '.($state['metodo_pago'] ?? '').': '.($state['info'] ?? '')) : null)
-                    ->columnSpanFull(),
+                    ->schema([
+                        Toggle::make('estilos.metodos_pago_carrito.transferencia.activo')
+                            ->label('Habilitar Transferencia Bancaria en el Carrito')
+                            ->helperText('Si se desactiva o no tiene cuentas, no se mostrará esta opción en el carrito.')
+                            ->default(true),
+
+                        Grid::make(2)->schema([
+                            TextInput::make('estilos.metodos_pago_carrito.transferencia.titulo')
+                                ->label('Título de la opción')
+                                ->default('Transferencia / Deposito Bancario')
+                                ->placeholder('Ej. Transferencia / Deposito Bancario'),
+
+                            TextInput::make('estilos.metodos_pago_carrito.transferencia.descripcion')
+                                ->label('Subtítulo o Instrucción')
+                                ->default('Realiza tu pago directamente desde tu cuenta bancaria,')
+                                ->placeholder('Ej. Realiza tu pago directamente desde tu cuenta bancaria,'),
+                        ]),
+
+                        Repeater::make('estilos.cuentas_pago')
+                            ->label('Cuentas Bancarias Disponibles')
+                            ->helperText('Agrega las cuentas donde tus clientes pueden depositar (ej. BCP, Interbank, BBVA).')
+                            ->schema([
+                                Grid::make(3)->schema([
+                                    TextInput::make('label')
+                                        ->label('Tipo de cuenta')
+                                        ->placeholder('Ej. Cuenta corriente / Cuenta interbancaria')
+                                        ->required(),
+                                    TextInput::make('metodo_pago')
+                                        ->label('Banco / Moneda')
+                                        ->placeholder('Ej. BCP en nuevo soles / Interbank')
+                                        ->required(),
+                                    TextInput::make('info')
+                                        ->label('Número de Cuenta / CCI')
+                                        ->placeholder('Ej. 1917358439064')
+                                        ->required(),
+                                ]),
+                            ])
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => (filled($state['metodo_pago'] ?? null) || filled($state['label'] ?? null)) ? (($state['label'] ?? '').' | '.($state['metodo_pago'] ?? '').' — '.($state['info'] ?? '')) : null)
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Método 2: Pago con QR YAPE en Carrito')
+                    ->description('Muestra el código QR de Yape, el número telefónico y las instrucciones para enviar el comprobante.')
+                    ->collapsible()
+                    ->schema([
+                        Toggle::make('estilos.metodos_pago_carrito.yape.activo')
+                            ->label('Habilitar Pago con QR YAPE en el Carrito')
+                            ->helperText('Si se desactiva o no tiene celular/QR, no se mostrará esta opción en el carrito.')
+                            ->default(true),
+
+                        Grid::make(2)->schema([
+                            TextInput::make('estilos.metodos_pago_carrito.yape.titulo')
+                                ->label('Título de la opción')
+                                ->default('Pago con QR YAPE')
+                                ->placeholder('Ej. Pago con QR YAPE'),
+
+                            TextInput::make('estilos.metodos_pago_carrito.yape.numero')
+                                ->label('Número de celular YAPE')
+                                ->placeholder('Ej. 990096126 o 990 096 126')
+                                ->helperText('Número editable según el celular del negocio.')
+                                ->prefixIcon('heroicon-m-phone'),
+
+                            TextInput::make('estilos.metodos_pago_carrito.yape.titular')
+                                ->label('Nombre del titular de la cuenta YAPE (Opcional)')
+                                ->placeholder('Ej. Lismer Corp SRL'),
+
+                            TextInput::make('estilos.metodos_pago_carrito.yape.instruccion')
+                                ->label('Instrucción junto al QR')
+                                ->default('Ingrese a YAPE y escanee este QR')
+                                ->placeholder('Ej. Ingrese a YAPE y escanee este QR'),
+
+                            FileUpload::make('estilos.metodos_pago_carrito.yape.qr_imagen')
+                                ->label('Imagen del Código QR de YAPE')
+                                ->image()
+                                ->disk('public')
+                                ->directory('sites/pagos/qr')
+                                ->visibility('public')
+                                ->openable()
+                                ->downloadable()
+                                ->columnSpanFull(),
+
+                            TextInput::make('estilos.metodos_pago_carrito.yape.mensaje_voucher')
+                                ->label('Texto para confirmación por WhatsApp')
+                                ->default('Enviar captura del depósito por WhatsApp al {numero}')
+                                ->placeholder('Enviar captura del depósito por WhatsApp al {numero}')
+                                ->helperText('Usa {numero} para reemplazarlo automáticamente por el celular configurado arriba.')
+                                ->columnSpanFull(),
+                        ]),
+                    ]),
             ])
             ->columnSpanFull();
     }
