@@ -6,7 +6,9 @@ export function useInicioData(
     initialProductosDestacados = null
 ) {
     const findSeccion = (slugKey) => {
-        if (!seccionesData) return null;
+        if (!seccionesData) {
+return null;
+}
 
         const normalize = (str) =>
             String(str || '')
@@ -16,15 +18,28 @@ export function useInicioData(
                 .replace(/[-_ ]/g, '');
 
         const target = normalize(slugKey);
-        if (!target) return null;
+
+        if (!target) {
+return null;
+}
 
         // 1. Acceso directo por clave de objeto ('sobre-nosotros', 'sobre_nosotros', etc.)
         if (typeof seccionesData === 'object' && !Array.isArray(seccionesData)) {
-            if (seccionesData[slugKey]) return seccionesData[slugKey];
+            if (seccionesData[slugKey]) {
+return seccionesData[slugKey];
+}
+
             const dashKey = String(slugKey).toLowerCase().replace(/_/g, '-');
-            if (seccionesData[dashKey]) return seccionesData[dashKey];
+
+            if (seccionesData[dashKey]) {
+return seccionesData[dashKey];
+}
+
             const underKey = String(slugKey).toLowerCase().replace(/-/g, '_');
-            if (seccionesData[underKey]) return seccionesData[underKey];
+
+            if (seccionesData[underKey]) {
+return seccionesData[underKey];
+}
         }
 
         const list = Array.isArray(seccionesData)
@@ -33,9 +48,13 @@ export function useInicioData(
 
         // 2. Coincidencia EXACTA por slug o nombre
         for (const item of list) {
-            if (!item) continue;
+            if (!item) {
+continue;
+}
+
             const itemSlug = normalize(item.slug || '');
             const itemNom = normalize(item.nombre || '');
+
             if (itemSlug === target || itemNom === target) {
                 return item;
             }
@@ -64,6 +83,7 @@ export function useInicioData(
     const banerproductos = findSeccion('banerproductos') || findSeccion('baner_productos') || findSeccion('banerProductos') || findSeccion('banerproducto') || findSeccion('banerProducto') || null;
     const sectores = findSeccion('sectores') || null;
     const sobreNosotros = findSeccion('sobre_nosotros') || findSeccion('sobre-nosotros') || findSeccion('sobrenosotros') || null;
+    const comoComprar = findSeccion('como_comprar') || findSeccion('como-comprar') || findSeccion('comocomprar') || findSeccion('cotizacion') || null;
     const contancto = findSeccion('contacto') || null;
 
     return {
@@ -77,6 +97,7 @@ export function useInicioData(
         banerproductos,
         sectores,
         sobreNosotros,
+        comoComprar,
         contacto: contancto,
         productosDestacados: initialProductosDestacados || [],
         loading: false,

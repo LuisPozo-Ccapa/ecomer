@@ -31,6 +31,15 @@
       "_DynamicIcon-vSbptBxr.js"
     ]
   },
+  "_ComoComprarSection-BQQKIELl.js": {
+    "file": "assets/ComoComprarSection-BQQKIELl.js",
+    "name": "ComoComprarSection",
+    "imports": [
+      "_rolldown-runtime-BWaJ3C7D.js",
+      "_vendor-inertia-BCyGzrYZ.js",
+      "_vendor-framer-motion-Brhgw_zz.js"
+    ]
+  },
   "_ContactoSection-NeVnpFHm.js": {
     "file": "assets/ContactoSection-NeVnpFHm.js",
     "name": "ContactoSection",
@@ -264,7 +273,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BVoe24QO.css",
+    "file": "assets/app-Co0_rhz9.css",
     "name": "app",
     "names": [
       "app.css"
@@ -282,7 +291,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-C2kabWH2.js",
+    "file": "assets/app-RcYQpI0y.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -309,6 +318,7 @@
       "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/BanerPieSection.jsx",
       "_CategoriaSection-BuhOdRR0.js",
+      "_ComoComprarSection-BQQKIELl.js",
       "_GaleriaSection-GmyGbe5A.js",
       "_HeroSection-BQUxn5KR.js",
       "_MarcasSection-Bi8RVySg.js",
@@ -445,7 +455,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-KO4Bq3AO.js",
+    "file": "assets/Index-CTrCA2SK.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -543,7 +553,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-C2EUmQGv.js",
+    "file": "assets/SectionInicio-DM90ccBE.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -558,7 +568,8 @@
       "_CategoriaSection-BuhOdRR0.js",
       "_ProductosDestacadosSection-Q7n2RRi7.js",
       "_SectoresSection-CKUFb7nH.js",
-      "_SobreNosotrosInicioSection-vtwgBcQP.js"
+      "_SobreNosotrosInicioSection-vtwgBcQP.js",
+      "_ComoComprarSection-BQQKIELl.js"
     ],
     "dynamicImports": [
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
@@ -785,7 +796,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/shared/Header.jsx": {
-    "file": "assets/Header-C06VvppR.js",
+    "file": "assets/Header-DAkYnAzZ.js",
     "name": "Header",
     "src": "resources/js/pages/sites/Ecomer/shared/Header.jsx",
     "isDynamicEntry": true,
