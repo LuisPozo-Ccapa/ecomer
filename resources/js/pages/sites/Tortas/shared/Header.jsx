@@ -63,6 +63,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             }
             // Excluir catálogo del nav — va como botón flotante
             if (slug === 'catalogo') return null;
+            if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros'].includes(slug)) return null;
             return { ...s, orden: s.orden ?? 99 };
         }).filter(Boolean);
 

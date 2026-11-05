@@ -62,7 +62,7 @@ class SitePageController extends Controller
 
         $seccionesNav = $site->plantilla->secciones
             ->where('activa', true)
-            ->reject(fn ($s) => strtolower($s->slug) === 'nav');
+            ->reject(fn ($s) => in_array(strtolower(str_replace(['_', ' '], '-', $s->slug)), ['nav', 'sectores', 'sobre-nosotros', 'sobre_nosotros']));
 
         $targetSlug = strtolower(str_replace(['_', ' '], '-', $seccionSlug));
         $seccion = $seccionesNav->first(function ($s) use ($targetSlug) {

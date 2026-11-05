@@ -16,23 +16,35 @@ export function useInicioData(
                 .replace(/[-_ ]/g, '');
 
         const target = normalize(slugKey);
+        if (!target) return null;
+
+        // 1. Acceso directo por clave de objeto ('sobre-nosotros', 'sobre_nosotros', etc.)
+        if (typeof seccionesData === 'object' && !Array.isArray(seccionesData)) {
+            if (seccionesData[slugKey]) return seccionesData[slugKey];
+            const dashKey = String(slugKey).toLowerCase().replace(/_/g, '-');
+            if (seccionesData[dashKey]) return seccionesData[dashKey];
+            const underKey = String(slugKey).toLowerCase().replace(/-/g, '_');
+            if (seccionesData[underKey]) return seccionesData[underKey];
+        }
 
         const list = Array.isArray(seccionesData)
             ? seccionesData
             : Object.values(seccionesData);
 
+        // 2. Coincidencia EXACTA por slug o nombre
         for (const item of list) {
             if (!item) continue;
-            const slugNorm = normalize(item.slug || item.nombre || '');
-            if (slugNorm === target || (slugNorm && target && (slugNorm.includes(target) || target.includes(slugNorm)))) {
+            const itemSlug = normalize(item.slug || '');
+            const itemNom = normalize(item.nombre || '');
+            if (itemSlug === target || itemNom === target) {
                 return item;
             }
         }
 
+        // 3. Coincidencia EXACTA por clave del objeto normalizada
         if (typeof seccionesData === 'object' && !Array.isArray(seccionesData)) {
             for (const key in seccionesData) {
-                const keyNorm = normalize(key);
-                if (keyNorm === target || (keyNorm && target && (keyNorm.includes(target) || target.includes(keyNorm)))) {
+                if (normalize(key) === target) {
                     return seccionesData[key];
                 }
             }
@@ -51,6 +63,7 @@ export function useInicioData(
     const banerpie = findSeccion('banerpie') || findSeccion('baner_pie') || findSeccion('banerPie') || null;
     const banerproductos = findSeccion('banerproductos') || findSeccion('baner_productos') || findSeccion('banerProductos') || findSeccion('banerproducto') || findSeccion('banerProducto') || null;
     const sectores = findSeccion('sectores') || null;
+    const sobreNosotros = findSeccion('sobre_nosotros') || findSeccion('sobre-nosotros') || findSeccion('sobrenosotros') || null;
     const contancto = findSeccion('contacto') || null;
 
     return {
@@ -63,6 +76,7 @@ export function useInicioData(
         banerpie,
         banerproductos,
         sectores,
+        sobreNosotros,
         contacto: contancto,
         productosDestacados: initialProductosDestacados || [],
         loading: false,

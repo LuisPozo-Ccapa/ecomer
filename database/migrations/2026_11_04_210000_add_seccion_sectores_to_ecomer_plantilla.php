@@ -27,7 +27,7 @@ return new class extends Migration
                 [
                     'nombre' => 'Sectores',
                     'orden'  => 8,
-                    'activa' => true,
+                    'activa' => false,
                 ]
             );
 

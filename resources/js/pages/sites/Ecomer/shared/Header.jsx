@@ -278,6 +278,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                 }
                 // Excluir catálogo del nav — va como botón flotante
                 if (slug === 'catalogo' || s.isCatalogo) return null;
+                // Excluir secciones modulares de la página de inicio del menú de navegación
+                if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros'].includes(slug)) return null;
                 if (slug === 'marcas' || slug === 'marca') {
                     return { ...s, orden: estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== '' ? Number(estilos.seccion_marcas.orden) : (s.orden ?? 5) };
                 }

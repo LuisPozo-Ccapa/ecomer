@@ -7,6 +7,7 @@ import MarcasSection from './subcomponents/MarcasSection';
 import CategoriaSection from './subcomponents/CategoriaSection';
 import ProductosDestacadosSection from './subcomponents/ProductosDestacadosSection';
 import SectoresSection from './subcomponents/SectoresSection';
+import SobreNosotrosInicioSection from './subcomponents/SobreNosotrosInicioSection';
 
 const TikTokSection = lazy(() => import('./subcomponents/TikTokSection'));
 const BanerPieSection = lazy(() => import('./subcomponents/BanerPieSection'));
@@ -34,6 +35,7 @@ export default function SectionInicio({
         tiktok,
         banerpie,
         sectores,
+        sobreNosotros,
         productosDestacados: productos,
         loading,
         error,
@@ -97,6 +99,9 @@ export default function SectionInicio({
             </div>
             <div className="content-auto">
                 <SectoresSection seccionData={sectores} />
+            </div>
+            <div className="content-auto">
+                <SobreNosotrosInicioSection seccionData={sobreNosotros} />
             </div>
             <Suspense fallback={null}>
                 <TikTokSection seccionData={tiktok} />
