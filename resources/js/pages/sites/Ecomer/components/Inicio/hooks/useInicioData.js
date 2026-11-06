@@ -85,6 +85,7 @@ continue;
     const sobreNosotros = findSeccion('sobre_nosotros') || findSeccion('sobre-nosotros') || findSeccion('sobrenosotros') || null;
     const comoComprar = findSeccion('como_comprar') || findSeccion('como-comprar') || findSeccion('comocomprar') || findSeccion('cotizacion') || null;
     const sedes = findSeccion('sedes') || findSeccion('sucursales') || findSeccion('puntos_venta') || findSeccion('puntos-de-venta') || null;
+    const faq = findSeccion('faq') || findSeccion('faqs') || findSeccion('preguntas_frecuentes') || findSeccion('preguntas-frecuentes') || null;
     const contancto = findSeccion('contacto') || null;
 
     return {
@@ -100,6 +101,7 @@ continue;
         sobreNosotros,
         comoComprar,
         sedes,
+        faq,
         contacto: contancto,
         productosDestacados: initialProductosDestacados || [],
         loading: false,

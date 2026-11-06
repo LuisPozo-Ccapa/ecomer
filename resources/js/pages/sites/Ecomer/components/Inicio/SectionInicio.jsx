@@ -10,6 +10,7 @@ import SectoresSection from './subcomponents/SectoresSection';
 import SobreNosotrosInicioSection from './subcomponents/SobreNosotrosInicioSection';
 import ComoComprarSection from './subcomponents/ComoComprarSection';
 import SedesSection from './subcomponents/SedesSection';
+import FaqSection from './subcomponents/FaqSection';
 
 const TikTokSection = lazy(() => import('./subcomponents/TikTokSection'));
 const BanerPieSection = lazy(() => import('./subcomponents/BanerPieSection'));
@@ -40,6 +41,7 @@ export default function SectionInicio({
         sobreNosotros,
         comoComprar,
         sedes,
+        faq,
         productosDestacados: productos,
         loading,
         error,
@@ -112,6 +114,9 @@ export default function SectionInicio({
             </div>
             <div className="content-auto">
                 <SedesSection seccionData={sedes} />
+            </div>
+            <div className="content-auto">
+                <FaqSection seccionData={faq} />
             </div>
             <Suspense fallback={null}>
                 <TikTokSection seccionData={tiktok} />
