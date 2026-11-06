@@ -279,7 +279,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                 // Excluir catálogo del nav — va como botón flotante
                 if (slug === 'catalogo' || s.isCatalogo) return null;
                 // Excluir secciones modulares de la página de inicio del menú de navegación
-                if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros', 'como_comprar', 'como-comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes'].includes(slug)) return null;
+                if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros', 'como_comprar', 'como-comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones'].includes(slug)) return null;
                 if (slug === 'marcas' || slug === 'marca') {
                     return { ...s, orden: estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== '' ? Number(estilos.seccion_marcas.orden) : (s.orden ?? 5) };
                 }

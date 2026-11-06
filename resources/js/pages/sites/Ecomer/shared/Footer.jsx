@@ -684,6 +684,18 @@ export default function Footer({
                             Políticas de Devolución
                     </Link>
                 </li>
+                <li className="pt-1.5 border-t border-neutral-800">
+                    <Link
+                        href={buildUrl('/libro-de-reclamaciones')}
+                        className="hover:text-white transition-colors duration-150 inline-flex items-center gap-1.5 group/libro"
+                        title="Libro de Reclamaciones Virtual"
+                    >
+                        <span className="text-sm">📖</span>
+                        <span className="font-semibold text-neutral-300 group-hover/libro:text-white underline underline-offset-2">
+                            Libro de Reclamaciones
+                        </span>
+                    </Link>
+                </li>
             </ul>
         </div >
 
@@ -854,6 +866,10 @@ export default function Footer({
                                             </Link >
                                         )
     }
+    <Link href={buildUrl('/libro-de-reclamaciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none inline-flex items-center gap-1 font-medium text-neutral-300">
+        <span>📖</span>
+        <span>Libro de Reclamaciones</span>
+    </Link>
                                     </div >
                                 )
 }

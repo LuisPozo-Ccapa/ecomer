@@ -12,6 +12,7 @@ const SectionNosotros = lazy(() => import('./components/Nosotros/SectionNosotros
 const SectionContacto = lazy(() => import('./components/Contacto/SectionContacto'));
 const SectionProductoDetalle = lazy(() => import('./components/Productos/SectionProductoDetalle'));
 const LegalPage = lazy(() => import('@/components/LegalPage'));
+const LibroReclamacionesPage = lazy(() => import('@/components/LibroReclamacionesPage'));
 
 export default function Ecomer({
     site,
@@ -252,6 +253,13 @@ export default function Ecomer({
                             dominio={dominio}
                             siteSlug={siteSlug}
                             legalType={seccionActiva.legal_type || 'terminos'}
+                            estilos={estilos}
+                        />
+                    ) : seccionActiva?.is_libro_reclamaciones ? (
+                        <LibroReclamacionesPage
+                            site={site}
+                            dominio={dominio}
+                            siteSlug={siteSlug}
                             estilos={estilos}
                         />
                     ) : productoSeleccionado ? (

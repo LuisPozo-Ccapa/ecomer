@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
 const descargarCatalogo721d1b776873b25ea5ee3e79d0062a52 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.url = (options?: RouteQueryOpt
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.get = (options?: RouteQueryOpt
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
 descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
     const descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
         descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/catalogo/descargar-pdf'
  */
         descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.head = (options?: RouteQueryOp
     descargarCatalogo721d1b776873b25ea5ee3e79d0062a52.form = descargarCatalogo721d1b776873b25ea5ee3e79d0062a52Form
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 const descargarCatalogoa0db0def83886227f6725985f3117c4e = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.url = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.url = (args: { dominio: string
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +131,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.get = (args: { dominio: string
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
 descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -141,7 +141,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
     const descargarCatalogoa0db0def83886227f6725985f3117c4eForm = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -151,7 +151,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargarCatalogoa0db0def83886227f6725985f3117c4eForm.get = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{dominio}/catalogo/descargar-pdf'
  */
         descargarCatalogoa0db0def83886227f6725985f3117c4eForm.head = (args: { dominio: string | number } | [dominio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -176,7 +176,7 @@ descargarCatalogoa0db0def83886227f6725985f3117c4e.head = (args: { dominio: strin
     descargarCatalogoa0db0def83886227f6725985f3117c4e.form = descargarCatalogoa0db0def83886227f6725985f3117c4eForm
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 const descargarCatalogobeeae37e65ef939033903be744aedb4c = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -191,7 +191,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.definition = {
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.url = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions) => {
@@ -217,7 +217,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.url = (args: { param1: string 
 
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -226,7 +226,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.get = (args: { param1: string 
 })
 /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
 descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -236,7 +236,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
 
     /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
     const descargarCatalogobeeae37e65ef939033903be744aedb4cForm = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -246,7 +246,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
 
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargarCatalogobeeae37e65ef939033903be744aedb4cForm.get = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -255,7 +255,7 @@ descargarCatalogobeeae37e65ef939033903be744aedb4c.head = (args: { param1: string
         })
             /**
 * @see \App\Http\Controllers\SitePageController::descargarCatalogo
- * @see app/Http/Controllers/SitePageController.php:606
+ * @see app/Http/Controllers/SitePageController.php:613
  * @route '/{param1}/{param2}/catalogo/descargar-pdf'
  */
         descargarCatalogobeeae37e65ef939033903be744aedb4cForm.head = (args: { param1: string | number, param2: string | number } | [param1: string | number, param2: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
