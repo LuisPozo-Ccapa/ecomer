@@ -464,6 +464,42 @@ class SiteForm
                                     Textarea::make('estilos.politicas.devoluciones.sec_4')->label('4. Excepciones')->rows(3)->placeholder('Productos perecibles, personalizados o en remate final no aplican para devolución...'),
                                 ]),
                         ]),
+
+                    Tab::make('Libro de Reclamaciones')
+                        ->icon('heroicon-o-book-open')
+                        ->schema([
+                            Section::make('Identificación de la Empresa Proveedora')
+                                ->description('Datos formales que deben figurar obligatoriamente en la cabecera de la Hoja de Reclamación Digital según Ley N° 29571 (INDECOPI).')
+                                ->schema([
+                                    Grid::make(3)->schema([
+                                        TextInput::make('estilos.libro_reclamaciones.razon_social')
+                                            ->label('Razón Social de la Empresa')
+                                            ->placeholder('Ej. LISMER CORP SRL')
+                                            ->helperText('Nombre comercial o razón social registrada en SUNAT.'),
+                                        TextInput::make('estilos.libro_reclamaciones.ruc')
+                                            ->label('RUC de la Empresa')
+                                            ->placeholder('Ej. 20601234567')
+                                            ->maxLength(11),
+                                        TextInput::make('estilos.libro_reclamaciones.direccion_legal')
+                                            ->label('Domicilio Fiscal / Legal')
+                                            ->placeholder('Ej. Jr. Huarochirí N°592, CC. Plaza Ferretero')
+                                            ->helperText('Dirección física visible en la cabecera del libro.'),
+                                    ]),
+                                    Grid::make(2)->schema([
+                                        TextInput::make('estilos.libro_reclamaciones.email_receptor')
+                                            ->label('Correo Electrónico para Reclamaciones')
+                                            ->placeholder('reclamos@tudominio.com')
+                                            ->helperText('Correo donde llegarán las quejas/reclamos de este sitio. Si se deja en blanco, usará el configurado en el archivo .env.'),
+                                        TextInput::make('estilos.libro_reclamaciones.telefono_atencion')
+                                            ->label('Teléfono de Atención / WhatsApp')
+                                            ->placeholder('Ej. 994063340'),
+                                    ]),
+                                    Textarea::make('estilos.libro_reclamaciones.mensaje_informativo')
+                                        ->label('Mensaje Informativo Adicional')
+                                        ->placeholder('Texto explicativo adicional que se muestra al consumidor al inicio de la Hoja de Reclamaciones.')
+                                        ->rows(3),
+                                ]),
+                        ]),
                 ])
                 ->columnSpanFull(),
         ];
