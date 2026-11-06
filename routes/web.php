@@ -3,6 +3,7 @@
 use App\Http\Controllers\PlantillasController;
 use App\Http\Controllers\SitePageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\LibroReclamacionesController;
 use App\Models\Site;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -114,6 +115,10 @@ Route::get('/comprobar-archivos', function () {
 Route::get('/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar');
 Route::get('/{dominio}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar1');
 Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar2');
+
+Route::post('/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store');
+Route::post('/{dominio}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store.dominio');
+Route::post('/{param1}/{param2}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store.slug');
 
 Route::get('/{seccion}', [SitePageController::class, 'show'])->name('sitios.seccion');
 Route::get('/{dominio}/{seccion}', [SitePageController::class, 'show'])->name('sitios.show');

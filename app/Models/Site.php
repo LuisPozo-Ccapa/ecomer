@@ -66,6 +66,11 @@ class Site extends Model
         return $this->hasMany(Producto::class);
     }
 
+    public function libroReclamaciones(): HasMany
+    {
+        return $this->hasMany(LibroReclamacion::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

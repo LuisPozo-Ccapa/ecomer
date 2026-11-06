@@ -62,7 +62,7 @@ class SitePageController extends Controller
 
         $seccionesNav = $site->plantilla->secciones
             ->where('activa', true)
-            ->reject(fn ($s) => in_array(strtolower(str_replace(['_', ' '], '-', $s->slug)), ['nav', 'sectores', 'sobre-nosotros', 'sobre_nosotros', 'como-comprar', 'como_comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes']));
+            ->reject(fn ($s) => in_array(strtolower(str_replace(['_', ' '], '-', $s->slug)), ['nav', 'sectores', 'sobre-nosotros', 'sobre_nosotros', 'como-comprar', 'como_comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones']));
 
         $targetSlug = strtolower(str_replace(['_', ' '], '-', $seccionSlug));
         $seccion = $seccionesNav->first(function ($s) use ($targetSlug) {
@@ -117,6 +117,13 @@ class SitePageController extends Controller
                 'contenido' => [],
                 'is_legal' => true,
                 'legal_type' => $info['type'],
+            ];
+        } elseif (in_array($targetSlug, ['libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones'])) {
+            $seccionActiva = [
+                'slug' => 'libro-de-reclamaciones',
+                'nombre' => 'Libro de Reclamaciones',
+                'contenido' => [],
+                'is_libro_reclamaciones' => true,
             ];
         } elseif (! $seccion && in_array($targetSlug, ['inicio', 'hero', 'productos', 'tienda', 'tiendas', 'servicios', 'servicio', 'nosotros', 'sobre-nosotros', 'contacto', 'contactos'])) {
             $canonicalSlug = in_array($targetSlug, ['productos', 'tienda', 'tiendas'])
