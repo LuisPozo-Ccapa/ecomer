@@ -43,59 +43,63 @@ export function getPolicyData(type, customPoliticas = {}) {
             badge: 'MARCO LEGAL & CONDICIONES DE USO',
             title: 'Términos y Condiciones',
             subtitle: 'Conoce los términos, derechos y obligaciones que rigen la utilización de nuestra plataforma digital.',
+            defaultIntro: 'Bienvenido a nuestra plataforma. En el presente documento se establecen las condiciones que regulan el uso de nuestro sitio web y los servicios disponibles.',
             icon: FaScaleBalanced,
             sectionDefs: [
-                { key: 'sec_1', num: '1', title: 'Aceptación de los Términos' },
-                { key: 'sec_2', num: '2', title: 'Descripción del Servicio' },
-                { key: 'sec_3', num: '3', title: 'Registro y Responsabilidad del Usuario' },
-                { key: 'sec_4', num: '4', title: 'Contenido de los Anuncios / Productos' },
-                { key: 'sec_5', num: '5', title: 'Planes y Pagos' },
-                { key: 'sec_6', num: '6', title: 'Propiedad Intelectual' },
-                { key: 'sec_7', num: '7', title: 'Limitación de Responsabilidad' },
-                { key: 'sec_8', num: '8', title: 'Cancelación y Suspensión' },
-                { key: 'sec_9', num: '9', title: 'Modificaciones de los Términos' },
-                { key: 'sec_10', num: '10', title: 'Contacto' },
+                { key: 'sec_1', num: '1', title: 'Aceptación de los Términos', default: 'Al registrarte como usuario o utilizar la plataforma, aceptas los presentes Términos y Condiciones que regulan el acceso y uso de los servicios disponibles.' },
+                { key: 'sec_2', num: '2', title: 'Descripción del Servicio', default: 'Nuestra plataforma proporciona servicios de comercio electrónico para la consulta, cotización y compra de productos y suministros con garantía.' },
+                { key: 'sec_3', num: '3', title: 'Registro y Responsabilidad del Usuario', default: 'El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso y de la veracidad de la información proporcionada.' },
+                { key: 'sec_4', num: '4', title: 'Contenido de los Anuncios / Productos', default: 'Todos los productos publicados cumplen con los estándares de calidad técnica y especificaciones informadas en sus respectivas fichas.' },
+                { key: 'sec_5', num: '5', title: 'Planes y Pagos', default: 'Los precios, métodos de pago y condiciones comerciales de facturación se rigen bajo los acuerdos informados en cada cotización u orden.' },
+                { key: 'sec_6', num: '6', title: 'Propiedad Intelectual', default: 'Todos los contenidos, marcas y logotipos de este sitio son propiedad exclusiva de sus respectivos titulares y marcas representadas.' },
+                { key: 'sec_7', num: '7', title: 'Limitación de Responsabilidad', default: 'No nos hacemos responsables por fallas ajenas de conectividad o uso inapropiado de los productos fuera de sus especificaciones técnicas de fábrica.' },
+                { key: 'sec_8', num: '8', title: 'Cancelación y Suspensión', default: 'Nos reservamos el derecho de suspender operaciones o cuentas que infrinjan los presentes términos o intenten actividades fraudulentas.' },
+                { key: 'sec_9', num: '9', title: 'Modificaciones de los Términos', default: 'Podremos actualizar estos términos periódicamente comunicando las modificaciones en este mismo sitio web.' },
+                { key: 'sec_10', num: '10', title: 'Contacto', default: 'Si tienes consultas sobre estos Términos y Condiciones, contáctanos a través de nuestros canales oficiales de atención al cliente.' },
             ]
         },
         privacidad: {
             badge: 'SEGURIDAD & PRIVACIDAD DE DATOS',
             title: 'Política de Privacidad',
             subtitle: 'Conoce nuestras prácticas de protección de datos, recopilación responsable y los derechos sobre tu información personal.',
+            defaultIntro: 'Valoramos y respetamos la privacidad de nuestros usuarios. Esta política explica cómo recopilamos, utilizamos y protegemos tu información personal.',
             icon: FaUserShield,
             sectionDefs: [
-                { key: 'sec_1', num: '1', title: 'Información que Recopilamos' },
-                { key: 'sec_2', num: '2', title: 'Uso de la Información' },
-                { key: 'sec_3', num: '3', title: 'Protección de Datos' },
-                { key: 'sec_4', num: '4', title: 'Compartición de Información' },
-                { key: 'sec_5', num: '5', title: 'Cookies' },
-                { key: 'sec_6', num: '6', title: 'Derechos del Usuario' },
-                { key: 'sec_7', num: '7', title: 'Conservación de Datos' },
-                { key: 'sec_8', num: '8', title: 'Cambios a esta Política' },
-                { key: 'sec_9', num: '9', title: 'Contacto' },
+                { key: 'sec_1', num: '1', title: 'Información que Recopilamos', default: 'Recopilamos información proporcionada voluntariamente como nombre, teléfono, dirección y correo electrónico al realizar consultas o pedidos.' },
+                { key: 'sec_2', num: '2', title: 'Uso de la Información', default: 'Utilizamos los datos para procesar requerimientos, cotizaciones, despachos de pedidos y brindar atención al cliente personalizada.' },
+                { key: 'sec_3', num: '3', title: 'Protección de Datos', default: 'Implementamos rigurosas medidas de seguridad administrativas y tecnológicas para salvaguardar tu información frente a accesos no autorizados.' },
+                { key: 'sec_4', num: '4', title: 'Compartición de Información', default: 'No comercializamos ni cedemos tus datos personales a terceros sin tu previo consentimiento expreso, salvo obligación legal.' },
+                { key: 'sec_5', num: '5', title: 'Cookies', default: 'Utilizamos cookies para optimizar tu experiencia de navegación, recordar preferencias y analizar estadísticas anónimas de tráfico.' },
+                { key: 'sec_6', num: '6', title: 'Derechos del Usuario', default: 'Tienes derecho a acceder, corregir, actualizar o solicitar la supresión de tus datos personales conforme a la legislación de protección de datos.' },
+                { key: 'sec_7', num: '7', title: 'Conservación de Datos', default: 'Conservamos la información personal durante el tiempo estrictamente necesario para cumplir las finalidades descritas en esta política.' },
+                { key: 'sec_8', num: '8', title: 'Cambios a esta Política', default: 'Nos reservamos el derecho de modificar esta Política de Privacidad en cualquier momento comunicándolo oportunamente en nuestra plataforma.' },
+                { key: 'sec_9', num: '9', title: 'Contacto', default: 'Para ejercer tus derechos de privacidad o realizar consultas, escríbenos a nuestros canales oficiales de atención.' },
             ]
         },
         envios: {
             badge: 'DESPACHO & COBERTURA NACIONAL',
             title: 'Política de Envíos',
             subtitle: 'Información detallada sobre plazos de entrega, zonas de cobertura y métodos de despacho.',
+            defaultIntro: 'Nos comprometemos a entregar tus productos de manera rápida, segura y oportuna en todo el territorio nacional.',
             icon: FaTruckFast,
             sectionDefs: [
-                { key: 'sec_1', num: '1', title: 'Cobertura y Zonas de Envío' },
-                { key: 'sec_2', num: '2', title: 'Tiempos y Plazos de Entrega' },
-                { key: 'sec_3', num: '3', title: 'Costos y Métodos de Envío' },
-                { key: 'sec_4', num: '4', title: 'Recepción de Pedidos' },
+                { key: 'sec_1', num: '1', title: 'Cobertura y Zonas de Envío', default: 'Realizamos envíos a nivel nacional coordinando con las principales agencias de transporte o mediante despacho directo en zonas autorizadas.' },
+                { key: 'sec_2', num: '2', title: 'Tiempos y Plazos de Entrega', default: 'Los plazos estándar oscilan entre 24 a 72 horas hábiles según el destino final y la confirmación del pedido y stock.' },
+                { key: 'sec_3', num: '3', title: 'Costos y Métodos de Envío', default: 'Los costos de envío se calculan en base al destino, peso y volumen de la carga, informándose oportunamente antes del despacho.' },
+                { key: 'sec_4', num: '4', title: 'Recepción de Pedidos', default: 'Es necesario presentar documento de identidad o número de orden al recibir la mercancía y verificar el estado del embalaje.' },
             ]
         },
         devoluciones: {
             badge: 'GARANTÍA & CAMBIOS DE PRODUCTO',
             title: 'Políticas de Devolución',
             subtitle: 'Conoce las condiciones y el procedimiento para solicitar un cambio o devolución de producto.',
+            defaultIntro: 'Tu satisfacción es nuestra prioridad. Contamos con políticas claras para cambios y devoluciones de productos garantizados.',
             icon: FaRotateLeft,
             sectionDefs: [
-                { key: 'sec_1', num: '1', title: 'Condiciones para Cambios y Devoluciones' },
-                { key: 'sec_2', num: '2', title: 'Plazos para Devoluciones' },
-                { key: 'sec_3', num: '3', title: 'Proceso y Reembolsos' },
-                { key: 'sec_4', num: '4', title: 'Excepciones' },
+                { key: 'sec_1', num: '1', title: 'Condiciones para Cambios y Devoluciones', default: 'El producto debe encontrarse sin uso, en su empaque original con manuales completos y acompañado de su comprobante de pago emitido.' },
+                { key: 'sec_2', num: '2', title: 'Plazos para Devoluciones', default: 'Dispones de un plazo de hasta 7 días calendario tras recibir tu pedido para comunicar y solicitar una revisión de cambio o devolución.' },
+                { key: 'sec_3', num: '3', title: 'Proceso y Reembolsos', default: 'Los reembolsos o notas de crédito se procesan tras la inspección técnica del producto dentro de los plazos bancarios comerciales.' },
+                { key: 'sec_4', num: '4', title: 'Excepciones', default: 'Componentes fabricados a medida especial, intervenidos por terceros o en remate final no aplican para devolución salvo defecto de fábrica comprobado.' },
             ]
         }
     };
@@ -103,21 +107,24 @@ export function getPolicyData(type, customPoliticas = {}) {
     const config = policyMap[type] || policyMap.terminos;
     const userPolicy = customPoliticas?.[type] || {};
 
-    const intro = typeof userPolicy.intro === 'string' && userPolicy.intro.trim() !== '' ? userPolicy.intro.trim() : null;
+    const intro = typeof userPolicy.intro === 'string' && userPolicy.intro.trim() !== ''
+        ? userPolicy.intro.trim()
+        : config.defaultIntro;
 
     const sections = config.sectionDefs
         .map((def) => {
             const val = userPolicy[def.key];
-            if (typeof val === 'string' && val.trim() !== '') {
-                return {
-                    id: `${type}-${def.key}`,
-                    num: def.num,
-                    title: def.title,
-                    content: val.trim()
-                };
-            }
-            return null;
-        })
+                const content = typeof val === 'string' && val.trim() !== '' ? val.trim() : def.default;
+                if (content) {
+                    return {
+                        id: `${type}-${def.key}`,
+                        num: def.num,
+                        title: def.title,
+                    content
+                    };
+                }
+                return null;
+            })
         .filter(Boolean);
 
     const hasContent = Boolean(intro || sections.length > 0);
@@ -208,8 +215,8 @@ export default function LegalModal({ isOpen, onClose, defaultTab = 'terminos', s
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${activeTab === tab.id
-                                                ? 'bg-amber-500 text-black shadow-xs font-bold'
-                                                : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
+                                            ? 'bg-amber-500 text-black shadow-xs font-bold'
+                                            : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
                                             }`}
                                     >
                                         <TabIcon className="h-3 w-3" />
@@ -251,8 +258,8 @@ export default function LegalModal({ isOpen, onClose, defaultTab = 'terminos', s
                                                     key={sec.id}
                                                     onClick={() => scrollToSection(sec.id)}
                                                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left text-xs transition-all ${activeSection === sec.id
-                                                            ? 'bg-amber-50 text-amber-900 font-bold border border-amber-200'
-                                                            : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 font-medium'
+                                                        ? 'bg-amber-50 text-amber-900 font-bold border border-amber-200'
+                                                        : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 font-medium'
                                                         }`}
                                                 >
                                                     <span className="h-5 w-5 rounded-md bg-neutral-100 text-neutral-700 font-bold text-[10px] flex items-center justify-center shrink-0">

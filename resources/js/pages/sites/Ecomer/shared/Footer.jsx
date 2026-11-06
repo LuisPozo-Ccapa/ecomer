@@ -474,7 +474,7 @@ export default function Footer({
             devoluciones: 'politica-de-devolucion',
         };
         const pSlug = slugMap[type] || type;
-        return siteSlug ? `/${dominio}/${siteSlug}/${pSlug}` : `/${dominio}/${pSlug}`;
+        return buildUrl(`/${pSlug}`);
     };
 
     const [legalModalOpen, setLegalModalOpen] = useState(false);
@@ -549,8 +549,8 @@ export default function Footer({
                         </div>
                     </div>
 
-                    {/* --- 2. CUERPO PRINCIPAL: 4 COLUMNAS LIMPIAS Y EN ESPAÑOL --- */}
-                    <div className="py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 border-b border-neutral-800/80 text-sm">
+                    {/* --- 2. CUERPO PRINCIPAL: 5 COLUMNAS LIMPIAS Y EN ESPAÑOL --- */}
+                    <div className="py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-8 border-b border-neutral-800/80 text-sm">
 
                         {/* COLUMNA 1: SOBRE NOSOTROS & REDES */}
                         <div className="space-y-4">
@@ -640,8 +640,55 @@ export default function Footer({
                             </ul>
                         </div>
 
-                        {/* COLUMNA 3: ATENCIÓN AL CLIENTE (CORREOS, HORARIOS Y WHATSAPP) */}
+                        {/* COLUMNA 3: LEGALES */}
                         <div className="space-y-4">
+                            <div className="h-12 flex items-center">
+                                <h4 className="text-white font-bold text-sm tracking-wide">
+                                    Legales
+                                </h4>
+                            </div>
+                            <ul className="space-y-2.5 text-xs text-neutral-400">
+                                <li>
+                                    <Link
+                                        href={getPolicyUrl('terminos')}
+                                        className="hover:text-white transition-colors duration-150 block truncate"
+                                        title="Términos y Condiciones"
+                                    >
+                                        Términos y Condiciones
+                                </Link>
+                            </li>
+                            <li>
+                                    <Link
+                                    href={getPolicyUrl('privacidad')}
+                                    className="hover:text-white transition-colors duration-150 block truncate"
+                                    title="Política de Privacidad"
+                                >
+                                    Política de Privacidad
+                            </Link>
+                        </li>
+                        <li>
+                                    <Link
+                                href={getPolicyUrl('envios')}
+                                className="hover:text-white transition-colors duration-150 block truncate"
+                                title="Política de Envíos"
+                            >
+                                Política de Envíos
+                        </Link>
+                    </li>
+                    <li>
+                                    <Link
+                            href={getPolicyUrl('devoluciones')}
+                            className="hover:text-white transition-colors duration-150 block truncate"
+                            title="Políticas de Devolución"
+                        >
+                            Políticas de Devolución
+                    </Link>
+                </li>
+            </ul>
+        </div >
+
+            {/* COLUMNA 4: ATENCIÓN AL CLIENTE (CORREOS, HORARIOS Y WHATSAPP) */ }
+            < div className = "space-y-4" >
                             <div className="h-12 flex items-center">
                                 <h4 className="text-white font-bold text-sm tracking-wide">
                                     Atención al Cliente
@@ -703,112 +750,125 @@ export default function Footer({
                                                     </div>
                                                 )}
                                             </div>
-                        </div>
+                        </div >
 
-                        {/* COLUMNA 4: MÉTODOS Y CUENTAS DE PAGO */}
-                                <div className="space-y-4">
-                                    <div className="h-12 flex items-center">
-                                        <h4 className="text-white font-bold text-sm tracking-wide">
-                                            Métodos de Pago
-                                        </h4>
-                                    </div>
+        {/* COLUMNA 5: MÉTODOS Y CUENTAS DE PAGO */ }
+        < div className = "space-y-4" >
+            <div className="h-12 flex items-center">
+                <h4 className="text-white font-bold text-sm tracking-wide">
+                    Métodos de Pago
+                </h4>
+            </div>
 
-                                    {/* Cuentas Bancarias / Información para Pagar */}
-                                    {cuentasPago.length > 0 && (
-                                        <div className="space-y-2">
-                                            {cuentasPago.map((item, idx) => {
-                                                const label = item.label || item.Label || 'Cuenta:';
-                                                const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
-                                                const info = item.info || item.Info || item.numero || '';
+    {/* Cuentas Bancarias / Información para Pagar */ }
+    {
+        cuentasPago.length > 0 && (
+            <div className="space-y-2">
+                {cuentasPago.map((item, idx) => {
+                    const label = item.label || item.Label || 'Cuenta:';
+                    const metodo = item.metodo_pago || item.Metodo_pago || item.metodo || 'Banco';
+                    const info = item.info || item.Info || item.numero || '';
 
-                                                return (
-                                                    <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
-                                                        <div className="flex items-center justify-between gap-1 text-[11px]">
-                                                            <span className="text-neutral-400 font-semibold">{label}</span>
-                                                            <span className="text-white font-extrabold">{metodo}</span>
-                                                        </div>
-                                                        <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
-                                                            {info}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-
-                                    {/* Métodos de Pago Aceptados (Insignias) */}
-                                    {renderedBadges.length > 0 && (
-                                        <div className="pt-1">
-                                            <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
-                                                Insignias Aceptadas
-                                            </span>
-                                            <div className="flex flex-wrap items-center gap-1.5">
-                                                {renderedBadges}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
+                    return (
+                        <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800/90 text-xs space-y-0.5">
+                            <div className="flex items-center justify-between gap-1 text-[11px]">
+                                <span className="text-neutral-400 font-semibold">{label}</span>
+                                <span className="text-white font-extrabold">{metodo}</span>
                             </div>
-
-                            {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */}
-                            <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-                                <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 text-center sm:text-left">
-                                    <span>
-                                        © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
-                                    </span>
-                                    <span className="hidden sm:inline text-neutral-700">•</span>
-                                    <a
-                                        href="https://www.ccapasistemas.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-neutral-400 hover:text-white transition-colors group/ccapa focus:outline-none"
-                                        title="CCAPA TECNOLOGIAS DE INFORMACION SAC"
-                                    >
-                                        <span>Hecho por</span>
-                                        <span className="text-red-500 text-xs group-hover/ccapa:scale-110 transition-transform">♥️</span>
-                                        <span className="text-neutral-300 font-semibold tracking-wide group-hover/ccapa:text-white group-hover/ccapa:underline underline-offset-2">
-                                            CCAPA TECNOLOGIAS DE INFORMACION SAC
-                                        </span>
-                                    </a>
-                                </div>
-
-                                {hasAnyLegal && (
-                                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
-                                        {hasEnvios && (
-                                            <a href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                                Política de Envíos
-                                            </a>
-                                        )}
-                                        {hasDevoluciones && (
-                                            <a href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                                Políticas de Devolución
-                                            </a>
-                                        )}
-                                        {hasPrivacidad && (
-                                            <a href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                                Política de Privacidad
-                                            </a>
-                                        )}
-                                        {hasTerminos && (
-                                            <a href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
-                                                Términos y Condiciones
-                                            </a>
-                                        )}
-                                    </div>
-                                )}
+                            <div className="font-mono text-white text-xs font-bold select-all tracking-tight truncate">
+                                {info}
                             </div>
-
                         </div>
-                    </footer>
+                    );
+                })}
+            </div>
+        )
+    }
 
-                    {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */}
-                    <LegalModal
-                        isOpen={legalModalOpen}
-                        onClose={() => setLegalModalOpen(false)}
-                        defaultTab={legalModalTab}
-                        site={site}
-                    />
+    {/* Métodos de Pago Aceptados (Insignias) */ }
+    {
+        renderedBadges.length > 0 && (
+            <div className="pt-1">
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
+                    Insignias Aceptadas
+                </span>
+                <div className="flex flex-wrap items-center gap-1.5">
+                    {renderedBadges}
+                </div>
+            </div>
+        )
+    }
+                                </div >
+
+                            </div >
+
+        {/* --- 3. BARRA INFERIOR DE COPYRIGHT Y POLÍTICAS EN ESPAÑOL --- */ }
+        < div className = "pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500" >
+            <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 text-center sm:text-left">
+                <span>
+                    © {currentYear} <span className="text-neutral-400 font-medium">{siteName}</span>. Todos los derechos reservados.
+                </span>
+                <span className="hidden sm:inline text-neutral-700">•</span>
+                <a
+                    href="https://www.ccapasistemas.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-neutral-400 hover:text-white transition-colors group/ccapa focus:outline-none"
+                    title="CCAPA TECNOLOGIAS DE INFORMACION SAC"
+                >
+                    <span>Hecho por</span>
+                    <span className="text-red-500 text-xs group-hover/ccapa:scale-110 transition-transform">♥️</span>
+                    <span className="text-neutral-300 font-semibold tracking-wide group-hover/ccapa:text-white group-hover/ccapa:underline underline-offset-2">
+                        CCAPA TECNOLOGIAS DE INFORMACION SAC
+                    </span>
+                </a>
+            </div>
+
+    {
+        hasAnyLegal && (
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-xs text-neutral-400">
+                {hasEnvios && (
+                        <Link href={getPolicyUrl('envios')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                            Política de Envíos
+                                            </Link>
+        )
+    }
+    {
+        hasDevoluciones && (
+                <Link href={getPolicyUrl('devoluciones')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                    Políticas de Devolución
+                                            </Link >
+                                        )
+    }
+    {
+        hasPrivacidad && (
+                <Link href={getPolicyUrl('privacidad')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                    Política de Privacidad
+                                            </Link >
+                                        )
+    }
+    {
+        hasTerminos && (
+                <Link href={getPolicyUrl('terminos')} className="hover:text-white transition-colors cursor-pointer focus:outline-none">
+                    Términos y Condiciones
+                                            </Link >
+                                        )
+    }
+                                    </div >
+                                )
+}
+                            </div >
+
+                        </div >
+                    </footer >
+
+    {/* MODAL DE POLÍTICAS Y TÉRMINOS CON DISEÑO DE CARDS */ }
+    < LegalModal
+isOpen = { legalModalOpen }
+onClose = {() => setLegalModalOpen(false)}
+defaultTab = { legalModalTab }
+site = { site }
+    />
                 </>
                 );
 }
