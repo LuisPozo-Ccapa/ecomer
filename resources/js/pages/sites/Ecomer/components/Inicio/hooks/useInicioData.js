@@ -84,6 +84,7 @@ continue;
     const sectores = findSeccion('sectores') || null;
     const sobreNosotros = findSeccion('sobre_nosotros') || findSeccion('sobre-nosotros') || findSeccion('sobrenosotros') || null;
     const comoComprar = findSeccion('como_comprar') || findSeccion('como-comprar') || findSeccion('comocomprar') || findSeccion('cotizacion') || null;
+    const sedes = findSeccion('sedes') || findSeccion('sucursales') || findSeccion('puntos_venta') || findSeccion('puntos-de-venta') || null;
     const contancto = findSeccion('contacto') || null;
 
     return {
@@ -98,6 +99,7 @@ continue;
         sectores,
         sobreNosotros,
         comoComprar,
+        sedes,
         contacto: contancto,
         productosDestacados: initialProductosDestacados || [],
         loading: false,
