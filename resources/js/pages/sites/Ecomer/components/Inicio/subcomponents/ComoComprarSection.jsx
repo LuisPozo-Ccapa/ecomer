@@ -138,13 +138,10 @@ export default function ComoComprarSection({ seccionData }) {
         }
     };
 
-    // SVG path para el recorte orgánico en la esquina inferior derecha
-    const organicPhotoPath = 'M 35 0 H 525 Q 560 0 560 35 V 290 C 560 320 525 320 525 350 Q 525 380 495 380 H 35 Q 0 380 0 345 V 35 Q 0 0 35 0 Z';
-
     return (
         <section className="relative w-full bg-[#f8fafc]/80 py-16 sm:py-20 md:py-24 overflow-hidden border-t border-slate-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Cuadrícula superior: Pasos a la izquierda, Foto orgánica a la derecha */}
+                {/* Cuadrícula superior: Pasos a la izquierda, Foto a la derecha */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                     {/* Columna Izquierda: Encabezado + 4 Pasos (2x2) */}
                     <div className="lg:col-span-7 flex flex-col justify-center">
@@ -192,74 +189,29 @@ export default function ComoComprarSection({ seccionData }) {
                         </div>
                     </div>
 
-                    {/* Columna Derecha: Foto con recorte orgánico en la esquina inferior */}
+                    {/* Columna Derecha: Foto rectangular limpia con esquinas redondeadas */}
                     <div className="lg:col-span-5 flex justify-center lg:justify-end">
-                        <div className="relative w-full max-w-[480px] lg:max-w-[540px]">
-                            <svg
-                                viewBox="0 0 560 380"
-                                className="w-full h-auto drop-shadow-xl"
-                                preserveAspectRatio="xMidYMid meet"
-                            >
-                                <defs>
-                                    <clipPath id="comoComprarShapeClip">
-                                        <path d={organicPhotoPath} />
-                                    </clipPath>
-
-                                    <linearGradient id="comoComprarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#1e3a6a" />
-                                        <stop offset="50%" stopColor="#0f2240" />
-                                        <stop offset="100%" stopColor="#081427" />
-                                    </linearGradient>
-                                </defs>
-
-                                {/* Base silueta con gradiente navy */}
-                                <path
-                                    d={organicPhotoPath}
-                                    fill="url(#comoComprarGradient)"
+                        <div className="relative w-full max-w-[480px] lg:max-w-[540px] aspect-[14/10] sm:aspect-[16/11] rounded-3xl overflow-hidden shadow-xl border border-slate-100 bg-[#0f2240]">
+                            {imagenUrl ? (
+                                <img
+                                    src={imagenUrl}
+                                    alt="Cómo comprar"
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
-
-                                {/* Efectos ilustrativos cuando no hay imagen subida aún */}
-                                {!imagenUrl && (
-                                    <g clipPath="url(#comoComprarShapeClip)">
-                                        {/* Círculos decorativos sutiles */}
-                                        <circle cx="280" cy="190" r="160" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.08" />
-                                        <circle cx="280" cy="190" r="110" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.1" />
-                                        <circle cx="280" cy="190" r="60" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.12" />
-
-                                        {/* Icono central de asesoría / cotización */}
-                                        <g transform="translate(248, 148)" fill="none" stroke="currentColor" className="text-[var(--color-primario,#eab308)]">
-                                            <rect x="0" y="0" width="64" height="74" rx="8" strokeWidth="2.5" strokeOpacity="0.8" />
-                                            <line x1="16" y1="20" x2="48" y2="20" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.8" />
-                                            <line x1="16" y1="36" x2="48" y2="36" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.8" />
-                                            <line x1="16" y1="52" x2="34" y2="52" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.8" />
-                                        </g>
-
-                                        <text
-                                            x="280"
-                                            y="260"
-                                            textAnchor="middle"
-                                            fill="white"
-                                            fillOpacity="0.9"
-                                            fontSize="14"
-                                            fontWeight="600"
-                                            letterSpacing="1"
-                                        >
-                                            ASESORÍA Y COTIZACIÓN INMEDIATA
-                                        </text>
-                                    </g>
-                                )}
-
-                                {/* Imagen real subida desde Filament */}
-                                {imagenUrl && (
-                                    <image
-                                        href={imagenUrl}
-                                        width="560"
-                                        height="380"
-                                        preserveAspectRatio="xMidYMid slice"
-                                        clipPath="url(#comoComprarShapeClip)"
-                                    />
-                                )}
-                            </svg>
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-br from-[#1e3a6a] via-[#0f2240] to-[#081427]">
+                                    <div className="h-16 w-16 rounded-2xl border border-white/20 flex items-center justify-center mb-3 text-[var(--color-primario,#eab308)]">
+                                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <span className="text-xs uppercase tracking-widest font-bold opacity-90">
+                                        Asesoría y Cotización Inmediata
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

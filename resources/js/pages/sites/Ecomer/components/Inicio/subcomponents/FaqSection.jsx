@@ -92,79 +92,31 @@ export default function FaqSection({ seccionData }) {
         setOpenIndex((prev) => (prev === index ? null : index));
     };
 
-    // SVG path con corte orgánico suave en la esquina inferior derecha
-    const organicFaqPath = 'M 35 0 H 365 Q 400 0, 400 35 V 400 C 400 440, 355 440, 355 470 Q 355 500, 320 500 H 35 Q 0 500, 0 465 V 35 Q 0 0, 35 0 Z';
-
     return (
         <section className="relative w-full bg-white py-16 sm:py-20 md:py-24 overflow-hidden border-t border-slate-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-                    {/* COLUMNA IZQUIERDA: FOTO VERTICAL CON RECORTE ORGÁNICO */}
+                    {/* COLUMNA IZQUIERDA: FOTO VERTICAL RECTANGULAR LIMPIA */}
                     <div className="lg:col-span-5 flex justify-center lg:justify-start">
-                        <div className="relative w-full max-w-[360px] sm:max-w-[400px]">
-                            <svg
-                                viewBox="0 0 400 500"
-                                className="w-full h-auto drop-shadow-xl"
-                                preserveAspectRatio="xMidYMid meet"
-                            >
-                                <defs>
-                                    <clipPath id="faqShapeClip">
-                                        <path d={organicFaqPath} />
-                                    </clipPath>
-
-                                    <linearGradient id="faqNavyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#1e3a6a" />
-                                        <stop offset="50%" stopColor="#0f2240" />
-                                        <stop offset="100%" stopColor="#091528" />
-                                    </linearGradient>
-                                </defs>
-
-                                {/* Base silueta */}
-                                <path
-                                    d={organicFaqPath}
-                                    fill="url(#faqNavyGradient)"
+                        <div className="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-slate-100 bg-[#0f2240]">
+                            {imagenUrl ? (
+                                <img
+                                    src={imagenUrl}
+                                    alt={rawTitulo || 'Preguntas Frecuentes'}
+                                    className="w-full h-full object-cover"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
-
-                                {/* Fallback cuando no hay foto subida aún */}
-                                {!imagenUrl && (
-                                    <g clipPath="url(#faqShapeClip)">
-                                        <circle cx="200" cy="240" r="150" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.08" />
-                                        <circle cx="200" cy="240" r="100" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.1" />
-                                        <circle cx="200" cy="240" r="50" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.12" />
-
-                                        {/* Ícono de soporte / atención */}
-                                        <g transform="translate(168, 180)" fill="none" stroke="currentColor" className="text-[var(--color-primario,#eab308)]">
-                                            <circle cx="32" cy="32" r="30" strokeWidth="2.5" strokeOpacity="0.8" />
-                                            <path d="M22 28 C22 20, 42 20, 42 28 C42 34, 32 34, 32 40" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.8" />
-                                            <circle cx="32" cy="48" r="2.5" fill="currentColor" />
-                                        </g>
-
-                                        <text
-                                            x="200"
-                                            y="290"
-                                            textAnchor="middle"
-                                            fill="white"
-                                            fillOpacity="0.95"
-                                            fontSize="13"
-                                            fontWeight="700"
-                                            letterSpacing="1"
-                                        >
-                                            ASESORÍA Y SOPORTE
-                                        </text>
-                                    </g>
-                                )}
-
-                                {/* Imagen real subida desde Filament */}
-                                {imagenUrl && (
-                                    <image
-                                        href={imagenUrl}
-                                        width="400"
-                                        height="500"
-                                        preserveAspectRatio="xMidYMid slice"
-                                        clipPath="url(#faqShapeClip)"
-                                    />
-                                )}
-                            </svg>
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-br from-[#1e3a6a] via-[#0f2240] to-[#091528]">
+                                    <div className="h-16 w-16 rounded-2xl border border-white/20 flex items-center justify-center mb-4 text-[var(--color-primario,#eab308)]">
+                                        <FaHeadset className="h-8 w-8" />
+                                    </div>
+                                    <span className="text-xs uppercase tracking-widest font-bold opacity-95">
+                                        Asesoría y Soporte
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
 
