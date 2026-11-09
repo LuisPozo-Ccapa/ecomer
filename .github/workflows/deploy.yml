@@ -1,0 +1,73 @@
+name: CI/CD Multi-Ecommerce Auto-Deploy
+
+on:
+  push:
+    branches:
+      - 'ecommerce/*-produccion' # Solo despliega ramas de produccion
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy to cPanel
+    runs-on: ubuntu-latest
+    
+    # Vincula dinamicamente el entorno de GitHub segun la rama que recibio el push
+    environment: ${{ github.ref_name }}
+
+    steps:
+      - name: 1. Checkout del Codigo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 2. Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath
+          coverage: none
+
+      - name: 3. Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 4. Instalar Dependencias de Composer (Solo Produccion, Sin Tests)
+        run: |
+          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction
+
+      - name: 5. Compilacion de Frontend (Vite + React)
+        run: |
+          npm ci --legacy-peer-deps
+          npm run build
+
+      - name: 6. Despliegue Incremental via FTPS (Con Proteccion de Storage y BD)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol: ftps
+          dangerous-clean-slate: false # NUNCA borrar archivos del servidor (protege fotos de clientes y logs)
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            storage/**
+            public/storage/**
+            tests/**
+            phpunit.xml
+            resources/js/**
+            vite.config.js
+            package.json
+            package-lock.json
+            docs/**
+            README.md
+            .env*
+
+      - name: 7. Ejecucion Post-Deploy Remota (Migraciones Seguras y Cache)
+        run: |
+          echo "Ejecutando post-deploy seguro en ${{ secrets.PROD_URL }}..."
+          curl --fail-with-body -s -X POST "${{ secrets.PROD_URL }}/deploy-hook.php" \
+            -H "X-Deploy-Token: ${{ secrets.DEPLOY_TOKEN }}"
