@@ -115,3 +115,4 @@ try {
         'line' => $e->getLine()
     ], JSON_PRETTY_PRINT);
 }
+
