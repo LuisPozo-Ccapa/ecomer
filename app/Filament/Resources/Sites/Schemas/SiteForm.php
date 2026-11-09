@@ -342,8 +342,14 @@ class SiteForm
                                                     }
                                                     return $state;
                                                 }),
-                                            ColorPicker::make('estilos.color_primario'),
-                                            ColorPicker::make('estilos.color_secundario'),
+                                            ColorPicker::make('estilos.color_primario')
+                                                ->label('Color primario'),
+                                            ColorPicker::make('estilos.color_secundario')
+                                                ->label('Color secundario'),
+                                            ColorPicker::make('estilos.color_acento')
+                                                ->label('Color de acento / Cards destacadas')
+                                                ->helperText('Color para tarjetas destacadas (Llámanos, Asesor WhatsApp y badges). Si se deja vacío, tomará el color primario.')
+                                                ->nullable(),
                                             Select::make('estilos.tipografia_titulos')
                                                 ->options(PlantillaForm::fuentes())
                                                 ->searchable(),

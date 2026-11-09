@@ -21,6 +21,7 @@ export default function CardsContactoSection({
                     const isGold = idx === 0 || card.estilo === 'destacado';
                     const isNavy = idx === 1;
                     const isBlack = idx >= 2;
+                    const accentColor = card.color || 'var(--color-acento, var(--color-primario))';
 
                     // Valores dinámicos según el Switch activo
                     const displayTitle = card.titulo;
@@ -75,11 +76,11 @@ export default function CardsContactoSection({
                                                     key={lIdx}
                                                     type="button"
                                                     onClick={() => setLineaActivaIndex(lIdx)}
-                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                                                        lineaActivaIndex === lIdx
-                                                            ? 'bg-[#B88A38] text-white shadow-xs'
-                                                            : 'text-gray-600 hover:text-gray-900'
+                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${lineaActivaIndex === lIdx
+                                                                ? 'text-white shadow-xs'
+                                                                : 'text-gray-600 hover:text-gray-900'
                                                     }`}
+                                                    style={lineaActivaIndex === lIdx ? { backgroundColor: accentColor } : {}}
                                                 >
                                                     {linea.etiqueta}
                                                 </button>
@@ -95,11 +96,10 @@ export default function CardsContactoSection({
                                                     key={sIdx}
                                                     type="button"
                                                     onClick={() => setSedeActivaIndex(sIdx)}
-                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                                                        sedeActivaIndex === sIdx
+                                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer ${sedeActivaIndex === sIdx
                                                             ? 'bg-black text-white shadow-xs'
                                                             : 'text-gray-600 hover:text-gray-900'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {sede.titulo}
                                                 </button>
@@ -124,8 +124,8 @@ export default function CardsContactoSection({
                                         href={displayBtnEnlace}
                                         target={displayBtnEnlace.startsWith('http') ? '_blank' : '_self'}
                                         rel={displayBtnEnlace.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                        className="inline-flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md shadow-[#B88A38]/30 hover:brightness-110 hover:shadow-lg active:scale-95"
-                                        style={{ backgroundColor: '#B88A38' }}
+                                        className="inline-flex items-center justify-center gap-2 w-full sm:w-auto rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md hover:brightness-110 hover:shadow-lg active:scale-95 cursor-pointer"
+                                        style={{ backgroundColor: accentColor }}
                                     >
                                         <DynamicIcon name={card.icono} className="h-3.5 w-3.5 text-white/95" />
                                         <span className="truncate">{displayBtnTxt}</span>

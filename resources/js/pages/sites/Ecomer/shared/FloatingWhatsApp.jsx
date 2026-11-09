@@ -186,13 +186,13 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
     const telLink = `tel:${activeContact?.cleanNum ? (activeContact.cleanNum.startsWith('51') ? '+' + activeContact.cleanNum : '+51' + activeContact.cleanNum) : '+51970665124'}`;
     const waLink = activeContact?.url || `https://wa.me/${activeContact?.cleanNum || '51970665124'}?text=${encodeURIComponent('Hola, quisiera más información.')}`;
 
-    // Color para el botón de mensaje: si el color secundario es blanco (#ffffff) o vacío, usamos el tono dorado cálido fiel a la referencia
+    // Color para el botón de mensaje: toma el color de acento, el primario de la marca o azul por defecto
     const colorBotonMensaje = useMemo(() => {
-        const sec = (estilos?.color_secundario || site?.estilos?.color_secundario || '').trim().toLowerCase();
-        if (!sec || sec === '#ffffff' || sec === '#fff' || sec === 'white' || sec === 'rgb(255, 255, 255)') {
-            return '#B88A38'; // Tono dorado de la imagen de referencia
-        }
-        return estilos?.color_secundario || site?.estilos?.color_secundario || '#B88A38';
+        const acento = (estilos?.color_acento || site?.estilos?.color_acento || '').trim();
+        if (acento) return acento;
+        const primario = (estilos?.color_primario || site?.estilos?.color_primario || '').trim();
+        if (primario) return primario;
+        return '#1854a4';
     }, [estilos, site]);
 
     return (
@@ -211,11 +211,10 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
                                     key={i}
                                     type="button"
                                     onClick={() => setSelectedIndex(i)}
-                                    className={`flex-1 text-[11px] font-bold py-1.5 px-2.5 rounded-xl transition-all cursor-pointer truncate ${
-                                        selectedIndex === i
+                                    className={`flex-1 text-[11px] font-bold py-1.5 px-2.5 rounded-xl transition-all cursor-pointer truncate ${selectedIndex === i
                                             ? 'bg-white text-gray-900 shadow-2xs'
                                             : 'text-gray-500 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     {c.label || c.name || `Contacto ${i + 1}`}
                                 </button>
@@ -308,9 +307,8 @@ export default function FloatingWhatsApp({ site, dominio, siteSlug, seccionesDat
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className={`relative flex items-center justify-center rounded-full p-4 text-white shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer ${
-                    !isOpen ? 'wa-pulse-active' : ''
-                }`}
+                className={`relative flex items-center justify-center rounded-full p-4 text-white shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer ${!isOpen ? 'wa-pulse-active' : ''
+                    }`}
                 style={{
                     backgroundColor: isOpen ? '#22c55e' : 'var(--color-primario)',
                 }}

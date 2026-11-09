@@ -44,8 +44,8 @@ export default function UbicacionSedesSection({
                                     type="button"
                                     onClick={() => setSedeActivaIndex(sIdx)}
                                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${isSedeActive
-                                            ? 'bg-white text-gray-900 shadow-md font-extrabold scale-102'
-                                            : 'text-neutral-300 hover:text-white hover:bg-white/10'
+                                        ? 'bg-white text-gray-900 shadow-md font-extrabold scale-102'
+                                        : 'text-neutral-300 hover:text-white hover:bg-white/10'
                                         }`}
                                 >
                                     <FaLocationDot className={`h-3 w-3 ${isSedeActive ? 'text-red-600' : 'text-neutral-400'}`} />
@@ -89,7 +89,10 @@ export default function UbicacionSedesSection({
                                 Referencia comercial
                             </span>
                             {sedesList.length > 1 && (
-                                <span className="text-[10px] font-extrabold text-[#B88A38] uppercase">
+                                <span
+                                    className="text-[10px] font-extrabold uppercase"
+                                    style={{ color: 'var(--color-acento, var(--color-primario))' }}
+                                >
                                     • {currentSede.titulo}
                                 </span>
                             )}
@@ -106,34 +109,34 @@ export default function UbicacionSedesSection({
                 </div>
             </div>
 
-                    {/* Franja Horizontal con Iconos Circulares Premium (Opción 2) */}
-                    {redesFinales && redesFinales.length > 0 && (
-                        <div className="mt-5 p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-2 min-w-0">
-                                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                                <span className="text-xs font-bold text-neutral-300 tracking-wide truncate">
-                                    Síguenos en nuestras redes
-                                </span>
-                            </div>
+            {/* Franja Horizontal con Iconos Circulares Premium (Opción 2) */}
+            {redesFinales && redesFinales.length > 0 && (
+                <div className="mt-5 p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                        <span className="text-xs font-bold text-neutral-300 tracking-wide truncate">
+                            Síguenos en nuestras redes
+                        </span>
+                    </div>
 
-                            <div className="flex items-center gap-2 shrink-0">
-                                {redesFinales.map((red, rIdx) => (
-                                    <a
-                                        key={rIdx}
-                                        href={red.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        title={red.nombre}
-                                        aria-label={red.nombre}
-                                        className={`h-9 w-9 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white transition-all duration-200 hover:scale-110 active:scale-95 shadow-sm group ${red.color || 'hover:bg-white hover:text-gray-900'}`}
-                                    >
-                                        <DynamicIcon name={red.icono} className="h-4 w-4 transition-transform group-hover:scale-110" />
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-2 shrink-0">
+                        {redesFinales.map((red, rIdx) => (
+                            <a
+                                key={rIdx}
+                                href={red.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={red.nombre}
+                                aria-label={red.nombre}
+                                className={`h-9 w-9 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white transition-all duration-200 hover:scale-110 active:scale-95 shadow-sm group ${red.color || 'hover:bg-white hover:text-gray-900'}`}
+                            >
+                                <DynamicIcon name={red.icono} className="h-4 w-4 transition-transform group-hover:scale-110" />
+                            </a>
+                        ))}
+                    </div>
                 </div>
-            );
+            )}
+        </div>
+    );
 }
 

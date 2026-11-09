@@ -61,35 +61,38 @@ export default function MediosPagoSection({
                         })}
 
                         {/* Card 4: Asesor WhatsApp */}
-                        <div className="h-full min-h-[115px] flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-[#B88A38] text-white shadow-md">
-                            <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-xs">
-                                    <FaWhatsapp className="h-5 w-5 text-emerald-600" />
+                            <div
+                                className="h-full min-h-[115px] flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl text-white shadow-md"
+                                style={{ backgroundColor: 'var(--color-acento, var(--color-primario))' }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-xs">
+                                        <FaWhatsapp className="h-5 w-5 text-emerald-600" />
+                                    </div>
+                                    <span className="text-[11px] font-bold text-white leading-tight">
+                                        ¿Prefieres Hablar con Asesor?
+                                    </span>
                                 </div>
-                                <span className="text-[11px] font-bold text-white leading-tight">
-                                    ¿Prefieres Hablar con Asesor?
-                                </span>
+                                <div className="mt-2 pt-1">
+                                    {waNum ? (
+                                        <a
+                                            href={`https://wa.me/${waNum}?text=${encodeURIComponent('Hola, deseo comunicarme directamente con un asesor comercial.')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-black hover:bg-neutral-900 text-white py-2 px-3 text-[11px] font-bold transition-all shadow-sm active:scale-95"
+                                        >
+                                            <FaPhone className="h-3 w-3 text-white" />
+                                            <span>Hablar por WhatsApp</span>
+                                        </a>
+                                    ) : (
+                                        <span className="text-[11px] font-bold text-white/90">Atención personalizada</span>
+                                    )}
+                                </div>
                             </div>
-                            <div className="mt-2 pt-1">
-                                {waNum ? (
-                                    <a
-                                        href={`https://wa.me/${waNum}?text=${encodeURIComponent('Hola, deseo comunicarme directamente con un asesor comercial.')}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-black hover:bg-neutral-900 text-white py-2 px-3 text-[11px] font-bold transition-all shadow-sm active:scale-95"
-                                    >
-                                        <FaPhone className="h-3 w-3 text-white" />
-                                        <span>Hablar por WhatsApp</span>
-                                    </a>
-                                ) : (
-                                    <span className="text-[11px] font-bold text-white/90">Atención personalizada</span>
-                                )}
-                            </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
-            </div>
         </section>
     );
 }

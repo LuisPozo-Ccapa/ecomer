@@ -106,9 +106,13 @@ export default function Ecomer({
         ? uniqueFonts.map((f) => `family=${f.replace(/ /g, '+')}:wght@400;600;700;800`).join('&')
         : null;
 
+    const colorPrimario = estilos?.color_primario || '#F72F46';
+    const colorAcento = estilos?.color_acento || colorPrimario;
+
     const styles = {
-        '--color-primario': estilos?.color_primario || '#F72F46',
+        '--color-primario': colorPrimario,
         '--color-secundario': estilos?.color_secundario || '#ffffff',
+        '--color-acento': colorAcento,
         '--tipografia-titulos': `'${titulosFont}', sans-serif`,
         '--tipografia-texto': `'${textoFont}', sans-serif`,
         '--radio-bordes': estilos?.radio_bordes || '0.5rem',
