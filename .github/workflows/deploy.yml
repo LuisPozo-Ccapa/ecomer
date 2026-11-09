@@ -19,11 +19,11 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: 2. Setup PHP 8.3
+      - name: 2. Setup PHP 8.4
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, fileinfo, gd, zip
           coverage: none
 
       - name: 3. Setup Node.js 20
@@ -34,7 +34,7 @@ jobs:
 
       - name: 4. Instalar Dependencias de Composer (Solo Produccion, Sin Tests)
         run: |
-          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction
+          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction --ignore-platform-req=php+
 
       - name: 5. Compilacion de Frontend (Vite + React)
         run: |
