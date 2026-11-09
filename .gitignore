@@ -37,6 +37,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+*.zip
 *.zip/erp
 /docs
 /deploy

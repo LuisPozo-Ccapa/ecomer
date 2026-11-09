@@ -54,6 +54,7 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/vendor/**
             storage/**
             public/storage/**
             tests/**
