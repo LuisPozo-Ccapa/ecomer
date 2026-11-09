@@ -69,6 +69,6 @@ jobs:
       - name: 7. Ejecucion Post-Deploy Remota (Migraciones Seguras y Cache)
         run: |
           echo "Ejecutando post-deploy seguro en ${{ secrets.PROD_URL }}..."
-          curl --fail-with-body -s -X POST "${{ secrets.PROD_URL }}/deploy-hook.php" \
+          curl --fail-with-body -s -X POST "${{ secrets.PROD_URL }}/api/deploy/run-tasks" \
             -H "X-Deploy-Token: ${{ secrets.DEPLOY_TOKEN }}"
 

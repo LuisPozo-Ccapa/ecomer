@@ -151,5 +151,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/tiktok-oembed', [TikTokApiController::class, 'oembed']);
 });
 
-Route::get('/tiktok-oembed', [TikTokApiController::class, 'oembed']);
+use App\Http\Controllers\DeployWebhookController;
+
+Route::post('/deploy/run-tasks', [DeployWebhookController::class, 'handle'])
+    ->middleware('throttle:5,1');
 
