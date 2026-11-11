@@ -271,6 +271,7 @@ class PlantillaForm
                                                     ->schema([
                                                         Repeater::make('estilos.acciones_nav')
                                                             ->label('WhatsApp, Correos y Contacto')
+                                                            ->defaultItems(0)
                                                             ->schema([
                                                                 Grid::make(3)->schema([
                                                                     Select::make('icono')
@@ -1000,6 +1001,7 @@ class PlantillaForm
 
                         Repeater::make('estilos.cuentas_pago')
                             ->label('Cuentas Bancarias Disponibles')
+                            ->defaultItems(0)
                             ->helperText('Agrega las cuentas donde tus clientes pueden depositar (ej. BCP, Interbank, BBVA).')
                             ->schema([
                                 Grid::make(3)->schema([

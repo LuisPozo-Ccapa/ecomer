@@ -7,7 +7,7 @@ use App\Filament\Resources\Categorias\Pages\ListCategorias;
 use App\Filament\Resources\Productos\Pages\CreateProducto;
 use App\Filament\Resources\Productos\Pages\ListProductos;
 use App\Models\Categoria;
-use App\Models\Dominio;
+use App\Models\Moneda;
 use App\Models\Plantilla;
 use App\Models\Producto;
 use App\Models\Site;
@@ -39,19 +39,19 @@ class ProductosResourceTest extends TestCase
             'nombre' => 'Ecomer',
         ]);
 
-        $dominio = Dominio::create([
-            'user_id' => $this->user->id,
-            'nombre' => 'creadorDePaginas',
-        ]);
-
         $this->tienda = Tienda::create([
             'nombre' => 'Tienda Test',
             'slug' => 'tienda-test',
         ]);
 
+        $pen = Moneda::firstOrCreate(
+            ['codigo' => 'PEN'],
+            ['nombre' => 'Soles', 'simbolo' => 'S/', 'activa' => true]
+        );
+        $this->tienda->monedas()->attach($pen->id);
+
         $this->site = Site::create([
             'user_id' => $this->user->id,
-            'dominio_id' => $dominio->id,
             'plantilla_id' => $plantilla->id,
             'nombre' => 'E-comer 1',
             'slug' => 'e-comer1',
@@ -88,7 +88,7 @@ class ProductosResourceTest extends TestCase
         ]);
 
         $this->assertSame($categoria->id, $subcategoria->categoria_id);
-        $this->assertSame($this->site->id, $subcategoria->categoria->site_id);
+        $this->assertSame($this->tienda->id, $subcategoria->categoria->tienda_id);
     }
 
     public function test_producto_pages_render(): void
@@ -118,6 +118,12 @@ class ProductosResourceTest extends TestCase
                 'precio_oferta' => 199.99,
                 'cantidad' => '500 g',
                 'stock' => 10,
+                'productoTiendas' => [
+                    [
+                        'tienda_id' => $this->tienda->id,
+                        'stock' => 10,
+                    ],
+                ],
                 'activo' => true,
                 'destacado' => true,
             ])
@@ -127,11 +133,10 @@ class ProductosResourceTest extends TestCase
         $producto = Producto::where('slug', 'camisa-blanca')->first();
 
         $this->assertNotNull($producto);
-        $this->assertSame($this->site->id, $producto->site_id);
         $this->assertSame($categoria->id, $producto->categoria_id);
         $this->assertSame('250.00', (string) $producto->precio);
         $this->assertSame('199.99', (string) $producto->precio_oferta);
-        $this->assertSame(10, $producto->stock);
+        $this->assertSame(10, $producto->productoTiendas->first()->stock);
         $this->assertSame('CAM-001', $producto->sku);
         $this->assertTrue($producto->activo);
         $this->assertTrue($producto->destacado);

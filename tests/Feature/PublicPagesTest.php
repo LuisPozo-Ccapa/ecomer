@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Dominio;
 use App\Models\Plantilla;
 use App\Models\Respuesta;
 use App\Models\Site;
@@ -29,11 +28,8 @@ class PublicPagesTest extends TestCase
         $inicio = $plantilla->secciones()->create(['slug' => 'inicio', 'nombre' => 'Inicio', 'orden' => 1]);
         $pregunta = $inicio->preguntas()->create(['label' => 'titulo1', 'tipo' => 'texto', 'orden' => 1]);
 
-        $dominio = Dominio::create(['user_id' => $user->id, 'nombre' => 'creadorDePaginas', 'estado' => 'activo']);
-
         $site = Site::create([
             'user_id' => $user->id,
-            'dominio_id' => $dominio->id,
             'plantilla_id' => $plantilla->id,
             'nombre' => 'Mi tienda',
             'slug' => 'e-comer1',
@@ -42,7 +38,7 @@ class PublicPagesTest extends TestCase
 
         Respuesta::create(['site_id' => $site->id, 'pregunta_id' => $pregunta->id, 'valor' => 'Hola mundo']);
 
-        return [$plantilla, $site, $dominio];
+        return [$plantilla, $site];
     }
 
     public function test_galeria_de_plantillas(): void
@@ -59,12 +55,12 @@ class PublicPagesTest extends TestCase
 
     public function test_publicar_sitio_publico(): void
     {
-        [$plantilla, $site, $dominio] = $this->crearEcosistema();
+        [$plantilla, $site] = $this->crearEcosistema();
 
-        $this->get("/{$dominio->nombre}/{$site->slug}/inicio")
+        $this->get('/inicio')
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('sites/Ecomer1/Index')
+                ->component('sites/Ecomer/Index')
                 ->where('site.nombre', 'Mi tienda')
                 ->where('seccionActiva.slug', 'inicio')
                 ->where('seccionActiva.contenido.0.valor', 'Hola mundo'));
@@ -85,7 +81,7 @@ class PublicPagesTest extends TestCase
         $this->get("/plantillas/{$plantilla->slug}")
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('sites/Ecomer1/Index')
+                ->component('sites/Ecomer/Index')
                 ->where('site.nombre', $plantilla->nombre)
                 ->where('seccionActiva.slug', 'inicio')
                 ->where('seccionActiva.contenido.0.valor', 'Luciana'));
@@ -93,24 +89,24 @@ class PublicPagesTest extends TestCase
         $this->get("/plantillas/{$plantilla->slug}/inicio")
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('sites/Ecomer1/Index')
+                ->component('sites/Ecomer/Index')
                 ->where('seccionActiva.contenido.0.valor', 'Luciana'));
     }
 
-    public function test_sitio_redirige_a_primera_seccion(): void
+    public function test_sitio_con_prefijo_slug_redirige_a_seccion(): void
     {
-        [$plantilla, $site, $dominio] = $this->crearEcosistema();
+        [$plantilla, $site] = $this->crearEcosistema();
 
-        $this->get("/{$dominio->nombre}/{$site->slug}")
-            ->assertRedirect("/{$dominio->nombre}/{$site->slug}/inicio");
+        $this->get("/{$site->slug}/inicio")
+            ->assertRedirect('/inicio');
     }
 
     public function test_sitio_no_publicado_da_404(): void
     {
-        [$plantilla, $site, $dominio] = $this->crearEcosistema();
+        [$plantilla, $site] = $this->crearEcosistema();
         $site->update(['estado' => 'borrador']);
 
-        $this->get("/{$dominio->nombre}/{$site->slug}/inicio")->assertNotFound();
+        $this->get('/inicio')->assertNotFound();
     }
 
     public function test_rutas_admin_no_colisionan(): void

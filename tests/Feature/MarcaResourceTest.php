@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Http\Resources\v1\ProductoResource;
-use App\Models\Dominio;
 use App\Models\Marca;
 use App\Models\Plantilla;
 use App\Models\Producto;
@@ -19,11 +18,9 @@ class MarcaResourceTest extends TestCase
     public function test_puede_crear_marca_y_asignar_a_producto(): void
     {
         $user = User::factory()->create();
-        $dominio = Dominio::create(['nombre' => 'midominio.com', 'user_id' => $user->id]);
         $plantilla = Plantilla::create(['nombre' => 'Plantilla Test', 'slug' => 'plantilla-test', 'tipo' => 'ecommerce']);
         $site = Site::create([
             'user_id' => $user->id,
-            'dominio_id' => $dominio->id,
             'plantilla_id' => $plantilla->id,
             'nombre' => 'Sitio Test',
             'slug' => 'sitio-test',
@@ -59,11 +56,9 @@ class MarcaResourceTest extends TestCase
     public function test_puede_guardar_enlace_en_producto(): void
     {
         $user = User::factory()->create();
-        $dominio = Dominio::create(['nombre' => 'midominio.com', 'user_id' => $user->id]);
         $plantilla = Plantilla::create(['nombre' => 'Plantilla Test', 'slug' => 'plantilla-test', 'tipo' => 'ecommerce']);
         $site = Site::create([
             'user_id' => $user->id,
-            'dominio_id' => $dominio->id,
             'plantilla_id' => $plantilla->id,
             'nombre' => 'Sitio Test',
             'slug' => 'sitio-test',
@@ -87,11 +82,9 @@ class MarcaResourceTest extends TestCase
     public function test_puede_asignar_marcas_a_sitios_y_plantillas(): void
     {
         $user = User::factory()->create();
-        $dominio = Dominio::create(['nombre' => 'midominio.com', 'user_id' => $user->id]);
         $plantilla = Plantilla::create(['nombre' => 'Plantilla Test', 'slug' => 'plantilla-test', 'tipo' => 'ecommerce']);
         $site = Site::create([
             'user_id' => $user->id,
-            'dominio_id' => $dominio->id,
             'plantilla_id' => $plantilla->id,
             'nombre' => 'Sitio Test',
             'slug' => 'sitio-test',

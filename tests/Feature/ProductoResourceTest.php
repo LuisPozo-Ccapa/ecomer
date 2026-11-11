@@ -93,6 +93,12 @@ class ProductoResourceTest extends TestCase
                 'slug' => 'zapatilla-running',
                 'precio' => 89.99,
                 'stock' => 10,
+                'productoTiendas' => [
+                    [
+                        'tienda_id' => $tienda->id,
+                        'stock' => 10,
+                    ],
+                ],
                 'variantes' => [
                     [
                         'color_id' => $rojo->id,

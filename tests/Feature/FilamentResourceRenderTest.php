@@ -16,7 +16,6 @@ use App\Filament\Resources\Tallas\Pages\CreateTalla;
 use App\Filament\Resources\Tallas\Pages\ListTallas;
 use App\Models\Categoria;
 use App\Models\Color;
-use App\Models\Dominio;
 use App\Models\Plantilla;
 use App\Models\Respuesta;
 use App\Models\Site;
@@ -155,7 +154,7 @@ class FilamentResourceRenderTest extends TestCase
         $this->assertNotNull($plantilla);
         $this->assertCount(1, $plantilla->secciones);
         $this->assertCount(2, $plantilla->secciones->first()->preguntas);
-        $this->assertSame(['color_primario' => '#000000'], $plantilla->estilos);
+        $this->assertSame('#000000', $plantilla->estilos['color_primario']);
     }
 
     public function test_eliminar_pregunta_del_estado_quita_su_campo_respuesta(): void
@@ -357,16 +356,10 @@ class FilamentResourceRenderTest extends TestCase
             'valor' => 'Contenido de plantilla',
         ]);
 
-        $dominio = Dominio::create([
-            'user_id' => $this->user->id,
-            'nombre' => 'creadorDePaginas',
-        ]);
-
         Livewire::test(CreateSite::class)
             ->fillForm([
                 'user_id' => $this->user->id,
                 'plantilla_id' => $plantilla->id,
-                'dominio_id' => $dominio->id,
                 'nombre' => 'Mi tienda',
                 'slug' => 'mi-tienda',
                 'estado' => 'publicado',
@@ -471,17 +464,11 @@ class FilamentResourceRenderTest extends TestCase
             'nombre' => 'Ecomer',
         ]);
 
-        $dominio = Dominio::create([
-            'user_id' => $this->user->id,
-            'nombre' => 'creadorDePaginas',
-        ]);
-
         Livewire::withQueryParams(['plantilla_id' => (string) $plantilla->id])
             ->test(CreateSite::class)
             ->assertFormSet([
                 'plantilla_id' => $plantilla->id,
                 'estado' => 'publicado',
-                'dominio_id' => $dominio->id,
             ]);
     }
 
@@ -507,16 +494,10 @@ class FilamentResourceRenderTest extends TestCase
             'requerida' => true,
         ]);
 
-        $dominio = Dominio::create([
-            'user_id' => $this->user->id,
-            'nombre' => 'creadorDePaginas',
-        ]);
-
         Livewire::test(CreateSite::class)
             ->fillForm([
                 'user_id' => $this->user->id,
                 'plantilla_id' => $plantilla->id,
-                'dominio_id' => $dominio->id,
                 'nombre' => 'Mi tienda',
                 'slug' => 'mi-tienda',
                 'estado' => 'publicado',
@@ -531,7 +512,7 @@ class FilamentResourceRenderTest extends TestCase
 
         $this->assertNotNull($site);
         $this->assertSame($plantilla->id, $site->plantilla_id);
-        $this->assertSame(['color_primario' => '#3b82f6'], $site->estilos);
+        $this->assertSame('#3b82f6', $site->estilos['color_primario']);
 
         $respuesta = Respuesta::where('site_id', $site->id)->where('pregunta_id', $pregunta->id)->first();
         $this->assertNotNull($respuesta);

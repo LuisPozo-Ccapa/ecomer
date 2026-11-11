@@ -32,16 +32,20 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: 4. Instalar Dependencias de Composer (Solo Produccion, Sin Tests)
+      - name: 4. Instalar Dependencias de Composer
         run: |
-          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction --ignore-platform-req=php+
+          composer install --prefer-dist --optimize-autoloader --no-progress --no-interaction --ignore-platform-req=php+
 
-      - name: 5. Compilacion de Frontend (Vite + React)
+      - name: 5. Ejecutar Pruebas Automatizadas (Gatekeeper)
+        run: |
+          php artisan test --colors=never
+
+      - name: 6. Compilacion de Frontend (Vite + React)
         run: |
           npm ci --legacy-peer-deps
           npm run build
 
-      - name: 6. Despliegue Incremental via FTPS (Con Proteccion de Storage y BD)
+      - name: 7. Despliegue Incremental via FTPS (Con Proteccion de Storage y BD)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -67,8 +71,12 @@ jobs:
             docs/**
             README.md
             .env*
+            eslint.config.js
+            .prettier*
+            .editorconfig
+            .npmrc
 
-      - name: 7. Ejecucion Post-Deploy Remota (Migraciones Seguras y Cache)
+      - name: 8. Ejecucion Post-Deploy Remota (Migraciones Seguras y Cache)
         run: |
           echo "Ejecutando post-deploy seguro en ${{ secrets.PROD_URL }}..."
           curl --fail-with-body -s -X POST "${{ secrets.PROD_URL }}/api/deploy/run-tasks" \
