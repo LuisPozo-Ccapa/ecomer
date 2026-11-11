@@ -39,6 +39,7 @@ jobs:
       - name: 5. Ejecutar Pruebas Automatizadas (Gatekeeper)
         run: |
           php artisan test --colors=never
+          rm -f bootstrap/cache/*.php
 
       - name: 6. Compilacion de Frontend (Vite + React)
         run: |
@@ -60,6 +61,7 @@ jobs:
             **/node_modules/**
             **/vendor/**
             .htaccess
+            bootstrap/cache/*.php
             storage/**
             public/storage/**
             tests/**

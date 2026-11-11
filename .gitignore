@@ -30,6 +30,8 @@ error_log
 /storage/framework/views/*
 !/storage/framework/views/.gitkeep
 /storage/framework/testing/*
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
 /vendor
 /scratch
 /composer-setup.php
