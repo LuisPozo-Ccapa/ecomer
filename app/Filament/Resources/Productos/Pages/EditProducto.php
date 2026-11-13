@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Productos\Pages;
 
 use App\Filament\Resources\Productos\ProductoResource;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditProducto extends EditRecord
@@ -14,6 +16,8 @@ class EditProducto extends EditRecord
     {
         return [
             DeleteAction::make(),
+            RestoreAction::make(),
+            ForceDeleteAction::make(),
         ];
     }
 

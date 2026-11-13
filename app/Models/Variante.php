@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['producto_id', 'color_id', 'talla_id', 'nombre', 'slug', 'precio', 'precio_oferta', 'stock', 'imagen', 'orden', 'activa'])]
 class Variante extends Model
 {
+    use SoftDeletes;
     public function producto(): BelongsTo
     {
         return $this->belongsTo(Producto::class);

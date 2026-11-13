@@ -93,7 +93,6 @@ class LibroReclamacionesTable
             ])
             ->recordActions([
                 EditAction::make()->label('Gestionar'),
-                DeleteAction::make()->label('Borrar'),
             ]);
     }
 }

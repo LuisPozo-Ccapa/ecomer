@@ -35,8 +35,31 @@ Route::post('/contacto', function (Request $request) {
     $sitioNombre = $validated['sitio_nombre'] ?? $site?->nombre ?? config('app.name');
     $destinatario = $site?->email ?: (config('mail.from.address') ?: env('MAIL_FROM_ADDRESS'));
 
+    $folio = \App\Models\Contacto::generarFolio();
+
+    // 1. Blindaje de datos: Persistencia garantizada en base de datos antes de cualquier llamada externa
+    $contacto = \App\Models\Contacto::create([
+        'folio'         => $folio,
+        'site_id'       => $site?->id,
+        'nombre'        => $validated['nombre'],
+        'empresa'       => $validated['empresa'] ?? null,
+        'telefono'      => $validated['telefono'],
+        'email'         => $validated['email'] ?? null,
+        'sector'        => $validated['sector'] ?? null,
+        'producto'      => $validated['producto'] ?? null,
+        'mensaje'       => $validated['mensaje'],
+        'sitio_nombre'  => $sitioNombre,
+        'estado'        => 'nuevo',
+        'correo_enviado'=> false,
+    ]);
+
     if (!$destinatario) {
-        return response()->json(['success' => false, 'error' => 'No se ha configurado la dirección de correo receptora.'], 500);
+        $contacto->update(['error_envio' => 'No se ha configurado la dirección de correo receptora.']);
+        return response()->json([
+            'success' => true,
+            'folio'   => $folio,
+            'message' => 'Cotización registrada exitosamente. Nos pondremos en contacto contigo a la brevedad.',
+        ]);
     }
 
     // Logo dinámico del CMS según el proyecto
@@ -81,7 +104,6 @@ Route::post('/contacto', function (Request $request) {
     $sitioEstilos = is_array($site?->estilos) ? $site->estilos : (is_string($site?->estilos) ? json_decode($site->estilos, true) : []);
     $sitioDireccion = $sitioEstilos['direccion'] ?? null;
 
-    $folio = 'COT-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
     $asunto = '[Cotización Web] ' . (!empty($validated['producto']) ? $validated['producto'] : 'Consulta General') . ' — ' . (!empty($validated['empresa']) ? $validated['empresa'] : $validated['nombre']);
 
     try {
@@ -109,10 +131,22 @@ Route::post('/contacto', function (Request $request) {
             }
         });
 
-        return response()->json(['success' => true, 'message' => 'Cotización enviada exitosamente.']);
+        $contacto->update(['correo_enviado' => true]);
+
+        return response()->json([
+            'success' => true,
+            'folio'   => $folio,
+            'message' => 'Cotización enviada exitosamente.',
+        ]);
     } catch (\Throwable $e) {
-        \Illuminate\Support\Facades\Log::error("Error enviando correo de contacto: " . $e->getMessage());
-        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        \Illuminate\Support\Facades\Log::error("Error enviando correo de contacto (Folio: {$folio}): " . $e->getMessage());
+        $contacto->update(['error_envio' => $e->getMessage()]);
+
+        return response()->json([
+            'success' => true,
+            'folio'   => $folio,
+            'message' => 'Cotización registrada exitosamente. Nos pondremos en contacto contigo a la brevedad.',
+        ]);
     }
 });
 

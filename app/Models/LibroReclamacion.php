@@ -5,9 +5,11 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LibroReclamacion extends Model
 {
+    use SoftDeletes;
     protected $table = 'libro_reclamaciones';
 
     protected $fillable = [

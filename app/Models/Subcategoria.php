@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['categoria_id', 'nombre', 'slug', 'descripcion', 'imagen', 'orden', 'activa'])]
 class Subcategoria extends Model
 {
+    use SoftDeletes;
     public function categoria(): BelongsTo
     {
         return $this->belongsTo(Categoria::class);
