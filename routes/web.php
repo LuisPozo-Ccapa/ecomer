@@ -151,9 +151,15 @@ Route::get('/catalogo/descargar-pdf', [SitePageController::class, 'descargarCata
 Route::get('/{dominio}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar1');
 Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar2');
 
-Route::post('/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store');
-Route::post('/{dominio}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store.dominio');
-Route::post('/{param1}/{param2}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])->name('libro-reclamaciones.store.slug');
+Route::post('/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('libro-reclamaciones.store');
+Route::post('/{dominio}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('libro-reclamaciones.store.dominio');
+Route::post('/{param1}/{param2}/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('libro-reclamaciones.store.slug');
 
 Route::get('/{seccion}', [SitePageController::class, 'show'])->name('sitios.seccion');
 Route::get('/{dominio}/{seccion}', [SitePageController::class, 'show'])->name('sitios.show');
