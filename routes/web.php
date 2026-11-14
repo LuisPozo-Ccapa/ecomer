@@ -28,7 +28,24 @@ Route::get('/plantillas/{plantilla:slug}/{seccion?}', [PlantillasController::cla
     ->name('plantillas.preview');
 
 Route::get('/storage/{path}', function (string $path) {
+    // 1. Blindaje Fase 1: Detección y bloqueo inmediato de secuencias de escape de directorio o caracteres nulos
+    if (str_contains($path, '..') || str_contains($path, "\0") || str_contains($path, '\\')) {
+        abort(404);
+    }
+
     $cleanPath = ltrim($path, '/');
+    $extension = strtolower(pathinfo($cleanPath, PATHINFO_EXTENSION));
+
+    // 2. Lista blanca estricta de extensiones web públicas autorizadas
+    $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg', 'pdf', 'ico'];
+    if (! in_array($extension, $allowedExtensions, true)) {
+        abort(404);
+    }
+
+    $allowedBases = array_filter([
+        realpath(storage_path('app/public')),
+        realpath(public_path('storage')),
+    ]);
 
     $candidatePaths = [
         storage_path('app/public/' . $cleanPath),
@@ -36,17 +53,35 @@ Route::get('/storage/{path}', function (string $path) {
     ];
 
     foreach ($candidatePaths as $candidate) {
-        if (file_exists($candidate) && is_file($candidate)) {
-            $mimeType = @mime_content_type($candidate) ?: 'image/webp';
-            return response()->file($candidate, [
-                'Content-Type' => $mimeType,
-                'Cache-Control' => 'public, max-age=31536000',
-            ]);
+        $realPath = realpath($candidate);
+
+        // 3. Verificación de frontera canónica estricta con realpath()
+        if ($realPath !== false && is_file($realPath)) {
+            $isAllowed = false;
+            foreach ($allowedBases as $base) {
+                if (str_starts_with($realPath, $base . DIRECTORY_SEPARATOR) || $realPath === $base) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if ($isAllowed) {
+                $mimeType = @mime_content_type($realPath) ?: match ($extension) {
+                    'svg' => 'image/svg+xml',
+                    'pdf' => 'application/pdf',
+                    default => 'image/webp',
+                };
+
+                return response()->file($realPath, [
+                    'Content-Type' => $mimeType,
+                    'Cache-Control' => 'public, max-age=31536000, immutable',
+                ]);
+            }
         }
     }
 
-    $extension = strtolower(pathinfo($cleanPath, PATHINFO_EXTENSION));
-    if (in_array($extension, ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'])) {
+    // 4. Si es imagen pero no existe físicamente en disco, servir placeholder SVG seguro
+    if (in_array($extension, ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'], true)) {
         $placeholderSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#F3F4F6"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9CA3AF" font-family="sans-serif" font-size="16">Imagen no encontrada</text></svg>';
 
         return response($placeholderSvg, 200, [
