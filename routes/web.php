@@ -21,7 +21,9 @@ Route::get('/', function () {
 
 Route::get('/plantillas', [PlantillasController::class, 'index'])->name('plantillas.index');
 
-Route::get('/plantillas/{plantilla:slug}/catalogo/descargar-pdf', [PlantillasController::class, 'descargarCatalogo'])->name('plantillas.descargarCatalogo');
+Route::get('/plantillas/{plantilla:slug}/catalogo/descargar-pdf', [PlantillasController::class, 'descargarCatalogo'])
+    ->middleware('throttle:6,1')
+    ->name('plantillas.descargarCatalogo');
 
 Route::get('/plantillas/{plantilla:slug}/{seccion?}', [PlantillasController::class, 'preview'])
     ->where('seccion', '[a-zA-Z0-9\-]+')
@@ -147,9 +149,15 @@ Route::get('/comprobar-archivos', function () {
     ]);
 });
 
-Route::get('/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar');
-Route::get('/{dominio}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar1');
-Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])->name('catalogo.descargar2');
+Route::get('/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])
+    ->middleware('throttle:6,1')
+    ->name('catalogo.descargar');
+Route::get('/{dominio}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])
+    ->middleware('throttle:6,1')
+    ->name('catalogo.descargar1');
+Route::get('/{param1}/{param2}/catalogo/descargar-pdf', [SitePageController::class, 'descargarCatalogo'])
+    ->middleware('throttle:6,1')
+    ->name('catalogo.descargar2');
 
 Route::post('/libro-de-reclamaciones', [LibroReclamacionesController::class, 'store'])
     ->middleware('throttle:5,1')

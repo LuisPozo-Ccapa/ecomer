@@ -661,7 +661,17 @@ class SitePageController extends Controller
         $productos = $productosQuery->orderBy('orden')->orderBy('nombre')->get();
         $titulo = $catalogoConfig['titulo'] ?? 'Catálogo de Productos';
         $colorPrimario = $estilos['color_primario'] ?? '#F72F46';
+        $filename = Str::slug($titulo).'.pdf';
+        $cacheRelPath = 'catalogos/catalogo_site_' . $site->id . '.pdf';
 
+        // Fase 3 (Cache-Aside): Si el PDF pre-renderizado ya existe en disco, servirlo estáticamente (< 50ms, 0 MB RAM)
+        if (Storage::disk('public')->exists($cacheRelPath)) {
+            return response()->download(Storage::disk('public')->path($cacheRelPath), $filename, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        // Compilar con DomPDF una sola vez y persistir en disco
         $pdf = Pdf::loadView('pdf.catalogo', [
             'site' => $site,
             'titulo' => $titulo,
@@ -670,8 +680,14 @@ class SitePageController extends Controller
             'estilos' => $estilos,
         ])->setOption('isGdEnabled', false)->setOption('isRemoteEnabled', true);
 
-        $filename = Str::slug($titulo).'.pdf';
+        if (! Storage::disk('public')->exists('catalogos')) {
+            Storage::disk('public')->makeDirectory('catalogos');
+        }
 
-        return $pdf->download($filename);
+        Storage::disk('public')->put($cacheRelPath, $pdf->output());
+
+        return response()->download(Storage::disk('public')->path($cacheRelPath), $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }

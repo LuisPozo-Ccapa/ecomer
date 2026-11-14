@@ -13,6 +13,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Site extends Model
 {
     use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::saved(function (Site $site) {
+            \App\Observers\ProductoObserver::clearCatalogCache($site->id);
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
