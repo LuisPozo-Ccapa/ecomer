@@ -212,7 +212,7 @@ return new class extends Migration
             }
 
             // 3. Pre-llenar la Sede inicial para los sitios existentes que ya tengan mapa o dirección
-            $sites = $plantilla->sites;
+            $sites = \Illuminate\Support\Facades\DB::table('sites')->where('plantilla_id', $plantilla->id)->get();
             foreach ($sites as $site) {
                 $respContacto = Respuesta::where('site_id', $site->id)
                     ->where('pregunta_id', $preguntaContacto?->id)

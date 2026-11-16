@@ -141,7 +141,7 @@ return new class extends Migration
             );
 
             // 6. Cargar datos iniciales de referencia para los sitios existentes (ej: Lismercorp)
-            $sites = Site::where('plantilla_id', $plantilla->id)->get();
+            $sites = \Illuminate\Support\Facades\DB::table('sites')->where('plantilla_id', $plantilla->id)->get();
             foreach ($sites as $site) {
                 $existing = Respuesta::where('site_id', $site->id)->where('pregunta_id', $pTitulo->id)->first();
                 if (! $existing) {
