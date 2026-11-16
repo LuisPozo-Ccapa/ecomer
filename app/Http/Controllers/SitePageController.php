@@ -449,6 +449,14 @@ class SitePageController extends Controller
     {
         if ($plantillaOrTipo instanceof Plantilla) {
             $studlySlug = Str::studly($plantillaOrTipo->slug);
+
+            // 1. Si coincide con una plantilla estándar compilada en Vite, resolver directamente
+            //    (Garantiza funcionamiento en producción cuando resources/js/ no se transfiere al cPanel)
+            if (in_array($studlySlug, ['Ecomer', 'Tortas', 'Corporativa', 'Anuncio'])) {
+                return "sites/{$studlySlug}/Index";
+            }
+
+            // 2. Si existe físicamente en desarrollo/local
             if (file_exists(resource_path("js/pages/sites/{$studlySlug}/Index.jsx"))) {
                 return "sites/{$studlySlug}/Index";
             }
@@ -463,10 +471,10 @@ class SitePageController extends Controller
         }
 
         return match ($tipo) {
-            'ecommerce' => 'sites/Tortas/Index',
+            'ecommerce' => 'sites/Ecomer/Index',
             'landing_page' => 'sites/Corporativa/Index',
             'anuncio' => 'sites/Anuncio/Index',
-            default => 'sites/Index',
+            default => 'sites/Ecomer/Index',
         };
     }
 

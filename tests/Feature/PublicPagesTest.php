@@ -126,4 +126,23 @@ class PublicPagesTest extends TestCase
 
         Storage::disk('public')->delete('sites/test-demo/imagen-test.png');
     }
+
+    public function test_pagina_plantilla_resuelve_componentes_estandar_correctamente(): void
+    {
+        $plantillaEcomer = new Plantilla(['slug' => 'ecomer', 'tipo' => 'ecommerce']);
+        $this->assertEquals('sites/Ecomer/Index', \App\Http\Controllers\SitePageController::paginaPlantilla($plantillaEcomer));
+
+        $plantillaTortas = new Plantilla(['slug' => 'tortas', 'tipo' => 'ecommerce']);
+        $this->assertEquals('sites/Tortas/Index', \App\Http\Controllers\SitePageController::paginaPlantilla($plantillaTortas));
+
+        $plantillaCorporativa = new Plantilla(['slug' => 'corporativa', 'tipo' => 'landing_page']);
+        $this->assertEquals('sites/Corporativa/Index', \App\Http\Controllers\SitePageController::paginaPlantilla($plantillaCorporativa));
+
+        $plantillaAnuncio = new Plantilla(['slug' => 'anuncio', 'tipo' => 'anuncio']);
+        $this->assertEquals('sites/Anuncio/Index', \App\Http\Controllers\SitePageController::paginaPlantilla($plantillaAnuncio));
+
+        // Fallback genérico por tipo
+        $this->assertEquals('sites/Ecomer/Index', \App\Http\Controllers\SitePageController::paginaPlantilla('ecommerce'));
+        $this->assertEquals('sites/Corporativa/Index', \App\Http\Controllers\SitePageController::paginaPlantilla('landing_page'));
+    }
 }
