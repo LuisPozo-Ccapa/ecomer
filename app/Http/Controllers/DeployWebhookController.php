@@ -38,6 +38,8 @@ class DeployWebhookController extends Controller
             $tasks = [
                 // SOLO migraciones aditivas (NUNCA fresh, NUNCA drop, NUNCA seed)
                 'migrate' => ['--force' => true],
+                // Auto-bootstrap idempotente: inicializa monedas, plantillas, rol, admin y sitio SOLO si la BD es virgen
+                'store:bootstrap' => [],
                 'optimize:clear' => [],
                 'config:cache' => [],
                 'route:cache' => [],
