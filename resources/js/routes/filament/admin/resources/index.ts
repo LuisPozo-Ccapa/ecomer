@@ -1,5 +1,6 @@
 import categorias from './categorias'
 import colores from './colores'
+import cotizacionesYContacto from './cotizaciones-y-contacto'
 import libroDeReclamaciones from './libro-de-reclamaciones'
 import marcas from './marcas'
 import monedas from './monedas'
@@ -15,6 +16,7 @@ import users from './users'
 const resources = {
     categorias: Object.assign(categorias, categorias),
 colores: Object.assign(colores, colores),
+cotizacionesYContacto: Object.assign(cotizacionesYContacto, cotizacionesYContacto),
 libroDeReclamaciones: Object.assign(libroDeReclamaciones, libroDeReclamaciones),
 marcas: Object.assign(marcas, marcas),
 monedas: Object.assign(monedas, monedas),

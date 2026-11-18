@@ -52,17 +52,26 @@ class AutoBootstrapStoreTest extends TestCase
         $this->assertNotNull($user);
         $this->assertTrue($user->hasRole('super_admin'));
 
-        // 6. Verificar sitio publicado
+        // 6. Verificar sitio publicado y estilos de orden estándar
         $site = Site::where('estado', 'publicado')->first();
         $this->assertNotNull($site);
         $this->assertEquals($plantilla->id, $site->plantilla_id);
         $this->assertEquals($user->id, $site->user_id);
         $this->assertTrue($site->monedas()->where('codigo', 'PEN')->exists());
+        $this->assertEquals(3, $site->estilos['seccion_productos']['orden'] ?? null);
+        $this->assertEquals(4, $site->estilos['seccion_marcas']['orden'] ?? null);
+        $this->assertEquals(6, $site->estilos['seccion_servicios']['orden'] ?? null);
 
-        // 7. Verificar que la tienda responde HTTP 200 en la ruta pública principal (sin 404)
+        // 7. Verificar que la tienda responde HTTP 200 en la ruta pública principal con el orden oficial
         $response = $this->get('/Inicio');
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('sites/Ecomer/Index'));
+        $response->assertInertia(fn ($page) => $page
+            ->component('sites/Ecomer/Index')
+            ->has('secciones')
+            ->where('secciones.0.slug', 'Hero')
+            ->where('secciones.1.slug', 'nosotros')
+            ->where('secciones.2.slug', 'productos')
+        );
     }
 
     /**
@@ -89,6 +98,49 @@ class AutoBootstrapStoreTest extends TestCase
 
         // El nombre personalizado no debe haber sido sobrescrito
         $this->assertEquals('Nombre Personalizado Por El Cliente', Site::first()->nombre);
+    }
+
+    /**
+     * Prueba que las secciones del nav se entreguen en el orden estándar oficial.
+     */
+    public function test_secciones_nav_siguen_orden_estandar_oficial(): void
+    {
+        Artisan::call('store:bootstrap');
+
+        $site = Site::first();
+        // Crear una marca activa vinculada a la plantilla
+        $marca = \App\Models\Marca::create([
+            'titulo' => 'Marca Demo',
+            'slug'   => 'marca-demo',
+            'activa' => true,
+        ]);
+        $site->marcas()->attach($marca->id);
+
+        $grupo = \App\Models\Servicios::create([
+            'nombre' => 'Servicios Principales',
+            'activo' => true,
+        ]);
+        $site->servicios()->attach($grupo->id);
+        \App\Models\Servicio::create([
+            'servicios_id' => $grupo->id,
+            'titulo'       => 'Servicio de Prueba',
+            'activo'       => true,
+            'orden'        => 1,
+        ]);
+
+        $response = $this->get('/Inicio');
+        $response->assertStatus(200);
+
+        $response->assertInertia(function ($page) {
+            $secciones = $page->toArray()['props']['secciones'] ?? [];
+            $slugs = array_map(fn ($s) => $s['slug'], $secciones);
+
+            // Filtrar solo las secciones que van al nav (excluyendo catalogo que es modal/flotante)
+            $navSlugs = array_values(array_filter($slugs, fn ($s) => $s !== 'catalogo'));
+
+            // El orden estándar debe ser: Hero (Inicio) -> nosotros -> productos -> marcas -> liquidación -> servicios -> contacto
+            $this->assertEquals(['Hero', 'nosotros', 'productos', 'marcas', 'liquidación', 'servicios', 'contacto'], $navSlugs);
+        });
     }
 }
 

@@ -230,9 +230,9 @@ class SitePageController extends Controller
             ->values()
             ->toArray();
 
-        $prodOrden = isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== ''
+        $prodOrden = isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== '' && $estilos['seccion_productos']['orden'] !== null
             ? (int) $estilos['seccion_productos']['orden']
-            : 2;
+            : 3;
 
         $hasProductosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])
@@ -246,17 +246,15 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])) {
-                    if (isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_productos']['orden'];
-                    }
+                    $sec['orden'] = $prodOrden;
                 }
             }
             unset($sec);
         }
 
-        $servOrden = isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== ''
+        $servOrden = isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== '' && $estilos['seccion_servicios']['orden'] !== null
             ? (int) $estilos['seccion_servicios']['orden']
-            : 3;
+            : 6;
 
         $hasServiciosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['servicios', 'servicio'])
@@ -270,9 +268,7 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['servicios', 'servicio'])) {
-                    if (isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_servicios']['orden'];
-                    }
+                    $sec['orden'] = $servOrden;
                 }
             }
             unset($sec);
@@ -282,7 +278,7 @@ class SitePageController extends Controller
         if (! empty($catalogoConfig['activo'])) {
             $catOrden = isset($catalogoConfig['orden']) && $catalogoConfig['orden'] !== ''
                 ? (int) $catalogoConfig['orden']
-                : 4;
+                : 98;
             $catTitulo = ! empty($catalogoConfig['titulo']) ? $catalogoConfig['titulo'] : 'Catálogo';
 
             $hasCatalogoInNav = collect($seccionesArray)->contains(
@@ -299,18 +295,16 @@ class SitePageController extends Controller
                 foreach ($seccionesArray as &$sec) {
                     if (strtolower($sec['slug'] ?? '') === 'catalogo') {
                         $sec['isCatalogo'] = true;
-                        if (isset($catalogoConfig['orden']) && $catalogoConfig['orden'] !== '') {
-                            $sec['orden'] = (int) $catalogoConfig['orden'];
-                        }
+                        $sec['orden'] = $catOrden;
                     }
                 }
                 unset($sec);
             }
         }
 
-        $marcasOrden = isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== ''
+        $marcasOrden = isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== '' && $estilos['seccion_marcas']['orden'] !== null
             ? (int) $estilos['seccion_marcas']['orden']
-            : 5;
+            : 4;
 
         $hasMarcasInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['marcas', 'marca'])
@@ -324,13 +318,19 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['marcas', 'marca'])) {
-                    if (isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_marcas']['orden'];
-                    }
+                    $sec['orden'] = $marcasOrden;
                 }
             }
             unset($sec);
         }
+
+        foreach ($seccionesArray as &$sec) {
+            $slugLower = strtolower($sec['slug'] ?? '');
+            if (in_array($slugLower, ['contacto', 'contactos']) && ($sec['orden'] === 5 || $sec['orden'] === 8 || empty($sec['orden']))) {
+                $sec['orden'] = 7;
+            }
+        }
+        unset($sec);
 
         usort($seccionesArray, fn ($a, $b) => ($a['orden'] ?? 99) <=> ($b['orden'] ?? 99));
 

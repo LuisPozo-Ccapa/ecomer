@@ -240,6 +240,7 @@ export default function Ecomer({
                     tieneTienda={tieneTienda}
                     productos={productos}
                     serviciosSitio={serviciosSitio}
+                    marcasSitio={marcasSitio}
                     estilos={estilos}
                     esDetalleProducto={Boolean(productoSeleccionado)}
                 />

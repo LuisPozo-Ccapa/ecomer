@@ -104,9 +104,33 @@ class BootstrapStoreCommand extends Command
             ]
         );
 
-        // 4. Verificación de Idempotencia para Tienda y Sitio
+        // 4. Verificación y Estandarización de Navegación para Tienda y Sitio
+        $existingSite = Site::withoutTrashed()->first();
+        if ($existingSite) {
+            $siteEstilos = $existingSite->estilos ?? [];
+            $needsUpdate = false;
+
+            if (! isset($siteEstilos['seccion_productos']['orden']) || $siteEstilos['seccion_productos']['orden'] === null || $siteEstilos['seccion_productos']['orden'] === '') {
+                $siteEstilos['seccion_productos']['orden'] = 3;
+                $needsUpdate = true;
+            }
+            if (! isset($siteEstilos['seccion_marcas']['orden']) || $siteEstilos['seccion_marcas']['orden'] === null || $siteEstilos['seccion_marcas']['orden'] === '') {
+                $siteEstilos['seccion_marcas']['orden'] = 4;
+                $needsUpdate = true;
+            }
+            if (! isset($siteEstilos['seccion_servicios']['orden']) || $siteEstilos['seccion_servicios']['orden'] === null || $siteEstilos['seccion_servicios']['orden'] === '') {
+                $siteEstilos['seccion_servicios']['orden'] = 6;
+                $needsUpdate = true;
+            }
+
+            if ($needsUpdate) {
+                $existingSite->update(['estilos' => $siteEstilos]);
+                $this->info("   • Estilos de orden de navegación estandarizados en el sitio existente: {$existingSite->nombre}");
+            }
+        }
+
         // Si ya existe un sitio activo y no se usa --force, omitir la creación de tienda/admin
-        if (! $this->option('force') && Site::withoutTrashed()->exists()) {
+        if (! $this->option('force') && $existingSite) {
             $this->info("✅ Plantillas y secciones maestras sincronizadas. Tienda existente protegida sin sobreescrituras.");
 
             return self::SUCCESS;
@@ -161,6 +185,9 @@ class BootstrapStoreCommand extends Command
                     'tipografia_texto'   => 'Montserrat',
                     'catalogo'           => ['activo' => true, 'titulo' => 'Catálogo', 'tipo_filtro' => 'todos'],
                     'redes_sociales'     => ['whatsapp' => '', 'facebook' => '', 'instagram' => ''],
+                    'seccion_productos'  => ['orden' => 3],
+                    'seccion_marcas'     => ['orden' => 4],
+                    'seccion_servicios'  => ['orden' => 6],
                 ],
             ]
         );
@@ -197,17 +224,19 @@ class BootstrapStoreCommand extends Command
         }
 
         foreach ($secciones as $sec) {
-            $seccion = Seccion::firstOrCreate(
+            $seccion = Seccion::firstOrNew(
                 [
                     'plantilla_id' => $plantilla->id,
                     'slug'         => $sec['slug'],
-                ],
-                [
-                    'nombre' => $sec['nombre'],
-                    'orden'  => $sec['orden'] ?? 1,
-                    'activa' => $sec['activa'] ?? false,
                 ]
             );
+
+            $seccion->nombre = $sec['nombre'];
+            $seccion->orden  = $sec['orden'] ?? 1;
+            if (! $seccion->exists) {
+                $seccion->activa = $sec['activa'] ?? false;
+            }
+            $seccion->save();
 
             if (! empty($sec['preguntas']) && is_array($sec['preguntas'])) {
                 foreach ($sec['preguntas'] as $p) {

@@ -22,6 +22,14 @@ const getCategoryIcon = (nombre = '') => {
     return 'FaBox';
 };
 
+const parseOrden = (val, fallback) => {
+    if (val !== undefined && val !== null && val !== '') {
+        const num = Number(val);
+        if (!isNaN(num) && num > 0) return num;
+    }
+    return fallback;
+};
+
 export default function Header({ site, dominio, siteSlug, secciones, seccionActiva, tieneTienda, productos, seccionesData, serviciosSitio, marcasSitio = [], estilos, esDetalleProducto = false }) {
     const [isScrolled, setIsScrolled] = useState(false);
     const headerRef = useRef(null);
@@ -220,9 +228,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             list.unshift({ slug: 'inicio', nombre: 'Inicio', orden: 1 });
         }
 
-        const prodOrden = estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== ''
-            ? Number(estilos.seccion_productos.orden)
-            : 2;
+        const prodOrden = parseOrden(estilos?.seccion_productos?.orden, 3);
 
         const hasProductosOrTienda = list.some((s) => {
             const slug = (s.slug || '').toLowerCase();
@@ -233,9 +239,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             list.push({ slug: 'productos', nombre: 'Productos', orden: prodOrden });
         }
 
-        const servOrden = estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== ''
-            ? Number(estilos.seccion_servicios.orden)
-            : 3;
+        const servOrden = parseOrden(estilos?.seccion_servicios?.orden, 6);
 
         const hasServiciosInList = list.some((s) => {
             const slug = (s.slug || '').toLowerCase();
@@ -250,9 +254,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
 
         // El catálogo ya no va en el nav — se muestra como botón flotante lateral
 
-        const marcasOrden = estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== ''
-            ? Number(estilos.seccion_marcas.orden)
-            : 5;
+        const marcasOrden = parseOrden(estilos?.seccion_marcas?.orden, 4);
 
         const hasMarcasInList = list.some((s) => {
             const slug = (s.slug || '').toLowerCase();
@@ -270,20 +272,33 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                 if (!s) return null;
 
                 const slug = (s.slug || '').toLowerCase();
+                if (slug === 'inicio' || slug === 'hero') {
+                    return { ...s, orden: parseOrden(s.orden, 1) };
+                }
+                if (slug === 'nosotros' || slug === 'sobre-nosotros' || slug === 'sobrenosotros') {
+                    return { ...s, orden: parseOrden(s.orden, 2) };
+                }
                 if (slug === 'productos' || slug === 'tienda' || slug === 'tiendas') {
-                    return { ...s, orden: estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== '' ? Number(estilos.seccion_productos.orden) : (s.orden ?? 2) };
+                    return { ...s, orden: parseOrden(estilos?.seccion_productos?.orden, parseOrden(s.orden, 3)) };
+                }
+                if (slug === 'marcas' || slug === 'marca') {
+                    return { ...s, orden: parseOrden(estilos?.seccion_marcas?.orden, parseOrden(s.orden, 4)) };
+                }
+                if (slug === 'liquidacion' || slug === 'liquidaciones' || slug.includes('liquidaci')) {
+                    return { ...s, orden: parseOrden(s.orden, 5) };
                 }
                 if (slug === 'servicios' || slug === 'servicio') {
-                    return { ...s, orden: estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== '' ? Number(estilos.seccion_servicios.orden) : (s.orden ?? 3) };
+                    return { ...s, orden: parseOrden(estilos?.seccion_servicios?.orden, parseOrden(s.orden, 6)) };
+                }
+                if (slug === 'contacto' || slug === 'contactos') {
+                    return { ...s, orden: parseOrden(s.orden, 7) };
                 }
                 // Excluir catálogo del nav — va como botón flotante
                 if (slug === 'catalogo' || s.isCatalogo) return null;
                 // Excluir secciones modulares de la página de inicio del menú de navegación
-                if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros', 'como_comprar', 'como-comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones'].includes(slug)) return null;
-                if (slug === 'marcas' || slug === 'marca') {
-                    return { ...s, orden: estilos?.seccion_marcas?.orden !== undefined && estilos?.seccion_marcas?.orden !== '' ? Number(estilos.seccion_marcas.orden) : (s.orden ?? 5) };
-                }
-                return { ...s, orden: s.orden ?? 99 };
+                if (['sectores', 'sobre_nosotros', 'como_comprar', 'como-comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones'].includes(slug)) return null;
+
+                return { ...s, orden: parseOrden(s.orden, 99) };
             })
             .filter(Boolean);
 
