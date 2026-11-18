@@ -197,3 +197,4 @@ class BootstrapStoreCommand extends Command
         return self::SUCCESS;
     }
 }
+

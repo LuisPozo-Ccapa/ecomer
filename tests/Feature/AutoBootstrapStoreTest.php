@@ -83,3 +83,4 @@ class AutoBootstrapStoreTest extends TestCase
         $this->assertEquals('Nombre Personalizado Por El Cliente', Site::first()->nombre);
     }
 }
+
