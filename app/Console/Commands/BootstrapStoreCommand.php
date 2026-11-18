@@ -24,24 +24,17 @@ class BootstrapStoreCommand extends Command
     /**
      * La descripción del comando.
      */
-    protected $description = 'Inicializa automáticamente el ecosistema esencial de una tienda en una base de datos vacía (Monedas, Plantillas, Roles, Admin y Sitio)';
+    protected $description = 'Inicializa automáticamente el ecosistema esencial de una tienda en una base de datos vacía (Monedas, Plantillas con 17 secciones completas, Roles, Admin y Sitio)';
 
     /**
      * Ejecuta el comando.
      */
     public function handle(): int
     {
-        // 1. Verificación de Idempotencia: Si ya existe un sitio activo, omitir de forma segura
-        if (! $this->option('force') && Site::withoutTrashed()->exists()) {
-            $this->info('La base de datos ya cuenta con una tienda configurada. Omitiendo auto-bootstrap de forma segura.');
-
-            return self::SUCCESS;
-        }
-
         $appName = config('app.name', 'Mi Tienda');
         $this->info("Iniciando auto-bootstrap para la tienda: {$appName}...");
 
-        // 2. Monedas Oficiales
+        // 1. Monedas Oficiales
         $soles = Moneda::firstOrCreate(
             ['codigo' => 'PEN'],
             ['nombre' => 'Soles', 'simbolo' => 'S/', 'activa' => true]
@@ -52,8 +45,13 @@ class BootstrapStoreCommand extends Command
             ['nombre' => 'Dólares', 'simbolo' => '$', 'activa' => true]
         );
 
+        // 2. Roles Administrativos (Filament Shield)
+        $superAdminRole = Role::firstOrCreate(
+            ['name' => 'super_admin', 'guard_name' => 'web']
+        );
+
         // 3. Plantillas Maestras
-        // 3.1 Plantilla Universal: Ecomer
+        // 3.1 Plantilla Universal: Ecomer (17 Secciones)
         $plantillaEcomer = Plantilla::firstOrCreate(
             ['slug' => 'ecomer'],
             [
@@ -72,35 +70,13 @@ class BootstrapStoreCommand extends Command
             ]
         );
 
-        // Secciones base del diseño Ecomer
-        $seccionesBase = [
-            ['slug' => 'Hero', 'nombre' => 'Inicio', 'orden' => 1, 'activa' => true],
-            ['slug' => 'nosotros', 'nombre' => 'Nosotros', 'orden' => 2, 'activa' => true],
-            ['slug' => 'productos', 'nombre' => 'Productos', 'orden' => 3, 'activa' => true],
-            ['slug' => 'marcas', 'nombre' => 'Marcas', 'orden' => 4, 'activa' => true],
-            ['slug' => 'contacto', 'nombre' => 'Contacto', 'orden' => 5, 'activa' => true],
-        ];
+        $this->seedSeccionesDesdeJson(
+            $plantillaEcomer,
+            database_path('data/plantilla_ecomer_secciones.json')
+        );
 
-        foreach ($seccionesBase as $sec) {
-            $seccion = Seccion::firstOrCreate(
-                ['plantilla_id' => $plantillaEcomer->id, 'slug' => $sec['slug']],
-                ['nombre' => $sec['nombre'], 'orden' => $sec['orden'], 'activa' => $sec['activa']]
-            );
-
-            if (in_array(strtolower($sec['slug']), ['hero', 'inicio'])) {
-                Pregunta::firstOrCreate(
-                    ['seccion_id' => $seccion->id, 'label' => 'Titulo'],
-                    ['tipo' => 'texto', 'estructura' => 'objeto', 'orden' => 1, 'requerida' => false]
-                );
-                Pregunta::firstOrCreate(
-                    ['seccion_id' => $seccion->id, 'label' => 'Subtitulo'],
-                    ['tipo' => 'texto', 'estructura' => 'objeto', 'orden' => 2, 'requerida' => false]
-                );
-            }
-        }
-
-        // 3.2 Plantilla Tortas
-        Plantilla::firstOrCreate(
+        // 3.2 Plantilla Tortas (9 Secciones)
+        $plantillaTortas = Plantilla::firstOrCreate(
             ['slug' => 'tortas'],
             [
                 'tipo'        => 'ecommerce',
@@ -109,6 +85,11 @@ class BootstrapStoreCommand extends Command
                 'estilos'     => ['color_primario' => '#f43f5e', 'color_secundario' => '#ffffff'],
                 'activa'      => true,
             ]
+        );
+
+        $this->seedSeccionesDesdeJson(
+            $plantillaTortas,
+            database_path('data/plantilla_tortas_secciones.json')
         );
 
         // 3.3 Plantilla Corporativa
@@ -123,10 +104,13 @@ class BootstrapStoreCommand extends Command
             ]
         );
 
-        // 4. Roles Administrativos (Filament Shield)
-        $superAdminRole = Role::firstOrCreate(
-            ['name' => 'super_admin', 'guard_name' => 'web']
-        );
+        // 4. Verificación de Idempotencia para Tienda y Sitio
+        // Si ya existe un sitio activo y no se usa --force, omitir la creación de tienda/admin
+        if (! $this->option('force') && Site::withoutTrashed()->exists()) {
+            $this->info("✅ Plantillas y secciones maestras sincronizadas. Tienda existente protegida sin sobreescrituras.");
+
+            return self::SUCCESS;
+        }
 
         // 5. Usuario Administrador Inicial
         $adminName = env('ADMIN_NAME', 'Administrador');
@@ -192,9 +176,78 @@ class BootstrapStoreCommand extends Command
         $this->info("✅ Auto-bootstrap completado exitosamente:");
         $this->info("   • Tienda: {$appName} (Slug: {$site->slug})");
         $this->info("   • Admin:  {$adminEmail}");
-        $this->info("   • Plantilla: Ecomer (publicada)");
+        $this->info("   • Plantilla: Ecomer (con 17 secciones completas)");
 
         return self::SUCCESS;
     }
-}
 
+    /**
+     * Siembra o sincroniza las secciones y preguntas de una plantilla desde un archivo JSON.
+     */
+    protected function seedSeccionesDesdeJson(Plantilla $plantilla, string $jsonPath): void
+    {
+        if (! file_exists($jsonPath)) {
+            $this->warn("Archivo no encontrado: {$jsonPath}. Omitiendo siembra de secciones.");
+            return;
+        }
+
+        $secciones = json_decode(file_get_contents($jsonPath), true);
+        if (! is_array($secciones)) {
+            return;
+        }
+
+        foreach ($secciones as $sec) {
+            $seccion = Seccion::firstOrCreate(
+                [
+                    'plantilla_id' => $plantilla->id,
+                    'slug'         => $sec['slug'],
+                ],
+                [
+                    'nombre' => $sec['nombre'],
+                    'orden'  => $sec['orden'] ?? 1,
+                    'activa' => $sec['activa'] ?? false,
+                ]
+            );
+
+            if (! empty($sec['preguntas']) && is_array($sec['preguntas'])) {
+                foreach ($sec['preguntas'] as $p) {
+                    $pregunta = Pregunta::firstOrCreate(
+                        [
+                            'seccion_id' => $seccion->id,
+                            'label'      => $p['label'],
+                            'parent_id'  => null,
+                        ],
+                        [
+                            'tipo'       => $p['tipo'] ?? 'texto',
+                            'estructura' => $p['estructura'] ?? 'objeto',
+                            'orden'      => $p['orden'] ?? 0,
+                            'requerida'  => $p['requerida'] ?? false,
+                            'ayuda'      => $p['ayuda'] ?? null,
+                            'opciones'   => $p['opciones'] ?? null,
+                        ]
+                    );
+
+                    if (! empty($p['hijos']) && is_array($p['hijos'])) {
+                        foreach ($p['hijos'] as $h) {
+                            Pregunta::firstOrCreate(
+                                [
+                                    'seccion_id' => $seccion->id,
+                                    'label'      => $h['label'],
+                                    'parent_id'  => $pregunta->id,
+                                ],
+                                [
+                                    'tipo'       => $h['tipo'] ?? 'texto',
+                                    'estructura' => $h['estructura'] ?? 'objeto',
+                                    'orden'      => $h['orden'] ?? 0,
+                                    'requerida'  => $h['requerida'] ?? false,
+                                    'ayuda'      => $h['ayuda'] ?? null,
+                                    'opciones'   => $h['opciones'] ?? null,
+                                ]
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

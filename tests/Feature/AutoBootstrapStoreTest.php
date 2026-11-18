@@ -32,11 +32,19 @@ class AutoBootstrapStoreTest extends TestCase
         $this->assertTrue(Moneda::where('codigo', 'PEN')->exists(), 'Debe existir la moneda Soles (PEN)');
         $this->assertTrue(Moneda::where('codigo', 'USD')->exists(), 'Debe existir la moneda Dólares (USD)');
 
-        // 4. Verificar plantilla Ecomer
+        // 4. Verificar plantilla Ecomer con sus 17 secciones completas
         $plantilla = Plantilla::where('slug', 'ecomer')->first();
         $this->assertNotNull($plantilla, 'Debe existir la plantilla ecomer');
         $this->assertEquals('ecommerce', $plantilla->tipo);
+        $this->assertEquals(17, $plantilla->secciones()->count(), 'La plantilla Ecomer debe tener sus 17 secciones');
         $this->assertTrue($plantilla->secciones()->where('slug', 'Hero')->exists());
+        $this->assertTrue($plantilla->secciones()->where('slug', 'sectores')->exists());
+        $this->assertTrue($plantilla->secciones()->where('slug', 'faq')->exists());
+
+        // 4.1 Verificar plantilla Tortas con sus 9 secciones completas
+        $plantillaTortas = Plantilla::where('slug', 'tortas')->first();
+        $this->assertNotNull($plantillaTortas, 'Debe existir la plantilla tortas');
+        $this->assertEquals(9, $plantillaTortas->secciones()->count(), 'La plantilla Tortas debe tener sus 9 secciones');
 
         // 5. Verificar rol y usuario super_admin
         $this->assertTrue(Role::where('name', 'super_admin')->exists());
