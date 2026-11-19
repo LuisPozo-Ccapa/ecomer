@@ -586,6 +586,13 @@ class SitePageController extends Controller
                 return null;
             }
 
+            if ($tipo === 'imagen' && is_array($valor)) {
+                $first = reset($valor);
+                if (is_string($first)) {
+                    $valor = $first;
+                }
+            }
+
             $formatUrl = function ($ruta) {
                 if (empty($ruta) || ! is_string($ruta)) {
                     return $ruta;

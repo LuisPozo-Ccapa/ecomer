@@ -171,9 +171,71 @@ class EditSite extends EditRecord
             }
         }
 
+        foreach ($respuestasMap as $pid => $item) {
+            $respuestasMap[$pid]['valor'] = static::normalizarValoresParaFormulario($item['valor'] ?? null);
+        }
+
         $data['respuestas'] = $respuestasMap;
 
         return $data;
+    }
+
+    public static function normalizarValoresParaFormulario(mixed $valor): mixed
+    {
+        if (is_null($valor)) {
+            return null;
+        }
+
+        if (is_string($valor)) {
+            $decoded = json_decode($valor, true);
+            if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+                $valor = $decoded;
+            }
+        }
+
+        if (! is_array($valor)) {
+            return $valor;
+        }
+
+        // Si es un array asociativo con una sola clave UUID/temporal y valor string de ruta
+        if (count($valor) === 1 && ! array_is_list($valor)) {
+            $firstKey = (string) array_key_first($valor);
+            $firstVal = reset($valor);
+            if (is_string($firstVal) && (preg_match('/^[a-f0-9\-]{32,36}$/i', $firstKey) || str_contains($firstVal, '/'))) {
+                return $firstVal;
+            }
+        }
+
+        foreach ($valor as $k => $v) {
+            $valor[$k] = static::normalizarValoresParaFormulario($v);
+        }
+
+        return $valor;
+    }
+
+    public static function normalizarValoresParaGuardar(mixed $valor): mixed
+    {
+        if (is_null($valor)) {
+            return null;
+        }
+
+        if (! is_array($valor)) {
+            return $valor;
+        }
+
+        if (count($valor) === 1 && ! array_is_list($valor)) {
+            $firstKey = (string) array_key_first($valor);
+            $firstVal = reset($valor);
+            if (is_string($firstVal) && (preg_match('/^[a-f0-9\-]{32,36}$/i', $firstKey) || str_contains($firstVal, '/'))) {
+                return $firstVal;
+            }
+        }
+
+        foreach ($valor as $k => $v) {
+            $valor[$k] = static::normalizarValoresParaGuardar($v);
+        }
+
+        return $valor;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
@@ -221,6 +283,7 @@ class EditSite extends EditRecord
             $enlace = $item['enlace'] ?? null;
 
             if (is_array($valor)) {
+                $valor = static::normalizarValoresParaGuardar($valor);
                 $valorClean = array_filter($valor);
                 if (empty($valorClean)) {
                     $valor = null;
@@ -230,15 +293,6 @@ class EditSite extends EditRecord
             }
 
             $existing = $existingRespuestas->get((int) $preguntaId);
-
-            // Preservar valor existente en BD si la petición viene vacía pero un compañero ya guardó un valor previamente
-            if (is_null($valor) && $existing && ! is_null($existing->valor) && (string) $existing->valor !== '') {
-                $valor = $existing->valor;
-            }
-
-            if (is_null($enlace) && $existing && ! is_null($existing->enlace) && (string) $existing->enlace !== '') {
-                $enlace = $existing->enlace;
-            }
 
             // Comprobación PATCH: Si el resultado final coincide con la BD, omitir actualización
             if ($existing && (string) $existing->valor === (string) $valor && (string) $existing->enlace === (string) $enlace) {

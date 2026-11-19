@@ -1137,8 +1137,8 @@
                         "tipo": "imagen",
                         "estructura": "objeto",
                         "orden": 1,
-                        "requerida": true,
-                        "ayuda": "Imagen de fondo de la tarjeta del sector",
+                        "requerida": false,
+                        "ayuda": "Imagen de fondo de la tarjeta del sector (Opcional, si se deja vacío se muestra el ícono de respaldo)",
                         "opciones": null
                     },
                     {
@@ -1184,6 +1184,15 @@
                         "orden": 6,
                         "requerida": false,
                         "ayuda": "Ruta o URL de destino al hacer clic (Ej: \/productos?sector=mineria)",
+                        "opciones": null
+                    },
+                    {
+                        "label": "icono",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 7,
+                        "requerida": false,
+                        "ayuda": "Ícono decorativo para la tarjeta cuando no se asigne imagen (Ej. FaIndustry, FaWrench, FaTruck)",
                         "opciones": null
                     }
                 ]
