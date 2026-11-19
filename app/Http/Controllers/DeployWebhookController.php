@@ -35,16 +35,23 @@ class DeployWebhookController extends Controller
         }
 
         try {
+            $isTesting = app()->environment('testing');
+
             $tasks = [
                 // SOLO migraciones aditivas (NUNCA fresh, NUNCA drop, NUNCA seed)
                 'migrate' => ['--force' => true],
                 // Auto-bootstrap idempotente: inicializa monedas, plantillas, rol, admin y sitio SOLO si la BD es virgen
                 'store:bootstrap' => [],
                 'optimize:clear' => [],
-                'config:cache' => [],
-                'route:cache' => [],
-                'view:cache' => [],
             ];
+
+            // En entorno de producción se optimizan y compilan configuraciones, rutas y vistas a disco.
+            // En testing se omiten para evitar contaminar bootstrap/cache/ con SQLite :memory: hacia el entorno local.
+            if (! $isTesting) {
+                $tasks['config:cache'] = [];
+                $tasks['route:cache'] = [];
+                $tasks['view:cache'] = [];
+            }
 
             $results = [];
 
@@ -67,6 +74,12 @@ class DeployWebhookController extends Controller
                         'details' => $results
                     ], 500);
                 }
+            }
+
+            if ($isTesting) {
+                $results['config:cache'] = ['exit_code' => 0, 'output' => 'Skipped in testing'];
+                $results['route:cache'] = ['exit_code' => 0, 'output' => 'Skipped in testing'];
+                $results['view:cache'] = ['exit_code' => 0, 'output' => 'Skipped in testing'];
             }
 
             // Validar enlace simbólico de imágenes (respetando las fotos existentes)

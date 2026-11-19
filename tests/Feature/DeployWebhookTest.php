@@ -43,4 +43,12 @@ class DeployWebhookTest extends TestCase
             ],
         ]);
     }
+
+    protected function tearDown(): void
+    {
+        @unlink(base_path('bootstrap/cache/config.php'));
+        @unlink(base_path('bootstrap/cache/routes-v7.php'));
+        @unlink(base_path('bootstrap/cache/events.php'));
+        parent::tearDown();
+    }
 }
