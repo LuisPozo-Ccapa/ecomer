@@ -193,4 +193,30 @@ class CmsImagenesAndSectoresTest extends TestCase
         $reloadedAfterClear = Respuesta::find($existing->id);
         $this->assertNull($reloadedAfterClear->valor);
     }
+
+    public function test_guardar_respuestas_top_level_image_uuid_array_does_not_throw_type_error(): void
+    {
+        $rawValor = [
+            '93dc41ef-ccfe-44d0-b12f-515e7c1dd724' => 'sites/siesquen/contenido/ejHhwYfI3dzhp483er9Nr6pPMS3i5aeslQZ6P83y.webp',
+        ];
+
+        // Ejecutar el pipeline exacto de guardarRespuestas
+        $valor = $rawValor;
+        if (is_array($valor)) {
+            $valor = EditSite::normalizarValoresParaGuardar($valor);
+            if (is_array($valor)) {
+                $valorClean = array_filter($valor);
+                if (empty($valorClean)) {
+                    $valor = null;
+                } else {
+                    $valor = json_encode($valor);
+                }
+            } elseif (is_string($valor) && trim($valor) === '') {
+                $valor = null;
+            }
+        }
+
+        // El resultado debe ser un string con la ruta limpia y NO lanzar TypeError
+        $this->assertSame('sites/siesquen/contenido/ejHhwYfI3dzhp483er9Nr6pPMS3i5aeslQZ6P83y.webp', $valor);
+    }
 }

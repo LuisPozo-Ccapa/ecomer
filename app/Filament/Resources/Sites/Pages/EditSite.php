@@ -284,11 +284,15 @@ class EditSite extends EditRecord
 
             if (is_array($valor)) {
                 $valor = static::normalizarValoresParaGuardar($valor);
-                $valorClean = array_filter($valor);
-                if (empty($valorClean)) {
+                if (is_array($valor)) {
+                    $valorClean = array_filter($valor);
+                    if (empty($valorClean)) {
+                        $valor = null;
+                    } else {
+                        $valor = json_encode($valor);
+                    }
+                } elseif (is_string($valor) && trim($valor) === '') {
                     $valor = null;
-                } else {
-                    $valor = json_encode($valor);
                 }
             }
 
