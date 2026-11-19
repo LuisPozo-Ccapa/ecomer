@@ -1,17 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function VideoGroup({ videoBlock }) {
     const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-    if (!videoBlock) return null;
-
-    const { titulo, imagen, enlace, porcentajes, info } = videoBlock;
-
-    if (!titulo && !imagen && (!porcentajes || porcentajes.length === 0)) {
-        return null;
-    }
+    const titulo = videoBlock?.titulo || 'Excelencia técnica y compromiso en cada proyecto';
+    const imagen = videoBlock?.imagen || '';
+    const enlace = videoBlock?.enlace || '';
 
     // Convert Youtube URL if applicable
     const getEmbedUrl = (url) => {
@@ -29,6 +25,22 @@ export default function VideoGroup({ videoBlock }) {
 
     const embedUrl = getEmbedUrl(enlace);
 
+    // Listado de información con respaldo corporativo
+    const rawInfo = Array.isArray(videoBlock?.info) ? videoBlock.info : [];
+    const info = rawInfo.length > 0 ? rawInfo : [
+        { icono: 'FaCheck', titulo: 'Atención Personalizada' },
+        { icono: 'FaShieldAlt', titulo: 'Garantía Certificada' },
+        { icono: 'FaHeadset', titulo: 'Soporte Continuo' },
+    ];
+
+    // Porcentajes de calidad y desempeño con respaldo corporativo
+    const rawPorcentajes = Array.isArray(videoBlock?.porcentajes) ? videoBlock.porcentajes : [];
+    const porcentajes = rawPorcentajes.length > 0 ? rawPorcentajes : [
+        { titulo: 'Satisfacción de Clientes', porcentaje: '98' },
+        { titulo: 'Disponibilidad de Stock', porcentaje: '95' },
+        { titulo: 'Entregas a Tiempo', porcentaje: '99' },
+    ];
+
     return (
         <section className="bg-white py-10 sm:py-14 px-4 sm:px-6 lg:px-8 text-gray-900">
             <div className="mx-auto max-w-[1540px]">
@@ -40,7 +52,7 @@ export default function VideoGroup({ videoBlock }) {
                     transition={{ duration: 0.6 }}
                     className="relative overflow-hidden rounded-[2.5rem] shadow-2xl min-h-[480px] sm:min-h-[560px] md:min-h-[620px] lg:min-h-[660px] flex items-end justify-start bg-gray-900"
                 >
-                    {/* Imagen de Fondo */}
+                    {/* Imagen de Fondo o degradado blueprint referencial */}
                     {imagen ? (
                         <img
                             src={imagen}
@@ -49,14 +61,21 @@ export default function VideoGroup({ videoBlock }) {
                             loading="lazy"
                         />
                     ) : (
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#183159] via-[#0f2240] to-[#0a172c]" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#071120] via-[#0b1c36] to-[#12284c]">
+                            <div
+                                className="pointer-events-none absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"
+                                aria-hidden="true"
+                            />
+                            <div className="pointer-events-none absolute -top-40 right-0 h-96 w-96 rounded-full bg-[var(--color-primario)]/20 blur-3xl" />
+                            <div className="pointer-events-none absolute -bottom-20 left-0 h-96 w-96 rounded-full bg-blue-600/15 blur-3xl" />
+                        </div>
                     )}
 
                     {/* Sombra de Degradado Suave sobre la imagen */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10" />
 
                     {/* ── Tarjeta Flotante en la Esquina Inferior Izquierda (Glassmorphism) ── */}
-                    <div className="relative z-10 m-5 sm:m-8 md:m-10 max-w-xl w-[calc(100%-2.5rem)] sm:w-auto p-6 sm:p-8 rounded-[2rem] bg-black/45 backdrop-blur-md border border-white/20 text-white shadow-2xl">
+                    <div className="relative z-10 m-5 sm:m-8 md:m-10 max-w-xl w-[calc(100%-2.5rem)] sm:w-auto p-6 sm:p-8 rounded-[2rem] bg-black/50 backdrop-blur-md border border-white/20 text-white shadow-2xl">
                         {/* Título Principal */}
                         {titulo && (
                             <h2
@@ -112,8 +131,8 @@ export default function VideoGroup({ videoBlock }) {
                         )}
                     </div>
 
-                    {/* ── Botón Play Flotante en el Lado Derecho (Círculo Traslúcido con texto "Play") ── */}
-                    {enlace && (
+                    {/* ── Botón Play Flotante en el Lado Derecho ── */}
+                    {enlace ? (
                         <div className="absolute top-1/2 right-8 sm:right-14 lg:right-20 -translate-y-1/2 z-20">
                             <button
                                 onClick={() => setIsVideoOpen(true)}
@@ -122,6 +141,15 @@ export default function VideoGroup({ videoBlock }) {
                             >
                                 <span style={{ fontFamily: 'var(--tipografia-titulos)' }}>Play</span>
                             </button>
+                        </div>
+                    ) : (
+                        <div className="hidden sm:flex absolute top-1/2 right-8 sm:right-14 lg:right-20 -translate-y-1/2 z-20 flex-col items-center">
+                            <div className="flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full border border-white/30 bg-white/5 backdrop-blur-md text-[var(--color-primario)] shadow-2xl">
+                                <DynamicIcon name="FaPlay" className="h-7 w-7 ml-1" />
+                            </div>
+                            <span className="mt-3 text-xs font-bold uppercase tracking-widest text-slate-300 bg-black/40 px-3 py-1 rounded-full border border-white/10">
+                                Video Corporativo
+                            </span>
                         </div>
                     )}
                 </motion.div>

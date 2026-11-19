@@ -1,17 +1,45 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
+import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
 export default function ServiciosGroup({ serviciosBlock }) {
-    if (!serviciosBlock || !serviciosBlock.items || serviciosBlock.items.length === 0) {
-        return null;
-    }
+    const subIcono = serviciosBlock?.subIcono || 'FaTools';
+    const sub = serviciosBlock?.sub || 'CATÁLOGO DE SERVICIOS';
+    const titulo = serviciosBlock?.titulo || 'Soluciones técnicas para tu negocio';
 
-    const { subIcono, sub, titulo, items } = serviciosBlock;
+    const rawItems = Array.isArray(serviciosBlock?.items) ? serviciosBlock.items : [];
+    const items = rawItems.length > 0 ? rawItems : [
+        {
+            numero: 'No - 01',
+            titulo: 'Asesoría Técnica y Cotización',
+            descripcion: 'Evaluación técnica personalizada para dimensionar y cotizar la solución óptima de tu requerimiento.',
+            boton: 'Solicitar Asesoría',
+            botonIcono: 'FaChevronRight',
+            icono: 'FaHeadset',
+        },
+        {
+            numero: 'No - 02',
+            titulo: 'Mantenimiento y Reparación de Equipos',
+            descripcion: 'Servicio preventivo y correctivo con personal certificado y repuestos originales garantizados.',
+            boton: 'Ver Servicio',
+            botonIcono: 'FaChevronRight',
+            icono: 'FaWrench',
+        },
+        {
+            numero: 'No - 03',
+            titulo: 'Despacho y Logística Integral',
+            descripcion: 'Envíos directos a obra o almacén a nivel nacional con seguimiento y trazabilidad continua.',
+            boton: 'Consultar Envíos',
+            botonIcono: 'FaChevronRight',
+            icono: 'FaTruck',
+        },
+    ];
 
     return (
         <section className="bg-white py-10 sm:py-14 px-4 sm:px-6 lg:px-8 text-gray-900">
             <div className="mx-auto max-w-[1540px]">
-                {/* ── Encabezado Estándar de Ecomer (Título y Subtítulo idéntico a las demás secciones) ── */}
+                {/* ── Encabezado Estándar de Ecomer ── */}
                 <div className="mb-8 pb-3 border-b border-gray-200">
                     {sub && (
                         <p
@@ -60,11 +88,20 @@ export default function ServiciosGroup({ serviciosBlock }) {
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <div className="absolute inset-0 bg-gray-900" />
+                                    <SectionPlaceholderGuide
+                                        tipo="card"
+                                        titulo={item.titulo || `Servicio ${item.numero || ''}`}
+                                        subtitulo="Servicio profesional garantizado"
+                                        icono={item.icono || (idx === 0 ? 'FaHeadset' : idx === 1 ? 'FaWrench' : 'FaTruck')}
+                                        badge="ESPECIALIDAD"
+                                        className="rounded-[2rem] min-h-full"
+                                    />
                                 )}
 
-                                {/* Overlay degradado — siempre visible */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                                {/* Overlay degradado — visible sobre la imagen */}
+                                {item.imagen && (
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                                )}
 
                                 {/* Insignia Superior: "No - 01" */}
                                 <div className="absolute top-6 left-6 z-20">
@@ -73,45 +110,47 @@ export default function ServiciosGroup({ serviciosBlock }) {
                                     </span>
                                 </div>
 
-                                {/* Contenido Inferior — siempre visible */}
-                                <div className="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-7">
-                                    <div className="space-y-3">
-                                        {/* Título */}
-                                        {item.titulo && (
-                                            <h3
-                                                className="text-xl sm:text-2xl font-bold text-white leading-snug tracking-tight"
-                                                style={{ fontFamily: 'var(--tipografia-titulos)' }}
-                                            >
-                                                {item.titulo}
-                                            </h3>
-                                        )}
-
-                                        {/* Descripción */}
-                                        {item.descripcion && (
-                                            <p
-                                                className="text-xs sm:text-sm text-gray-200 leading-relaxed font-normal line-clamp-2"
-                                                style={{ fontFamily: 'var(--tipografia-texto)' }}
-                                            >
-                                                {item.descripcion}
-                                            </p>
-                                        )}
-
-                                        {/* Botón en Color Primario Global con Ícono en Círculo */}
-                                        {item.boton && (
-                                            <div className="flex items-center pt-1">
-                                                <span
-                                                    className="inline-flex items-center gap-2.5 rounded-full text-white px-4 py-2 text-xs sm:text-sm font-bold shadow-md cursor-pointer"
-                                                    style={{ backgroundColor: 'var(--color-primario)', fontFamily: 'var(--tipografia-texto)' }}
+                                {/* Contenido Inferior — solo sobre imagen o cuando se requiera para no duplicar */}
+                                {item.imagen && (
+                                    <div className="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-7">
+                                        <div className="space-y-3">
+                                            {/* Título */}
+                                            {item.titulo && (
+                                                <h3
+                                                    className="text-xl sm:text-2xl font-bold text-white leading-snug tracking-tight"
+                                                    style={{ fontFamily: 'var(--tipografia-titulos)' }}
                                                 >
-                                                    <span>{item.boton}</span>
-                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">
-                                                        <DynamicIcon name={item.botonIcono || 'FaChevronRight'} className="h-3 w-3" />
+                                                    {item.titulo}
+                                                </h3>
+                                            )}
+
+                                            {/* Descripción */}
+                                            {item.descripcion && (
+                                                <p
+                                                    className="text-xs sm:text-sm text-gray-200 leading-relaxed font-normal line-clamp-2"
+                                                    style={{ fontFamily: 'var(--tipografia-texto)' }}
+                                                >
+                                                    {item.descripcion}
+                                                </p>
+                                            )}
+
+                                            {/* Botón en Color Primario Global con Ícono en Círculo */}
+                                            {item.boton && (
+                                                <div className="flex items-center pt-1">
+                                                    <span
+                                                        className="inline-flex items-center gap-2.5 rounded-full text-white px-4 py-2 text-xs sm:text-sm font-bold shadow-md cursor-pointer"
+                                                        style={{ backgroundColor: 'var(--color-primario)', fontFamily: 'var(--tipografia-texto)' }}
+                                                    >
+                                                        <span>{item.boton}</span>
+                                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">
+                                                            <DynamicIcon name={item.botonIcono || 'FaChevronRight'} className="h-3 w-3" />
+                                                        </span>
                                                     </span>
-                                                </span>
-                                            </div>
-                                        )}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </motion.div>
                         );
                     })}

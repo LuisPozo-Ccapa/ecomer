@@ -9,19 +9,29 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 export default function ElegirnosSection({ seccionData }) {
-    if (!seccionData) return null;
-
     // Normalizar los datos del valor de la sección
     const rawValor = seccionData?.valor;
     const data = Array.isArray(rawValor) ? rawValor[0] : (rawValor || {});
 
     const titulo = data?.Titulo || '¿Por qué elegirnos?';
-    const descripcion = data?.Descripcion || data?.descripcion || '';
+    const descripcion = data?.Descripcion || data?.descripcion || 'Razones que nos consolidan como el aliado estratégico preferido de empresas, industrias y profesionales.';
 
-    // Arreglo de tarjetas (Cards)
-    const cardsList = Array.isArray(data?.Cards) ? data.Cards : (Array.isArray(data?.cards) ? data.cards : []);
-
-    if (cardsList.length === 0) return null;
+    // Arreglo de tarjetas (Cards) con respaldo corporativo
+    const rawCardsList = Array.isArray(data?.Cards) ? data.Cards : (Array.isArray(data?.cards) ? data.cards : []);
+    const cardsList = rawCardsList.length > 0 ? rawCardsList : [
+        {
+            Titulo: 'Amplio Stock Disponible',
+            Descripcion: 'Inventario permanente de productos de alta demanda listos para despacho inmediato.',
+        },
+        {
+            Titulo: 'Asesoría Técnica Especializada',
+            Descripcion: 'Equipo profesional listo para responder consultas técnicas y optimizar tu presupuesto.',
+        },
+        {
+            Titulo: 'Garantía y Respaldo Oficial',
+            Descripcion: 'Alianzas directas con las mejores marcas del mercado nacional e internacional.',
+        },
+    ];
 
     // Helper para procesar títulos con la sintaxis /*texto destacado*/
     const renderFormattedTitle = (text) => {

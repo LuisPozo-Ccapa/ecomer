@@ -4,12 +4,20 @@ import DynamicIcon from '@/components/DynamicIcon';
 import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
 export default function MisionVisionSection({ seccionData }) {
-    if (!seccionData) return null;
-
-    // Normalizar los datos (en estructura array viene directamente en `valor`)
-    const items = Array.isArray(seccionData?.valor) ? seccionData.valor : [];
-
-    if (items.length === 0) return null;
+    // Normalizar los datos (en estructura array viene directamente en `valor`) con respaldo institucional
+    const rawItems = Array.isArray(seccionData?.valor) ? seccionData.valor : [];
+    const items = rawItems.length > 0 ? rawItems : [
+        {
+            Titulo: 'Nuestra /*Misión*/',
+            Descripcion: 'Brindar soluciones integrales de la más alta calidad a nuestros clientes, garantizando productos confiables, stock permanente y una atención técnica personalizada.',
+            Icono: 'FaBullseye',
+        },
+        {
+            Titulo: 'Nuestra /*Visión*/',
+            Descripcion: 'Ser la empresa referente y líder en el mercado nacional, reconocida por nuestra excelencia operativa, innovación logística y compromiso inquebrantable con cada cliente.',
+            Icono: 'FaEye',
+        },
+    ];
 
     // Helper para procesar títulos con sintaxis /*texto destacado*/
     const renderFormattedTitle = (text) => {
