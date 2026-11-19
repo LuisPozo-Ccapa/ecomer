@@ -680,12 +680,21 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                     filtroProdLower === 'oferta' ||
                                     nombreLower.includes('oferta');
 
-                                const hasStandalonePage = isInicio || isProductos || isServicios || isNosotros || isContacto;
+                                const isMarcas =
+                                    slugLower === 'marcas' ||
+                                    slugLower === 'marca' ||
+                                    nombreLower.includes('marca');
 
-                                const pageSlugTarget = isInicio ? 'inicio' : (isProductos ? 'productos' : (isServicios ? 'servicios' : (isNosotros ? 'nosotros' : (isContacto ? 'contacto' : seccion.slug))));
+                                const hasStandalonePage = isInicio || isProductos || isServicios || isNosotros || isContacto || isMarcas;
+
+                                const pageSlugTarget = isInicio ? 'inicio' : (isProductos || isMarcas ? 'productos' : (isServicios ? 'servicios' : (isNosotros ? 'nosotros' : (isContacto ? 'contacto' : seccion.slug))));
+                                const isMarcasUrl = Boolean(currentUrl && (currentUrl.includes('marca=') || currentUrl.includes('marcas=')));
+                                const isProductosActiva = isProductos && seccionActiva?.slug?.toLowerCase() === 'productos' && !isMarcasUrl && !currentUrl?.includes('liquidaciones=1') && !currentUrl?.includes('liquidacion=1') && !currentUrl?.includes('ofertas=1') && !currentUrl?.includes('oferta=1');
+                                const isMarcasActiva = isMarcas && isMarcasUrl;
+
                                 const activa = (isInicio
                                     ? (!seccionActiva || seccionActiva.slug?.toLowerCase() === 'inicio' || seccionActiva.slug?.toLowerCase() === 'hero')
-                                    : (pageSlugTarget === seccionActiva?.slug?.toLowerCase() || (isProductos && seccionActiva?.slug?.toLowerCase() === 'productos') || (isServicios && seccionActiva?.slug?.toLowerCase() === 'servicios') || (isNosotros && (seccionActiva?.slug?.toLowerCase() === 'nosotros' || seccionActiva?.slug?.toLowerCase() === 'sobre-nosotros')) || (isContacto && (seccionActiva?.slug?.toLowerCase() === 'contacto' || seccionActiva?.slug?.toLowerCase() === 'contactos'))))
+                                    : (isProductos ? isProductosActiva : (isMarcas ? isMarcasActiva : (pageSlugTarget === seccionActiva?.slug?.toLowerCase() || (isServicios && seccionActiva?.slug?.toLowerCase() === 'servicios') || (isNosotros && (seccionActiva?.slug?.toLowerCase() === 'nosotros' || seccionActiva?.slug?.toLowerCase() === 'sobre-nosotros')) || (isContacto && (seccionActiva?.slug?.toLowerCase() === 'contacto' || seccionActiva?.slug?.toLowerCase() === 'contactos'))))))
                                     && !isCatalogoUrlActive;
 
                                 const linkClasses = `rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-300 ${activa
@@ -755,6 +764,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                         >
                                             <Link
                                                 href={getProductosUrl(null, null)}
+                                                onClick={handleMegaMenuClick}
                                                 className={`inline-flex items-center gap-1.5 ${linkClasses}`}
                                                 style={activeStyle}
                                             >
@@ -769,8 +779,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                     );
                                 }
 
-                                const isMarcas = slugLower === 'marcas' || slugLower === 'marca';
-                                if (isMarcas && marcasArbol.length > 0) {
+                                if (isMarcas) {
                                     return (
                                         <div
                                             key={seccion.slug || 'marcas'}
@@ -780,6 +789,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                         >
                                             <Link
                                                 href={getProductosUrl(null, null)}
+                                                onClick={handleMegaMenuClick}
                                                 className={`inline-flex items-center gap-1.5 ${linkClasses}`}
                                                 style={activeStyle}
                                             >
@@ -918,43 +928,36 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 {/* COLUMNA IZQUIERDA: PESTAÑAS Y LISTADO (CATEGORÍAS Y MARCAS) */}
                                 <div className="w-64 sm:w-72 bg-gray-50/90 border-r border-gray-200/70 p-3 overflow-y-auto shrink-0 space-y-2">
                                     {/* Pestañas de Selección: Categorías / Marcas */}
-                                    {marcasArbol.length > 0 ? (
-                                        <div className="flex border border-gray-200/90 p-1 bg-gray-200/60 rounded-xl gap-1">
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setMegaMenuTab('categorias');
-                                                    setActiveHoverCategory(null);
-                                                    setActiveHoverMarca(null);
-                                                }}
-                                                className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer ${megaMenuTab === 'categorias'
-                                                    ? 'bg-white text-[var(--color-primario)] shadow-xs'
-                                                    : 'text-gray-600 hover:text-gray-900'
-                                                    }`}
-                                            >
-                                                Categorías ({categoriasArbol.length})
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setMegaMenuTab('marcas');
-                                                    setActiveHoverCategory(null);
-                                                    setActiveHoverMarca(null);
-                                                }}
-                                                className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer ${megaMenuTab === 'marcas'
-                                                    ? 'bg-white text-[var(--color-primario)] shadow-xs'
-                                                    : 'text-gray-600 hover:text-gray-900'
-                                                    }`}
-                                            >
-                                                Marcas ({marcasArbol.length})
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider text-gray-400 flex items-center justify-between">
-                                            <span>Categorías</span>
-                                            <span className="text-[10px] bg-gray-200 px-2 py-0.5 rounded-full text-gray-600 font-semibold">{categoriasArbol.length}</span>
-                                        </div>
-                                    )}
+                                    <div className="flex border border-gray-200/90 p-1 bg-gray-200/60 rounded-xl gap-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setMegaMenuTab('categorias');
+                                                setActiveHoverCategory(null);
+                                                setActiveHoverMarca(null);
+                                            }}
+                                            className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer ${megaMenuTab === 'categorias'
+                                                ? 'bg-white text-[var(--color-primario)] shadow-xs'
+                                                : 'text-gray-600 hover:text-gray-900'
+                                                }`}
+                                        >
+                                            Categorías ({categoriasArbol.length})
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setMegaMenuTab('marcas');
+                                                setActiveHoverCategory(null);
+                                                setActiveHoverMarca(null);
+                                            }}
+                                            className={`flex-1 py-1.5 text-xs font-extrabold rounded-lg transition-all duration-200 cursor-pointer ${megaMenuTab === 'marcas'
+                                                ? 'bg-white text-[var(--color-primario)] shadow-xs'
+                                                : 'text-gray-600 hover:text-gray-900'
+                                                }`}
+                                        >
+                                            Marcas ({marcasArbol.length})
+                                        </button>
+                                    </div>
 
                                     {/* LISTADO SEGÚN PESTAÑA SELECCIONADA */}
                                     {megaMenuTab === 'categorias' ? (
@@ -1173,32 +1176,52 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                                     </Link>
                                                 </div>
 
-                                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                                    {marcasArbol.map((m) => (
-                                                        <Link
-                                                            key={m.nombre}
-                                                            href={getMarcaUrl(m.nombre)}
-                                                            onClick={handleMegaMenuClick}
-                                                            className="group/marcard bg-gray-50/70 p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-white hover:shadow-md transition-all flex items-center gap-3"
-                                                        >
-                                                            {m.imagen ? (
-                                                                <img src={m.imagen} alt={m.nombre} width={36} height={36} loading="lazy" decoding="async" className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
-                                                            ) : (
-                                                                <div className="h-9 w-9 rounded-xl bg-gray-200/80 flex items-center justify-center shrink-0 text-gray-500 group-hover/marcard:text-[var(--color-primario)]">
-                                                                    <DynamicIcon name="FaAward" className="h-4 w-4" />
+                                                {marcasArbol.length > 0 ? (
+                                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                        {marcasArbol.map((m) => (
+                                                            <Link
+                                                                key={m.nombre}
+                                                                href={getMarcaUrl(m.nombre)}
+                                                                onClick={handleMegaMenuClick}
+                                                                className="group/marcard bg-gray-50/70 p-3.5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:bg-white hover:shadow-md transition-all flex items-center gap-3"
+                                                            >
+                                                                {m.imagen ? (
+                                                                    <img src={m.imagen} alt={m.nombre} width={36} height={36} loading="lazy" decoding="async" className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
+                                                                ) : (
+                                                                    <div className="h-9 w-9 rounded-xl bg-gray-200/80 flex items-center justify-center shrink-0 text-gray-500 group-hover/marcard:text-[var(--color-primario)]">
+                                                                        <DynamicIcon name="FaAward" className="h-4 w-4" />
+                                                                    </div>
+                                                                )}
+                                                                <div className="min-w-0 flex-1">
+                                                                    <h4 className="text-xs font-bold text-gray-900 truncate group-hover/marcard:text-[var(--color-primario)] transition-colors">
+                                                                        {m.nombre}
+                                                                    </h4>
+                                                                    <p className="text-[11px] text-gray-400 font-medium">
+                                                                        {m.count} {m.count === 1 ? 'producto' : 'productos'}
+                                                                    </p>
                                                                 </div>
-                                                            )}
-                                                            <div className="min-w-0 flex-1">
-                                                                <h4 className="text-xs font-bold text-gray-900 truncate group-hover/marcard:text-[var(--color-primario)] transition-colors">
-                                                                    {m.nombre}
-                                                                </h4>
-                                                                <p className="text-[11px] text-gray-400 font-medium">
-                                                                    {m.count} {m.count === 1 ? 'producto' : 'productos'}
-                                                                </p>
-                                                            </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="py-12 text-center text-gray-400">
+                                                        <div className="h-12 w-12 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                                                            <DynamicIcon name="FaAward" className="h-6 w-6" />
+                                                        </div>
+                                                        <p className="text-sm font-semibold text-gray-700">Catálogo de marcas en actualización</p>
+                                                        <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+                                                            Actualmente todos los productos están disponibles en el catálogo general.
+                                                        </p>
+                                                        <Link
+                                                            href={getProductosUrl(null, null)}
+                                                            onClick={handleMegaMenuClick}
+                                                            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--color-primario)] text-white text-xs font-bold shadow-xs hover:opacity-95 transition"
+                                                        >
+                                                            <span>Ver todos los productos</span>
+                                                            <DynamicIcon name="FaArrowRight" className="h-3 w-3" />
                                                         </Link>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         )
                                     ) : activeCategoryData ? (
@@ -1455,12 +1478,16 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 slugLower === 'marca' ||
                                 nombreLower.includes('marca');
 
-                            const hasStandalonePage = isInicio || isProductos || isServicios || isNosotros || isContacto;
+                            const hasStandalonePage = isInicio || isProductos || isServicios || isNosotros || isContacto || isMarcas;
 
-                            const pageSlugTarget = isInicio ? 'inicio' : (isProductos ? 'productos' : (isServicios ? 'servicios' : (isNosotros ? 'nosotros' : (isContacto ? 'contacto' : seccion.slug))));
+                            const pageSlugTarget = isInicio ? 'inicio' : (isProductos || isMarcas ? 'productos' : (isServicios ? 'servicios' : (isNosotros ? 'nosotros' : (isContacto ? 'contacto' : seccion.slug))));
+                            const isMarcasUrl = Boolean(currentUrl && (currentUrl.includes('marca=') || currentUrl.includes('marcas=')));
+                            const isProductosActiva = isProductos && seccionActiva?.slug?.toLowerCase() === 'productos' && !isMarcasUrl && !currentUrl?.includes('liquidaciones=1') && !currentUrl?.includes('liquidacion=1') && !currentUrl?.includes('ofertas=1') && !currentUrl?.includes('oferta=1');
+                            const isMarcasActiva = isMarcas && isMarcasUrl;
+
                             const activa = isInicio
                                 ? (!seccionActiva || seccionActiva.slug?.toLowerCase() === 'inicio' || seccionActiva.slug?.toLowerCase() === 'hero')
-                                : (pageSlugTarget === seccionActiva?.slug?.toLowerCase() || (isProductos && seccionActiva?.slug?.toLowerCase() === 'productos') || (isServicios && seccionActiva?.slug?.toLowerCase() === 'servicios') || (isNosotros && (seccionActiva?.slug?.toLowerCase() === 'nosotros' || seccionActiva?.slug?.toLowerCase() === 'sobre-nosotros')) || (isContacto && (seccionActiva?.slug?.toLowerCase() === 'contacto' || seccionActiva?.slug?.toLowerCase() === 'contactos')));
+                                : (isProductos ? isProductosActiva : (isMarcas ? isMarcasActiva : (pageSlugTarget === seccionActiva?.slug?.toLowerCase() || (isServicios && seccionActiva?.slug?.toLowerCase() === 'servicios') || (isNosotros && (seccionActiva?.slug?.toLowerCase() === 'nosotros' || seccionActiva?.slug?.toLowerCase() === 'sobre-nosotros')) || (isContacto && (seccionActiva?.slug?.toLowerCase() === 'contacto' || seccionActiva?.slug?.toLowerCase() === 'contactos')))));
 
                             const linkClasses = `block rounded-lg px-3 py-2.5 text-sm font-semibold transition ${activa
                                 ? 'text-white shadow-xs'
@@ -1596,52 +1623,66 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
                                 );
                             }
 
-                            if (isMarcas && marcasArbol.length > 0) {
-                                return (
-                                    <div key={seccion.slug || 'marcas'} className="space-y-1">
-                                        <div className="flex items-center justify-between">
-                                            <Link
-                                                href={getProductosUrl(null, null)}
-                                                onClick={() => setMobileMenuOpen(false)}
-                                                className={`${linkClasses} flex-1`}
-                                                style={activeStyle}
-                                            >
-                                                {displayName}
-                                            </Link>
-                                            <button
-                                                type="button"
-                                                onClick={() => setMobileMarcasSubmenuOpen(!mobileMarcasSubmenuOpen)}
-                                                aria-label="Desplegar submenú de marcas"
-                                                className="p-2 text-gray-500 hover:text-gray-900 cursor-pointer"
-                                            >
-                                                <DynamicIcon name="FaChevronDown" className={`h-4 w-4 transition-transform ${mobileMarcasSubmenuOpen ? 'rotate-180' : ''}`} />
-                                            </button>
-                                        </div>
-                                        {mobileMarcasSubmenuOpen && (
-                                            <div className="pl-4 space-y-2 border-l-2 border-[var(--color-primario)]/30 ml-2 my-1.5 pt-1">
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    {marcasArbol.map((m) => (
-                                                        <Link
-                                                            key={m.nombre}
-                                                            href={getMarcaUrl(m.nombre)}
-                                                            onClick={() => setMobileMenuOpen(false)}
-                                                            className="flex items-center gap-2 text-xs font-semibold text-gray-800 hover:text-[var(--color-primario)] p-2 rounded-xl bg-gray-50 border border-gray-100 hover:bg-white transition shadow-2xs"
-                                                        >
-                                                            {m.imagen ? (
-                                                                <img src={m.imagen} alt={m.nombre} width={24} height={24} loading="lazy" decoding="async" className="h-6 w-6 object-contain rounded-lg shrink-0 bg-white p-0.5 border border-gray-200" />
-                                                            ) : (
-                                                                <DynamicIcon name="FaTag" className="h-4 w-4 text-[var(--color-primario)] shrink-0" />
-                                                            )}
-                                                            <div className="min-w-0 flex-1">
-                                                                <span className="truncate block font-bold text-gray-900">{m.nombre}</span>
-                                                                {m.count > 0 && <span className="text-[10px] text-gray-400 block">{m.count} productos</span>}
-                                                            </div>
-                                                        </Link>
-                                                    ))}
-                                                </div>
+                            if (isMarcas) {
+                                if (marcasArbol.length > 0) {
+                                    return (
+                                        <div key={seccion.slug || 'marcas'} className="space-y-1">
+                                            <div className="flex items-center justify-between">
+                                                <Link
+                                                    href={getProductosUrl(null, null)}
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className={`${linkClasses} flex-1`}
+                                                    style={activeStyle}
+                                                >
+                                                    {displayName}
+                                                </Link>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setMobileMarcasSubmenuOpen(!mobileMarcasSubmenuOpen)}
+                                                    aria-label="Desplegar submenú de marcas"
+                                                    className="p-2 text-gray-500 hover:text-gray-900 cursor-pointer"
+                                                >
+                                                    <DynamicIcon name="FaChevronDown" className={`h-4 w-4 transition-transform ${mobileMarcasSubmenuOpen ? 'rotate-180' : ''}`} />
+                                                </button>
                                             </div>
-                                        )}
-                                    </div>
+                                            {mobileMarcasSubmenuOpen && (
+                                                <div className="pl-4 space-y-2 border-l-2 border-[var(--color-primario)]/30 ml-2 my-1.5 pt-1">
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        {marcasArbol.map((m) => (
+                                                            <Link
+                                                                key={m.nombre}
+                                                                href={getMarcaUrl(m.nombre)}
+                                                                onClick={() => setMobileMenuOpen(false)}
+                                                                className="flex items-center gap-2 text-xs font-semibold text-gray-800 hover:text-[var(--color-primario)] p-2 rounded-xl bg-gray-50 border border-gray-100 hover:bg-white transition shadow-2xs"
+                                                            >
+                                                                {m.imagen ? (
+                                                                    <img src={m.imagen} alt={m.nombre} width={24} height={24} loading="lazy" decoding="async" className="h-6 w-6 object-contain rounded-lg shrink-0 bg-white p-0.5 border border-gray-200" />
+                                                                ) : (
+                                                                    <DynamicIcon name="FaTag" className="h-4 w-4 text-[var(--color-primario)] shrink-0" />
+                                                                )}
+                                                                <div className="min-w-0 flex-1">
+                                                                    <span className="truncate block font-bold text-gray-900">{m.nombre}</span>
+                                                                    {m.count > 0 && <span className="text-[10px] text-gray-400 block">{m.count} productos</span>}
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+
+                                return (
+                                    <Link
+                                        key={seccion.slug || 'marcas'}
+                                        href={getProductosUrl(null, null)}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className={linkClasses}
+                                        style={activeStyle}
+                                    >
+                                        {displayName}
+                                    </Link>
                                 );
                             }
 
