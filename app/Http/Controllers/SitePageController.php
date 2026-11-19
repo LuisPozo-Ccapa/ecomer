@@ -160,10 +160,9 @@ class SitePageController extends Controller
             ->where('activo', true);
 
         if (! empty($tiendaIds)) {
-            $productosQuery->where(function ($q) use ($tiendaIds) {
-                $q->whereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds))
-                    ->orWhereDoesntHave('tiendas');
-            });
+            $productosQuery->whereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds));
+        } else {
+            $productosQuery->whereRaw('1 = 0');
         }
 
         $productos = $productosQuery->orderBy('orden')->orderBy('nombre')->get();

@@ -109,5 +109,16 @@ class ProductoApiTest extends TestCase
             ->assertJsonFragment(['nombre' => 'Stock Lima'])
             ->assertJsonMissing(['nombre' => 'Stock Cusco']);
     }
+
+    public function test_soporta_preflight_cors_en_rutas_api(): void
+    {
+        $response = $this->call('OPTIONS', '/api/v1/productos', [], [], [], [
+            'HTTP_ORIGIN' => 'https://ejemplo.com',
+            'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'GET',
+        ]);
+
+        $response->assertStatus(204);
+        $this->assertTrue($response->headers->has('Access-Control-Allow-Origin'));
+    }
 }
 

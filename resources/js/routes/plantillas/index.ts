@@ -82,7 +82,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-export const descargarCatalogo = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const descargarCatalogo = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: descargarCatalogo.url(args, options),
     method: 'get',
 })
@@ -97,7 +97,7 @@ descargarCatalogo.definition = {
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-descargarCatalogo.url = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
+descargarCatalogo.url = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plantilla: args }
     }
@@ -130,7 +130,7 @@ descargarCatalogo.url = (args: { plantilla: string | { slug: string } } | [plant
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-descargarCatalogo.get = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+descargarCatalogo.get = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: descargarCatalogo.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ descargarCatalogo.get = (args: { plantilla: string | { slug: string } } | [plant
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-descargarCatalogo.head = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+descargarCatalogo.head = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: descargarCatalogo.url(args, options),
     method: 'head',
 })
@@ -149,7 +149,7 @@ descargarCatalogo.head = (args: { plantilla: string | { slug: string } } | [plan
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-    const descargarCatalogoForm = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const descargarCatalogoForm = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: descargarCatalogo.url(args, options),
         method: 'get',
     })
@@ -159,7 +159,7 @@ descargarCatalogo.head = (args: { plantilla: string | { slug: string } } | [plan
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-        descargarCatalogoForm.get = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        descargarCatalogoForm.get = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: descargarCatalogo.url(args, options),
             method: 'get',
         })
@@ -168,7 +168,7 @@ descargarCatalogo.head = (args: { plantilla: string | { slug: string } } | [plan
  * @see app/Http/Controllers/PlantillasController.php:243
  * @route '/plantillas/{plantilla}/catalogo/descargar-pdf'
  */
-        descargarCatalogoForm.head = (args: { plantilla: string | { slug: string } } | [plantilla: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        descargarCatalogoForm.head = (args: { plantilla: string | number | { slug: string | number } } | [plantilla: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: descargarCatalogo.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -184,7 +184,7 @@ descargarCatalogo.head = (args: { plantilla: string | { slug: string } } | [plan
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-export const preview = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const preview = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -199,7 +199,7 @@ preview.definition = {
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-preview.url = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions) => {
+preview.url = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     plantilla: args[0],
@@ -231,7 +231,7 @@ preview.url = (args: { plantilla: string | { slug: string }, seccion?: string | 
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-preview.get = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+preview.get = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -240,7 +240,7 @@ preview.get = (args: { plantilla: string | { slug: string }, seccion?: string | 
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-preview.head = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+preview.head = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: preview.url(args, options),
     method: 'head',
 })
@@ -250,7 +250,7 @@ preview.head = (args: { plantilla: string | { slug: string }, seccion?: string |
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-    const previewForm = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const previewForm = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: preview.url(args, options),
         method: 'get',
     })
@@ -260,7 +260,7 @@ preview.head = (args: { plantilla: string | { slug: string }, seccion?: string |
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-        previewForm.get = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        previewForm.get = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: preview.url(args, options),
             method: 'get',
         })
@@ -269,7 +269,7 @@ preview.head = (args: { plantilla: string | { slug: string }, seccion?: string |
  * @see app/Http/Controllers/PlantillasController.php:40
  * @route '/plantillas/{plantilla}/{seccion?}'
  */
-        previewForm.head = (args: { plantilla: string | { slug: string }, seccion?: string | number } | [plantilla: string | { slug: string }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        previewForm.head = (args: { plantilla: string | number | { slug: string | number }, seccion?: string | number } | [plantilla: string | number | { slug: string | number }, seccion: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: preview.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',

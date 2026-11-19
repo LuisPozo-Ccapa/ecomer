@@ -7,25 +7,10 @@ use App\Http\Controllers\Api\v1\TikTokApiController;
 use App\Http\Controllers\ContactoController;
 use Illuminate\Support\Facades\Route;
 
-Route::options('{any}', function () {
-    return response()->json([], 200, [
-        'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers' => '*',
-    ]);
-})->where('any', '.*');
-
 Route::post('/contacto', [ContactoController::class, 'store'])
     ->middleware('throttle:10,1');
 
 Route::prefix('v1')->group(function () {
-    Route::options('{any}', function () {
-        return response()->json([], 200, [
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers' => '*',
-        ]);
-    })->where('any', '.*');
 
     // Plantillas (Templates)
     Route::get('/plantillas', [PlantillaApiController::class, 'index']);
