@@ -236,8 +236,8 @@
       "_DynamicIcon-C7HPmW5A.js"
     ]
   },
-  "_SedesSection-CAWdzW_S.js": {
-    "file": "assets/SedesSection-CAWdzW_S.js",
+  "_SedesSection-G8838kJu.js": {
+    "file": "assets/SedesSection-G8838kJu.js",
     "name": "SedesSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -371,7 +371,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B26oZx41.css",
+    "file": "assets/app-B4hhcpTL.css",
     "name": "app",
     "names": [
       "app.css"
@@ -389,7 +389,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DqjdfUpM.js",
+    "file": "assets/app-gq8CBzK6.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -424,7 +424,7 @@
       "_OfertasSection-CGsC8BjF.js",
       "_ProductosDestacadosSection-D0QzpbtT.js",
       "_SectoresSection-BFSs87gt.js",
-      "_SedesSection-CAWdzW_S.js",
+      "_SedesSection-G8838kJu.js",
       "_SobreNosotrosInicioSection-CQbWn57z.js",
       "resources/js/pages/sites/Ecomer/components/Inicio/subcomponents/TikTokSection.jsx",
       "resources/js/pages/sites/Ecomer/components/Nosotros/SectionNosotros.jsx",
@@ -583,7 +583,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-DnFC4pkf.js",
+    "file": "assets/Index-C2jbVbPe.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -682,7 +682,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-KqINvVkj.js",
+    "file": "assets/SectionInicio-DdQ1IitQ.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -699,7 +699,7 @@
       "_SectoresSection-BFSs87gt.js",
       "_SobreNosotrosInicioSection-CQbWn57z.js",
       "_ComoComprarSection-CV4h0seg.js",
-      "_SedesSection-CAWdzW_S.js",
+      "_SedesSection-G8838kJu.js",
       "_FaqSection-CRa4LZBQ.js"
     ],
     "dynamicImports": [
