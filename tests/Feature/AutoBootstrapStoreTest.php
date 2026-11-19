@@ -41,6 +41,26 @@ class AutoBootstrapStoreTest extends TestCase
         $this->assertTrue($plantilla->secciones()->where('slug', 'sectores')->exists());
         $this->assertTrue($plantilla->secciones()->where('slug', 'faq')->exists());
 
+        // 4.0.1 Verificar que Servicios -> Hero -> Imagenes cuenta con sus 3 subcampos (Imagen_pc, Imagen_tablet, Imagen_cel)
+        $seccionServicios = $plantilla->secciones()->where('slug', 'servicios')->first();
+        $this->assertNotNull($seccionServicios, 'La plantilla Ecomer debe tener la sección servicios');
+        $heroPregunta = $seccionServicios->preguntas()->where('label', 'Hero')->whereNull('parent_id')->first();
+        $this->assertNotNull($heroPregunta, 'Servicios debe tener la pregunta raíz Hero');
+        $imagenesPregunta = \App\Models\Pregunta::where('parent_id', $heroPregunta->id)->where('label', 'Imagenes')->first();
+        $this->assertNotNull($imagenesPregunta, 'Hero debe tener la pregunta Imagenes');
+        $this->assertTrue(
+            \App\Models\Pregunta::where('parent_id', $imagenesPregunta->id)->where('label', 'Imagen_pc')->exists(),
+            'Imagenes debe contener el campo Imagen_pc'
+        );
+        $this->assertTrue(
+            \App\Models\Pregunta::where('parent_id', $imagenesPregunta->id)->where('label', 'Imagen_tablet')->exists(),
+            'Imagenes debe contener el campo Imagen_tablet'
+        );
+        $this->assertTrue(
+            \App\Models\Pregunta::where('parent_id', $imagenesPregunta->id)->where('label', 'Imagen_cel')->exists(),
+            'Imagenes debe contener el campo Imagen_cel'
+        );
+
         // 4.1 Verificar plantilla Tortas con sus 9 secciones completas
         $plantillaTortas = Plantilla::where('slug', 'tortas')->first();
         $this->assertNotNull($plantillaTortas, 'Debe existir la plantilla tortas');

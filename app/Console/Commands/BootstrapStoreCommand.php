@@ -75,6 +75,24 @@ class BootstrapStoreCommand extends Command
             database_path('data/plantilla_ecomer_secciones.json')
         );
 
+        // Sincronizar catálogo maestro en cualquier otra plantilla ecommerce existente
+        $otrasPlantillasEcomer = Plantilla::where('id', '!=', $plantillaEcomer->id)
+            ->where(function ($q) {
+                $q->where('slug', 'like', '%ecomer%')
+                  ->orWhere('nombre', 'like', '%ecomer%')
+                  ->orWhere('tipo', 'ecommerce');
+            })
+            ->get();
+
+        foreach ($otrasPlantillasEcomer as $otraPlt) {
+            if ($otraPlt->slug !== 'tortas') {
+                $this->seedSeccionesDesdeJson(
+                    $otraPlt,
+                    database_path('data/plantilla_ecomer_secciones.json')
+                );
+            }
+        }
+
         // 3.2 Plantilla Tortas (9 Secciones)
         $plantillaTortas = Plantilla::firstOrCreate(
             ['slug' => 'tortas'],
@@ -246,43 +264,42 @@ class BootstrapStoreCommand extends Command
             $seccion->save();
 
             if (! empty($sec['preguntas']) && is_array($sec['preguntas'])) {
-                foreach ($sec['preguntas'] as $p) {
-                    $pregunta = Pregunta::firstOrCreate(
-                        [
-                            'seccion_id' => $seccion->id,
-                            'label'      => $p['label'],
-                            'parent_id'  => null,
-                        ],
-                        [
-                            'tipo'       => $p['tipo'] ?? 'texto',
-                            'estructura' => $p['estructura'] ?? 'objeto',
-                            'orden'      => $p['orden'] ?? 0,
-                            'requerida'  => $p['requerida'] ?? false,
-                            'ayuda'      => $p['ayuda'] ?? null,
-                            'opciones'   => $p['opciones'] ?? null,
-                        ]
-                    );
+                $this->seedPreguntasRecursivas((int) $seccion->id, $sec['preguntas'], null);
+            }
+        }
+    }
 
-                    if (! empty($p['hijos']) && is_array($p['hijos'])) {
-                        foreach ($p['hijos'] as $h) {
-                            Pregunta::firstOrCreate(
-                                [
-                                    'seccion_id' => $seccion->id,
-                                    'label'      => $h['label'],
-                                    'parent_id'  => $pregunta->id,
-                                ],
-                                [
-                                    'tipo'       => $h['tipo'] ?? 'texto',
-                                    'estructura' => $h['estructura'] ?? 'objeto',
-                                    'orden'      => $h['orden'] ?? 0,
-                                    'requerida'  => $h['requerida'] ?? false,
-                                    'ayuda'      => $h['ayuda'] ?? null,
-                                    'opciones'   => $h['opciones'] ?? null,
-                                ]
-                            );
-                        }
-                    }
-                }
+    /**
+     * Siembra o sincroniza recursivamente preguntas, subpreguntas (hijos), nietos y bisnietos.
+     */
+    protected function seedPreguntasRecursivas(int $seccionId, array $preguntas, ?int $parentId = null): void
+    {
+        foreach ($preguntas as $p) {
+            $pregunta = Pregunta::firstOrCreate(
+                [
+                    'seccion_id' => $seccionId,
+                    'label'      => $p['label'],
+                    'parent_id'  => $parentId,
+                ],
+                [
+                    'tipo'       => $p['tipo'] ?? 'texto',
+                    'estructura' => $p['estructura'] ?? 'objeto',
+                    'orden'      => $p['orden'] ?? 0,
+                    'requerida'  => $p['requerida'] ?? false,
+                    'ayuda'      => $p['ayuda'] ?? null,
+                    'opciones'   => $p['opciones'] ?? null,
+                ]
+            );
+
+            if ($pregunta->tipo !== ($p['tipo'] ?? 'texto') || $pregunta->estructura !== ($p['estructura'] ?? 'objeto')) {
+                $pregunta->update([
+                    'tipo'       => $p['tipo'] ?? 'texto',
+                    'estructura' => $p['estructura'] ?? 'objeto',
+                ]);
+            }
+
+            if (! empty($p['hijos']) && is_array($p['hijos'])) {
+                $this->seedPreguntasRecursivas($seccionId, $p['hijos'], (int) $pregunta->id);
             }
         }
     }

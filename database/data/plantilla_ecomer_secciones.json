@@ -12,8 +12,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Accion",
@@ -106,8 +105,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Subtitulo",
@@ -116,8 +114,7 @@
                 "orden": 3,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "boton",
@@ -126,8 +123,7 @@
                 "orden": 4,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -153,7 +149,36 @@
                         "orden": 1,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Imagen_pc",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_tablet",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_cel",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "sub",
@@ -207,7 +232,36 @@
                         "orden": 7,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "descripcion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -254,7 +308,27 @@
                         "orden": 4,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Texto",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Historia",
@@ -263,7 +337,36 @@
                         "orden": 5,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "año",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "area",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -357,7 +460,36 @@
                         "orden": 4,
                         "requerida": false,
                         "ayuda": "Lista repetible de tarjetas de valores (01, 02, 03...)",
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": "Ícono representativo (ej: FaCrosshairs, FaArrowTrendUp, FaClock, FaArrowsRotate)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": "Título del valor (Ej: CONSISTENCIA, MEJORA, PUNTUALIDAD)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "area",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": "Descripción breve del valor o pilar",
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -395,7 +527,45 @@
                         "orden": 3,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Imagen",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 4,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -470,8 +640,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Categorias",
@@ -508,8 +677,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -526,8 +694,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Titulo",
@@ -536,8 +703,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Videos",
@@ -583,8 +749,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -610,7 +775,36 @@
                         "orden": 1,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Imagen_pc",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_tablet",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_cel",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Titulo",
@@ -646,7 +840,27 @@
                         "orden": 5,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Texto",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Cards",
@@ -655,7 +869,101 @@
                         "orden": 6,
                         "requerida": false,
                         "ayuda": "Tarjetas de contacto superiores (Llámanos, Escríbenos, Visítanos, etc.)",
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": "Selecciona un ícono vectorial (ej. FaPhone, FaEnvelope, FaLocationDot)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": "Opcional: Sube tu propia imagen o logo en formato PNG\/SVG\/WebP",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": "Título de la tarjeta (Ej: Llámanos, Escríbenos, Visítanos)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 4,
+                                "requerida": false,
+                                "ayuda": "Horario o descripción corta (Ej: Lun a Vie 09:00 am - 07:00 pm, Prol. Huánuco 1676...)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Boton_Texto",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 5,
+                                "requerida": false,
+                                "ayuda": "Texto del botón o número (Ej: +51 984 150 060, Enviar correo, Ver en Maps)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Boton_Enlace",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 6,
+                                "requerida": false,
+                                "ayuda": "Enlace del botón (Ej: tel:+51984150060, mailto:info@correo.com, https:\/\/maps.google.com\/...)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Lineas",
+                                "tipo": "grupo",
+                                "estructura": "array",
+                                "orden": 7,
+                                "requerida": false,
+                                "ayuda": "Líneas o departamentos de contacto adicionales (ej. Ventas, Soporte, Postventa)",
+                                "opciones": null,
+                                "hijos": [
+                                    {
+                                        "label": "Etiqueta",
+                                        "tipo": "texto",
+                                        "estructura": "objeto",
+                                        "orden": 1,
+                                        "requerida": false,
+                                        "ayuda": "Nombre del departamento (Ej: Ventas, Soporte, Atención al Cliente)",
+                                        "opciones": null
+                                    },
+                                    {
+                                        "label": "Numero",
+                                        "tipo": "texto",
+                                        "estructura": "objeto",
+                                        "orden": 2,
+                                        "requerida": false,
+                                        "ayuda": "Número telefónico (Ej: 994063340)",
+                                        "opciones": null
+                                    },
+                                    {
+                                        "label": "Horario",
+                                        "tipo": "texto",
+                                        "estructura": "objeto",
+                                        "orden": 3,
+                                        "requerida": false,
+                                        "ayuda": "Horario de atención específico (Ej: Lun a Vie 09:00 am - 07:00 pm)",
+                                        "opciones": null
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "label": "Referencia",
@@ -673,7 +981,45 @@
                         "orden": 8,
                         "requerida": false,
                         "ayuda": "Tarjetas de métodos de pago en la barra inferior (Efectivo, Transferencia, Pago Fácil, etc.)",
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": "Ícono vectorial (ej. FaMoneyBillWave, FaBuildingColumns, FaMobileScreenButton, FaCreditCard)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": "Opcional: Sube tu propia imagen o logo (ej. logo Yape, BCP)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": "Título del método de pago (ej. Efectivo, Transferencia Bancaria, Pago Fácil)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 4,
+                                "requerida": false,
+                                "ayuda": "Detalle explicativo (ej. Paga en nuestra oficina al momento de la compra)",
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Sedes",
@@ -682,7 +1028,63 @@
                         "orden": 9,
                         "requerida": false,
                         "ayuda": "Sucursales o sedes físicas de la empresa para el mapa interactivo con switch",
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": "Nombre de la sede (Ej: Tienda Central, Sucursal Norte, Almacén Callao)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Direccion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": "Dirección completa (Ej: Jr. Huarochirí 592, CC. Plaza Ferretero)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Referencia",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": "Referencia comercial para llegar (Ej: Frente a la estación Monserrate)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Mapa",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 4,
+                                "requerida": false,
+                                "ayuda": "Dirección para el mapa de Google o coordenadas (Ej: Jr. Huarochirí 592, Cercado de Lima)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Boton_Enlace",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 5,
+                                "requerida": false,
+                                "ayuda": "Enlace directo de Google Maps (Ej: https:\/\/maps.google.com\/...)",
+                                "opciones": null
+                            },
+                            {
+                                "label": "Telefono",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 6,
+                                "requerida": false,
+                                "ayuda": "Teléfono directo de la sede (opcional)",
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             }
@@ -701,8 +1103,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": "Etiqueta superior en mayúsculas (Ej: SECTORES)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "titulo",
@@ -711,8 +1112,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": "Título principal (Ej: Soluciones hidráulicas para tu sector)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "descripcion",
@@ -721,8 +1121,7 @@
                 "orden": 3,
                 "requerida": false,
                 "ayuda": "Breve descripción general opcional de la sección",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "sectores",
@@ -804,8 +1203,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "Categoria",
@@ -814,8 +1212,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -832,8 +1229,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": "Etiqueta superior en mayúsculas (Ej: NOSOTROS)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "titulo",
@@ -842,8 +1238,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": "Título principal (Ej: Jóvenes como marca, expertos en oleohidráulica)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "descripcion",
@@ -852,8 +1247,7 @@
                 "orden": 3,
                 "requerida": false,
                 "ayuda": "Párrafo explicativo de trayectoria y propuesta de valor",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "imagen",
@@ -862,8 +1256,7 @@
                 "orden": 4,
                 "requerida": false,
                 "ayuda": "Fotografía del equipo o instalaciones",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "badge_destacado",
@@ -872,8 +1265,7 @@
                 "orden": 5,
                 "requerida": false,
                 "ayuda": "Cifra grande en la tarjeta flotante (Ej: +20 años)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "badge_texto",
@@ -882,8 +1274,7 @@
                 "orden": 6,
                 "requerida": false,
                 "ayuda": "Subtexto de la tarjeta flotante (Ej: de experiencia técnica en oleohidráulica)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "metricas",
@@ -921,8 +1312,7 @@
                 "orden": 8,
                 "requerida": false,
                 "ayuda": "Texto del botón de acción (Ej: Conócenos)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "boton_enlace",
@@ -931,8 +1321,7 @@
                 "orden": 9,
                 "requerida": false,
                 "ayuda": "Enlace de redirección (Ej: \/nosotros)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -949,8 +1338,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": null,
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -967,8 +1355,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": "Etiqueta superior en mayúsculas (Ej: CÓMO COMPRAR)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "titulo",
@@ -977,8 +1364,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": "Título principal (Ej: Cómo solicitar tu cotización)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "pasos",
@@ -1025,8 +1411,7 @@
                 "orden": 4,
                 "requerida": false,
                 "ayuda": "Fotografía de atención al cliente \/ equipo de cotizaciones",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "banner_texto",
@@ -1035,8 +1420,7 @@
                 "orden": 5,
                 "requerida": false,
                 "ayuda": "Texto del banner inferior (Ej: ¿Compras por volumen para revender? Consúltanos por condiciones mayoristas.)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "banner_boton_texto",
@@ -1045,8 +1429,7 @@
                 "orden": 6,
                 "requerida": false,
                 "ayuda": "Texto del botón en el banner (Ej: WhatsApp (+51) 986 350 124)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "banner_boton_enlace",
@@ -1055,8 +1438,7 @@
                 "orden": 7,
                 "requerida": false,
                 "ayuda": "Enlace del botón (Ej: https:\/\/wa.me\/51986350124)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -1110,8 +1492,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": "Etiqueta superior en mayúsculas (Ej: NUESTRAS SEDES)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "titulo",
@@ -1120,8 +1501,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": "Título principal (Ej: Encuentra la sede más cercana a tu operación)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "sedes",
@@ -1195,8 +1575,7 @@
                 "orden": 4,
                 "requerida": false,
                 "ayuda": "Texto del banner inferior de atención nacional",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "banner_callout_enlace_texto",
@@ -1205,8 +1584,7 @@
                 "orden": 5,
                 "requerida": false,
                 "ayuda": "Texto del enlace del banner (Ej: Atención en provincias ›)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "banner_callout_enlace",
@@ -1215,8 +1593,7 @@
                 "orden": 6,
                 "requerida": false,
                 "ayuda": "Enlace de WhatsApp o contacto para provincias",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             }
         ]
     },
@@ -1233,8 +1610,7 @@
                 "orden": 1,
                 "requerida": false,
                 "ayuda": "Etiqueta superior en mayúsculas (Ej: FAQ)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "titulo",
@@ -1243,8 +1619,7 @@
                 "orden": 2,
                 "requerida": false,
                 "ayuda": "Título principal (Ej: Preguntas frecuentes)",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "imagen",
@@ -1253,8 +1628,7 @@
                 "orden": 3,
                 "requerida": false,
                 "ayuda": "Fotografía de atención al cliente \/ asesoría técnica",
-                "opciones": null,
-                "hijos": []
+                "opciones": null
             },
             {
                 "label": "faqs",
@@ -1318,7 +1692,36 @@
                         "orden": 1,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Imagen_pc",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_tablet",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Imagen_cel",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Titulo",
@@ -1383,7 +1786,54 @@
                         "orden": 4,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Imagen",
+                                "tipo": "imagen",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 3,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Boton",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 4,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "BotonIcono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 5,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -1439,7 +1889,27 @@
                         "orden": 5,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Descripcion",
+                                "tipo": "area",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             },
@@ -1477,7 +1947,27 @@
                         "orden": 3,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Icono",
+                                "tipo": "icono",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     },
                     {
                         "label": "Porcentaje",
@@ -1486,7 +1976,27 @@
                         "orden": 4,
                         "requerida": false,
                         "ayuda": null,
-                        "opciones": null
+                        "opciones": null,
+                        "hijos": [
+                            {
+                                "label": "Titulo",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 1,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            },
+                            {
+                                "label": "Porcentaje",
+                                "tipo": "texto",
+                                "estructura": "objeto",
+                                "orden": 2,
+                                "requerida": false,
+                                "ayuda": null,
+                                "opciones": null
+                            }
+                        ]
                     }
                 ]
             }
