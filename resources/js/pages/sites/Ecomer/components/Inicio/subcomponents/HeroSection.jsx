@@ -199,7 +199,32 @@ export default function HeroSection({ seccionData }) {
                     >
                         {renderResponsiveImage(slides[0], 0)}
                     </motion.div>
-                ) : null}
+                ) : (
+                    <div className="w-full aspect-[1221/2161] sm:aspect-[16/9] bg-gradient-to-br from-[#0a172c] via-[#0f2240] to-[#1e3a6a] flex flex-col items-center justify-center p-6 text-white text-center relative overflow-hidden">
+                        <div className="pointer-events-none absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px]" />
+                        <div className="relative z-10 max-w-2xl flex flex-col items-center">
+                            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center mb-4 text-[var(--color-primario,#eab308)] shadow-inner">
+                                <DynamicIcon name="FaStore" className="h-8 w-8 sm:h-10 sm:w-10" />
+                            </div>
+                            <span className="inline-block px-3 py-1 mb-3 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-widest bg-[var(--color-primario,#eab308)] text-gray-950">
+                                BIENVENIDO A NUESTRA TIENDA
+                            </span>
+                            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight mb-3">
+                                {tituloHero || 'Calidad y Variedad en Productos'}
+                            </h1>
+                            <p className="text-xs sm:text-base text-slate-300 max-w-lg mb-6 leading-relaxed">
+                                {descripcionHero || 'Explora nuestro catálogo en línea y solicita tu cotización de forma rápida y sencilla.'}
+                            </p>
+                            <a
+                                href="#productos"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-primario,#eab308)] text-gray-950 font-bold text-xs sm:text-sm shadow-lg hover:brightness-105 transition"
+                            >
+                                <span>Ver Catálogo de Productos</span>
+                                <DynamicIcon name="FaChevronDown" className="h-3 w-3" />
+                            </a>
+                        </div>
+                    </div>
+                )}
 
                 <style>{`
                     .hero-swiper, .hero-swiper .swiper-wrapper, .hero-swiper .swiper-slide {

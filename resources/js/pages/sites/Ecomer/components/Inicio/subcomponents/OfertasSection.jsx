@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
+import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 import { useCartStore } from '@/stores/useCartStore';
 
 export default function OfertasSection({
@@ -29,9 +30,6 @@ export default function OfertasSection({
     // Títulos opcionales desde seccionData
     const subTitulo = getValor('sub_titulo') || getValor('subtitulo') || 'OFERTA DESTACADA';
     const titulo = getValor('titulo') || (categoriaNombre ? `Ofertas en ${categoriaNombre}` : 'Ofertas Especiales');
-
-    // Si no existe la imagen en los datos, no renderiza la sección
-    if (!imagenUrl) return null;
 
     // Filtrar productos dinámicamente por la categoría especificada
     const normalizeText = (str) =>
@@ -94,23 +92,34 @@ export default function OfertasSection({
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
                     {/* ── LADO IZQUIERDO: IMAGEN DE LA OFERTA (MITAD 50%) ── */}
                     <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs min-h-[500px] sm:min-h-[650px] lg:min-h-[760px] max-h-[760px] lg:max-h-[800px] flex w-full">
-                        <img
-                            src={imagenUrl}
-                            alt={categoriaNombre || 'Oferta'}
-                            width={600}
-                            height={800}
-                            className="w-full h-full max-w-full max-h-full object-cover rounded-xl"
-                            style={{ maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: 'cover' }}
-                            loading="lazy"
-                            decoding="async"
-                        />
+                        {imagenUrl ? (
+                            <img
+                                src={imagenUrl}
+                                alt={categoriaNombre || 'Oferta'}
+                                width={600}
+                                height={800}
+                                className="w-full h-full max-w-full max-h-full object-cover rounded-xl"
+                                style={{ maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: 'cover' }}
+                                loading="lazy"
+                                decoding="async"
+                            />
+                        ) : (
+                            <SectionPlaceholderGuide
+                                tipo="card"
+                                titulo={titulo || 'Ofertas y Promociones'}
+                                subtitulo="Productos con precios especiales por tiempo limitado · Gestiona tus promociones en el panel"
+                                icono="FaPercent"
+                                badge="OFERTA DESTACADA"
+                                className="rounded-xl min-h-full"
+                            />
+                        )}
                     </div>
 
                     {/* ── LADO DERECHO: PRODUCTOS EN 3 COLUMNAS CON SCROLL VERTICAL INVISIBLE (MITAD 50%) ── */}
                     <div className="flex flex-col justify-start max-h-[760px] lg:max-h-[800px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                        {productosFiltrados.length > 0 ? (
+                        {(productosFiltrados.length > 0 || productos.length > 0) ? (
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4 h-full content-start">
-                                {productosFiltrados.map((prod, idx) => {
+                                {(productosFiltrados.length > 0 ? productosFiltrados : productos.slice(0, 6)).map((prod, idx) => {
                                     const inCart = isInCart(prod);
                                     const tieneOferta = Boolean(prod.precio_oferta || prod.precio_oferta_soles);
                                     const precioRegular = Number(prod.precio_soles || prod.precio || 0);

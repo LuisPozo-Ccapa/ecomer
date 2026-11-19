@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
+import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
 export default function MisionVisionSection({ seccionData }) {
     if (!seccionData) return null;
@@ -80,9 +81,14 @@ export default function MisionVisionSection({ seccionData }) {
                                             loading="lazy"
                                         />
                                     ) : (
-                                        <div className="flex h-full w-full items-center justify-center bg-slate-900 text-gray-500">
-                                            <span>Sin Imagen</span>
-                                        </div>
+                                        <SectionPlaceholderGuide
+                                            tipo="card"
+                                            titulo={idx === 0 ? 'Misión Institucional' : 'Visión Estratégica'}
+                                            subtitulo={idx === 0 ? 'Compromiso diario con la calidad y excelencia' : 'Proyección y liderazgo en el sector'}
+                                            icono={idx === 0 ? 'FaBullseye' : 'FaEye'}
+                                            badge={idx === 0 ? 'PROPÓSITO' : 'FUTURO'}
+                                            className="rounded-3xl min-h-full"
+                                        />
                                     )}
                                     {/* Capa tenue de gradiente sobre la imagen */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
 export default function GaleriaSection({ seccionData }) {
     if (!seccionData) return null;
@@ -49,7 +50,46 @@ export default function GaleriaSection({ seccionData }) {
             .sort((a, b) => a.posicion - b.posicion)
         : [];
 
-    if (imagenes.length === 0) return null;
+    if (imagenes.length === 0) {
+        return (
+            <section id="galeria" className="relative scroll-mt-20 py-8 sm:py-12 bg-white border-t border-gray-100">
+                <div className="mx-auto w-full max-w-[1580px] px-3 sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10">
+                        <h2
+                            className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl"
+                            style={{ fontFamily: 'var(--tipografia-titulos)' }}
+                        >
+                            {titulo || 'Galería de Productos e Instalaciones'}
+                        </h2>
+                        <p
+                            className="mt-2 text-sm sm:text-base text-gray-600"
+                            style={{ fontFamily: 'var(--tipografia-texto)' }}
+                        >
+                            {subtitulo || 'Espacio para fotos destacadas de productos, almacenes y proyectos'}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                        <SectionPlaceholderGuide
+                            tipo="banner"
+                            titulo="Galería Fotográfica 01"
+                            subtitulo="Sube tus fotos de proyectos y productos en el panel administrativo"
+                            icono="FaCamera"
+                            badge="GALERÍA"
+                            className="min-h-[180px] sm:min-h-[220px]"
+                        />
+                        <SectionPlaceholderGuide
+                            tipo="banner"
+                            titulo="Galería Fotográfica 02"
+                            subtitulo="Muestra tus instalaciones, flota y stock disponible"
+                            icono="FaStore"
+                            badge="GALERÍA"
+                            className="min-h-[180px] sm:min-h-[220px]"
+                        />
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     // Navegación del modal Lightbox
     const handlePrev = (e) => {

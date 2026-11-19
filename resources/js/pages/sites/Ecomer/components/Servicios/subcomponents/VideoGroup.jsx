@@ -49,7 +49,7 @@ export default function VideoGroup({ videoBlock }) {
                             loading="lazy"
                         />
                     ) : (
-                        <div className="absolute inset-0 bg-gray-900" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#183159] via-[#0f2240] to-[#0a172c]" />
                     )}
 
                     {/* Sombra de Degradado Suave sobre la imagen */}

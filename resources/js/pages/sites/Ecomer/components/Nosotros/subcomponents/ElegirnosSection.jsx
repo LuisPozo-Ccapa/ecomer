@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import DynamicIcon from '@/components/DynamicIcon';
+import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -138,9 +139,13 @@ export default function ElegirnosSection({ seccionData }) {
                                                 loading="lazy"
                                             />
                                         ) : (
-                                            <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
-                                                <span>Sin Imagen</span>
-                                            </div>
+                                            <SectionPlaceholderGuide
+                                                tipo="compact"
+                                                titulo={cardTitulo || `Beneficio ${numberBadge}`}
+                                                subtitulo="Garantía, calidad y soporte certificado"
+                                                icono="FaAward"
+                                                className="rounded-2xl min-h-full"
+                                            />
                                         )}
                                     </div>
 

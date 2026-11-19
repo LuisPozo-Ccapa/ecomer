@@ -117,10 +117,18 @@ export default function MarcasSection({
 
     // Pista base para el marquee: asegurar suficientes marcas para cualquier resolución y loop uniforme
     const marcasTrack = useMemo(() => {
-        if (!marcasList || marcasList.length === 0) return [];
-        let list = [...marcasList];
+        const defaultMarcas = [
+            { titulo: 'Marca Líder 01', imagen: null },
+            { titulo: 'Marca Líder 02', imagen: null },
+            { titulo: 'Marca Líder 03', imagen: null },
+            { titulo: 'Marca Líder 04', imagen: null },
+            { titulo: 'Marca Líder 05', imagen: null },
+            { titulo: 'Marca Líder 06', imagen: null },
+        ];
+        const base = marcasList && marcasList.length > 0 ? marcasList : defaultMarcas;
+        let list = [...base];
         while (list.length < 12) {
-            list = [...list, ...marcasList];
+            list = [...list, ...base];
         }
         return list;
     }, [marcasList]);
@@ -242,7 +250,7 @@ export default function MarcasSection({
                 </div>
 
                 {/* ── CARRUSEL INFINITO DE MARCAS (MARQUEE CONTINUO SIN PARAR) ── */}
-                {marcasList.length > 0 && (
+                {marcasTrack.length > 0 && (
                     <div className="relative w-full overflow-hidden mb-10 py-2 select-none">
                         {/* Difuminado suave en los bordes para una transición continua elegante */}
                         <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-white to-transparent z-10" />
