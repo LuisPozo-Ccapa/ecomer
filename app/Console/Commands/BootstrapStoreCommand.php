@@ -127,6 +127,11 @@ class BootstrapStoreCommand extends Command
                 $existingSite->update(['estilos' => $siteEstilos]);
                 $this->info("   • Estilos de orden de navegación estandarizados en el sitio existente: {$existingSite->nombre}");
             }
+
+            // Asegurar que la sección servicios de la plantilla ecomer esté activa con orden oficial
+            Seccion::whereHas('plantilla', fn ($q) => $q->where('slug', 'ecomer'))
+                ->whereIn('slug', ['servicios', 'servicio'])
+                ->update(['activa' => true, 'orden' => 6]);
         }
 
         // Si ya existe un sitio activo y no se usa --force, omitir la creación de tienda/admin
@@ -235,6 +240,8 @@ class BootstrapStoreCommand extends Command
             $seccion->orden  = $sec['orden'] ?? 1;
             if (! $seccion->exists) {
                 $seccion->activa = $sec['activa'] ?? false;
+            } elseif (! empty($sec['activa']) && ! $seccion->activa) {
+                $seccion->activa = true;
             }
             $seccion->save();
 

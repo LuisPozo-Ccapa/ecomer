@@ -1300,7 +1300,7 @@
         "slug": "servicios",
         "nombre": "Servicios",
         "orden": 6,
-        "activa": false,
+        "activa": true,
         "preguntas": [
             {
                 "label": "Hero",

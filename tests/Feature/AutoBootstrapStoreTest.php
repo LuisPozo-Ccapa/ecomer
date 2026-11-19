@@ -116,18 +116,6 @@ class AutoBootstrapStoreTest extends TestCase
         ]);
         $site->marcas()->attach($marca->id);
 
-        $grupo = \App\Models\Servicios::create([
-            'nombre' => 'Servicios Principales',
-            'activo' => true,
-        ]);
-        $site->servicios()->attach($grupo->id);
-        \App\Models\Servicio::create([
-            'servicios_id' => $grupo->id,
-            'titulo'       => 'Servicio de Prueba',
-            'activo'       => true,
-            'orden'        => 1,
-        ]);
-
         $response = $this->get('/Inicio');
         $response->assertStatus(200);
 
