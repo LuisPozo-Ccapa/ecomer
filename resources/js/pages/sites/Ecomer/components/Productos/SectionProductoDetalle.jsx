@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Head } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
@@ -274,8 +275,27 @@ export default function SectionProductoDetalle({
         .filter((p) => p.id !== producto.id)
         .slice(0, 8);
 
+    const siteNombre = site?.nombre || '';
+    const tituloProducto = `${producto?.nombre || 'Producto'} | ${siteNombre}`;
+    const rawDesc = producto?.descripcion_corta || producto?.descripcion || `Detalles de ${producto?.nombre || 'producto'}`;
+    const metaDesc = typeof rawDesc === 'string' ? rawDesc.replace(/<[^>]*>?/gm, '').slice(0, 155) : '';
+    const primeraImg = producto?.imagenes?.[0] || producto?.imagen || '';
+    const ogImg = resolveImage(primeraImg) || site?.imagen || null;
+
     return (
         <main className="min-h-screen bg-[#F8F9FA] py-6">
+            <Head>
+                <title>{tituloProducto}</title>
+                {metaDesc && <meta name="description" content={metaDesc} />}
+                <meta property="og:title" content={tituloProducto} />
+                {metaDesc && <meta property="og:description" content={metaDesc} />}
+                {ogImg && <meta property="og:image" content={ogImg} />}
+                <meta property="og:type" content="product" />
+                <meta name="twitter:card" content={ogImg ? 'summary_large_image' : 'summary'} />
+                <meta name="twitter:title" content={tituloProducto} />
+                {metaDesc && <meta name="twitter:description" content={metaDesc} />}
+                {ogImg && <meta name="twitter:image" content={ogImg} />}
+            </Head>
             <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
                 {/* 1. Breadcrumbs y Botón Volver */}
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-gray-200 text-xs sm:text-sm">

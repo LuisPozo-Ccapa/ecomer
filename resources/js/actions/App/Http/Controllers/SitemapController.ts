@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 const index8a115ddf5518c330da8983f802a6240f = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index8a115ddf5518c330da8983f802a6240f.definition = {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 index8a115ddf5518c330da8983f802a6240f.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index8a115ddf5518c330da8983f802a6240f.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 index8a115ddf5518c330da8983f802a6240f.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index8a115ddf5518c330da8983f802a6240f.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 index8a115ddf5518c330da8983f802a6240f.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index8a115ddf5518c330da8983f802a6240f.head = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
     const index8a115ddf5518c330da8983f802a6240fForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index8a115ddf5518c330da8983f802a6240f.head = (options?: RouteQueryOptions): Rout
 
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
         index8a115ddf5518c330da8983f802a6240fForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index8a115ddf5518c330da8983f802a6240f.head = (options?: RouteQueryOptions): Rout
         })
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
         index8a115ddf5518c330da8983f802a6240fForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index8a115ddf5518c330da8983f802a6240f.head = (options?: RouteQueryOptions): Rout
     index8a115ddf5518c330da8983f802a6240f.form = index8a115ddf5518c330da8983f802a6240fForm
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
 const index54102249427a5297adbb3051d76fd6e8 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ index54102249427a5297adbb3051d76fd6e8.definition = {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
 index54102249427a5297adbb3051d76fd6e8.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ index54102249427a5297adbb3051d76fd6e8.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
 index54102249427a5297adbb3051d76fd6e8.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ index54102249427a5297adbb3051d76fd6e8.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
 index54102249427a5297adbb3051d76fd6e8.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ index54102249427a5297adbb3051d76fd6e8.head = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
     const index54102249427a5297adbb3051d76fd6e8Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ index54102249427a5297adbb3051d76fd6e8.head = (options?: RouteQueryOptions): Rout
 
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
         index54102249427a5297adbb3051d76fd6e8Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ index54102249427a5297adbb3051d76fd6e8.head = (options?: RouteQueryOptions): Rout
         })
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap'
  */
         index54102249427a5297adbb3051d76fd6e8Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ index54102249427a5297adbb3051d76fd6e8.head = (options?: RouteQueryOptions): Rout
     index54102249427a5297adbb3051d76fd6e8.form = index54102249427a5297adbb3051d76fd6e8Form
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
 const indexe5eec81c57d807ab088a389489f2cede = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -172,7 +172,7 @@ indexe5eec81c57d807ab088a389489f2cede.definition = {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
 indexe5eec81c57d807ab088a389489f2cede.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ indexe5eec81c57d807ab088a389489f2cede.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
 indexe5eec81c57d807ab088a389489f2cede.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -190,7 +190,7 @@ indexe5eec81c57d807ab088a389489f2cede.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
 indexe5eec81c57d807ab088a389489f2cede.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -200,7 +200,7 @@ indexe5eec81c57d807ab088a389489f2cede.head = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
     const indexe5eec81c57d807ab088a389489f2cedeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -210,7 +210,7 @@ indexe5eec81c57d807ab088a389489f2cede.head = (options?: RouteQueryOptions): Rout
 
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
         indexe5eec81c57d807ab088a389489f2cedeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -219,7 +219,7 @@ indexe5eec81c57d807ab088a389489f2cede.head = (options?: RouteQueryOptions): Rout
         })
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap_index.xml'
  */
         indexe5eec81c57d807ab088a389489f2cedeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -235,7 +235,7 @@ indexe5eec81c57d807ab088a389489f2cede.head = (options?: RouteQueryOptions): Rout
     indexe5eec81c57d807ab088a389489f2cede.form = indexe5eec81c57d807ab088a389489f2cedeForm
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
 const indexd76b47b579e4916e9bff798c511a6c7f = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -250,7 +250,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.definition = {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
 indexd76b47b579e4916e9bff798c511a6c7f.url = (options?: RouteQueryOptions) => {
@@ -259,7 +259,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
 indexd76b47b579e4916e9bff798c511a6c7f.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -268,7 +268,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
 indexd76b47b579e4916e9bff798c511a6c7f.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -278,7 +278,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.head = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
     const indexd76b47b579e4916e9bff798c511a6c7fForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -288,7 +288,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.head = (options?: RouteQueryOptions): Rout
 
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
         indexd76b47b579e4916e9bff798c511a6c7fForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -297,7 +297,7 @@ indexd76b47b579e4916e9bff798c511a6c7f.head = (options?: RouteQueryOptions): Rout
         })
             /**
 * @see \App\Http\Controllers\SitemapController::index
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.php'
  */
         indexd76b47b579e4916e9bff798c511a6c7fForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
