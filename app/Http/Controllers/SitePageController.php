@@ -333,19 +333,72 @@ class SitePageController extends Controller
 
         usort($seccionesArray, fn ($a, $b) => ($a['orden'] ?? 99) <=> ($b['orden'] ?? 99));
 
-        // ─── SEO: calcular título y descripción en el servidor para que Google los vea ───
+        // ─── SEO: calcular título, descripción, imagen y esquema en el servidor ───
         $seoCustomTitle       = $estilos['seo']['title'] ?? null;
         $seoCustomDescription = $estilos['seo']['description'] ?? null;
         $seoCustomKeywords    = $estilos['seo']['keywords'] ?? null;
 
-        $seoTitle = $seoCustomTitle
-            ?: "{$site->nombre} — " . ($seccionActiva['nombre'] ?? 'Inicio');
+        $paramProd = request()->query('producto');
+        $productoActivo = null;
+        if (! empty($paramProd)) {
+            $paramProdStr = (string) $paramProd;
+            $productoActivo = $productos->first(function ($p) use ($paramProdStr) {
+                return (string) $p->id === $paramProdStr
+                    || (string) $p->slug === $paramProdStr
+                    || strcasecmp((string) $p->nombre, $paramProdStr) === 0;
+            });
+        }
 
-        $rawDescription = $seoCustomDescription
-            ?: ($seccionActiva['descripcion'] ?? null)
-            ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
+        $scheme = (request()->secure() || request()->header('X-Forwarded-Proto') === 'https') ? 'https' : 'http';
+        $host = request()->getHost();
+        $port = request()->getPort();
+        $portStr = ($port && ! in_array($port, [80, 443])) ? ":{$port}" : '';
+        $currentBaseUrl = "{$scheme}://{$host}{$portStr}";
 
-        $seoDescription = mb_substr(strip_tags($rawDescription), 0, 160);
+        if ($productoActivo) {
+            $seoTitle = "{$productoActivo->nombre} | {$site->nombre}";
+            $rawDescription = $productoActivo->descripcion
+                ?: $productoActivo->descripcion_corta
+                ?: "Comprar {$productoActivo->nombre} en {$site->nombre}. Envíos y garantía.";
+            $seoDescription = mb_substr(strip_tags((string) $rawDescription), 0, 160);
+
+            $seoImage = null;
+            if (! empty($productoActivo->imagenes) && is_array($productoActivo->imagenes)) {
+                $first = $productoActivo->imagenes[0] ?? null;
+                if ($first) {
+                    $seoImage = filter_var($first, FILTER_VALIDATE_URL) ? $first : asset('storage/' . ltrim($first, '/'));
+                }
+            } elseif (! empty($productoActivo->imagen)) {
+                $seoImage = filter_var($productoActivo->imagen, FILTER_VALIDATE_URL) ? $productoActivo->imagen : asset('storage/' . ltrim($productoActivo->imagen, '/'));
+            }
+            if (! $seoImage && $site->imagen) {
+                $seoImage = asset('storage/' . ltrim($site->imagen, '/'));
+            }
+
+            $canonicalUrl = "{$currentBaseUrl}/productos?producto=" . rawurlencode((string) ($productoActivo->slug ?: $productoActivo->id));
+            $schemaJsonLd = \App\Services\SeoSchemaService::generateProductSchema($site, $productoActivo, $canonicalUrl);
+            $seoType = 'product';
+        } else {
+            $seoTitle = $seoCustomTitle
+                ?: "{$site->nombre} — " . ($seccionActiva['nombre'] ?? 'Inicio');
+
+            $rawDescription = $seoCustomDescription
+                ?: ($seccionActiva['descripcion'] ?? null)
+                ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
+
+            $seoDescription = mb_substr(strip_tags((string) $rawDescription), 0, 160);
+            $seoImage = $site->imagen ? asset('storage/' . ltrim($site->imagen, '/')) : asset('/favicon.png');
+
+            $cleanSlug = strtolower($seccionActiva['slug'] ?? 'inicio');
+            if (in_array($cleanSlug, ['inicio', 'hero', 'home'])) {
+                $canonicalUrl = "{$currentBaseUrl}";
+            } else {
+                $canonicalUrl = "{$currentBaseUrl}/{$seccionActiva['slug']}";
+            }
+
+            $schemaJsonLd = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
+            $seoType = 'website';
+        }
 
         // ─── LCP Preload: primer slide del hero para acelerar la carga en móvil y desktop ───
         $heroPreload = null;
@@ -386,9 +439,13 @@ class SitePageController extends Controller
 
         Inertia::share([
             '_seo' => [
-                'title'       => $seoTitle,
-                'description' => $seoDescription,
-                'keywords'    => $seoCustomKeywords,
+                'title'        => $seoTitle,
+                'description'  => $seoDescription,
+                'keywords'     => $seoCustomKeywords,
+                'image'        => $seoImage,
+                'canonical'    => $canonicalUrl,
+                'type'         => $seoType,
+                'schemaJsonLd' => $schemaJsonLd,
             ],
             '_heroPreload' => $heroPreload,
         ]);
