@@ -93,20 +93,36 @@ class SitemapController extends Controller
                 'priority'   => '0.9',
             ];
 
-            // Indexar productos individuales activos de las tiendas del sitio
+            // Indexar productos individuales activos de las tiendas del sitio con soporte de imagen para Google
             $productos = Producto::whereHas('tiendas', fn ($q) => $q->whereIn('tiendas.id', $tiendaIds))
                 ->where('activo', true)
                 ->orderBy('updated_at', 'desc')
-                ->get(['id', 'slug', 'updated_at']);
+                ->get(['id', 'slug', 'nombre', 'imagen', 'imagenes', 'updated_at']);
 
             foreach ($productos as $producto) {
                 $prodSlug = $producto->slug ?: $producto->id;
-                $urls[] = [
+                $imgLoc = null;
+                if (! empty($producto->imagenes) && is_array($producto->imagenes) && ! empty($producto->imagenes[0])) {
+                    $imgLoc = filter_var($producto->imagenes[0], FILTER_VALIDATE_URL) ? $producto->imagenes[0] : asset('storage/' . ltrim($producto->imagenes[0], '/'));
+                } elseif (! empty($producto->imagen)) {
+                    $imgLoc = filter_var($producto->imagen, FILTER_VALIDATE_URL) ? $producto->imagen : asset('storage/' . ltrim($producto->imagen, '/'));
+                }
+
+                $entry = [
                     'loc'        => $this->formatUrl("{$siteUrl}/productos?producto=" . rawurlencode((string) $prodSlug)),
                     'lastmod'    => $producto->updated_at ? $producto->updated_at->toIso8601String() : $siteLastMod,
                     'changefreq' => 'weekly',
                     'priority'   => '0.8',
                 ];
+
+                if ($imgLoc) {
+                    $entry['image'] = [
+                        'loc'   => $this->formatUrl($imgLoc),
+                        'title' => htmlspecialchars((string) $producto->nombre, ENT_XML1, 'UTF-8'),
+                    ];
+                }
+
+                $urls[] = $entry;
             }
         }
 

@@ -492,7 +492,7 @@ class SiteForm
                                     Grid::make(3)->schema([
                                         TextInput::make('estilos.libro_reclamaciones.razon_social')
                                             ->label('Razón Social de la Empresa')
-                                            ->placeholder('Ej. LISMER CORP SRL')
+                                            ->placeholder('Ej. Mi Empresa S.A.C.')
                                             ->helperText('Nombre comercial o razón social registrada en SUNAT.'),
                                         TextInput::make('estilos.libro_reclamaciones.ruc')
                                             ->label('RUC de la Empresa')

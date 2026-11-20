@@ -146,4 +146,57 @@ class SeoSchemaService
 
         return $schema;
     }
+
+    /**
+     * Genera el esquema JSON-LD de tipo BreadcrumbList para la jerarquía de navegación.
+     *
+     * @param  array<int, array{name: string, url: string}>  $items
+     * @return array<string, mixed>
+     */
+    public static function generateBreadcrumbSchema(array $items): array
+    {
+        $itemListElement = [];
+        foreach ($items as $index => $item) {
+            $itemListElement[] = [
+                '@type'    => 'ListItem',
+                'position' => $index + 1,
+                'name'     => (string) $item['name'],
+                'item'     => (string) $item['url'],
+            ];
+        }
+
+        return [
+            '@context'        => 'https://schema.org',
+            '@type'           => 'BreadcrumbList',
+            'itemListElement' => $itemListElement,
+        ];
+    }
+
+    /**
+     * Empaqueta uno o varios esquemas en un contenedor @graph estándar según Schema.org.
+     *
+     * @param  array<int, array<string, mixed>>  $schemas
+     * @return array<string, mixed>
+     */
+    public static function wrapInGraph(array $schemas): array
+    {
+        $filtered = array_values(array_filter($schemas));
+        if (count($filtered) === 0) {
+            return [];
+        }
+        if (count($filtered) === 1) {
+            return $filtered[0];
+        }
+
+        $cleanItems = [];
+        foreach ($filtered as $item) {
+            unset($item['@context']);
+            $cleanItems[] = $item;
+        }
+
+        return [
+            '@context' => 'https://schema.org',
+            '@graph'   => $cleanItems,
+        ];
+    }
 }

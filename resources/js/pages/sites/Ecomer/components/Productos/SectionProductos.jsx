@@ -6,6 +6,7 @@ import { useProductosData } from './hooks/useProductosData';
 import { useCartStore } from '@/stores/useCartStore';
 
 export default function SectionProductos({ dominio, siteSlug, seccion, seccionesData, productos: initialProductos, onSeleccionarProducto, estilos }) {
+    const { site } = usePage().props;
     const addItem = useCartStore((state) => state.addItem);
     const cartItems = useCartStore((state) => state.items);
 
@@ -640,6 +641,8 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                             <img
                                                 src={cat.imagen}
                                                 alt={cat.nombre}
+                                                loading="lazy"
+                                                decoding="async"
                                                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                                             />
                                         ) : (
@@ -713,7 +716,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                             }`}
                                     >
                                         {m.imagen ? (
-                                            <img src={m.imagen} alt={m.nombre} className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
+                                            <img src={m.imagen} alt={m.nombre} loading="lazy" decoding="async" className="h-9 w-9 object-contain rounded-xl p-1 bg-white border border-gray-200/60 shrink-0" />
                                         ) : (
                                             <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'bg-[var(--color-primario)] text-white' : 'bg-gray-200/80 text-gray-500 group-hover:text-[var(--color-primario)]'
                                                 }`}>
@@ -1155,7 +1158,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                         >
                                             <img
                                                 src={imgUrl}
-                                                alt="Banner Producto"
+                                                alt={`${site?.nombre || 'Catálogo'} — Banner Promocional`}
                                                 className="w-full h-auto object-cover rounded-2xl group-hover:scale-102 transition-transform duration-300"
                                                 loading="lazy"
                                                 decoding="async"
@@ -1165,7 +1168,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                         <div className="overflow-hidden rounded-2xl shadow-xs">
                                             <img
                                                 src={imgUrl}
-                                                alt="Banner Producto"
+                                                alt={`${site?.nombre || 'Catálogo'} — Banner Promocional`}
                                                 className="w-full h-auto object-cover rounded-2xl"
                                                 loading="lazy"
                                                 decoding="async"

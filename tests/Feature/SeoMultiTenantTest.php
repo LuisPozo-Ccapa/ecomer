@@ -196,6 +196,33 @@ class SeoMultiTenantTest extends TestCase
         $this->assertStringContainsString('"price": "249.90"', $content);
         $this->assertStringContainsString('"priceCurrency": "PEN"', $content);
         $this->assertStringContainsString('https://schema.org/InStock', $content);
+
+        // Schema JSON-LD de BreadcrumbList
+        $this->assertStringContainsString('"@type": "BreadcrumbList"', $content);
+        $this->assertStringContainsString('"name": "Inicio"', $content);
+        $this->assertStringContainsString('"name": "Productos"', $content);
+    }
+
+    public function test_sitemap_xml_incluye_namespace_y_etiquetas_de_imagenes_de_producto(): void
+    {
+        $response = $this->get('/sitemap.xml');
+        $response->assertStatus(200);
+
+        $content = $response->getContent();
+        $this->assertStringContainsString('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"', $content);
+        $this->assertStringContainsString('<image:image>', $content);
+        $this->assertStringContainsString('productos/taladro-1.webp', $content);
+        $this->assertStringContainsString('<image:title>Taladro Percutor Industrial 750W</image:title>', $content);
+    }
+
+    public function test_seccion_interna_renderiza_breadcrumbs_schema(): void
+    {
+        $response = $this->get('/contacto');
+        $response->assertStatus(200);
+
+        $content = $response->getContent();
+        $this->assertStringContainsString('"@type": "BreadcrumbList"', $content);
+        $this->assertStringContainsString('"name": "Contacto"', $content);
     }
 
     public function test_configuraciones_opcionales_filament_seo_se_renderizan_correctamente(): void

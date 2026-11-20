@@ -376,7 +376,25 @@ class SitePageController extends Controller
             }
 
             $canonicalUrl = "{$currentBaseUrl}/productos?producto=" . rawurlencode((string) ($productoActivo->slug ?: $productoActivo->id));
-            $schemaJsonLd = \App\Services\SeoSchemaService::generateProductSchema($site, $productoActivo, $canonicalUrl);
+            $productSchema = \App\Services\SeoSchemaService::generateProductSchema($site, $productoActivo, $canonicalUrl);
+
+            $breadcrumbItems = [
+                ['name' => 'Inicio', 'url' => "{$currentBaseUrl}"],
+                ['name' => 'Productos', 'url' => "{$currentBaseUrl}/productos"],
+            ];
+            if ($productoActivo->categoria) {
+                $breadcrumbItems[] = [
+                    'name' => $productoActivo->categoria->nombre,
+                    'url'  => "{$currentBaseUrl}/productos?categoria=" . rawurlencode((string) ($productoActivo->categoria->slug ?: $productoActivo->categoria->nombre)),
+                ];
+            }
+            $breadcrumbItems[] = [
+                'name' => $productoActivo->nombre,
+                'url'  => $canonicalUrl,
+            ];
+            $breadcrumbSchema = \App\Services\SeoSchemaService::generateBreadcrumbSchema($breadcrumbItems);
+
+            $schemaJsonLd = \App\Services\SeoSchemaService::wrapInGraph([$productSchema, $breadcrumbSchema]);
             $seoType = 'product';
         } else {
             $seoTitle = $seoCustomTitle
@@ -397,11 +415,16 @@ class SitePageController extends Controller
             $cleanSlug = strtolower($seccionActiva['slug'] ?? 'inicio');
             if (in_array($cleanSlug, ['inicio', 'hero', 'home'])) {
                 $canonicalUrl = "{$currentBaseUrl}";
+                $schemaJsonLd = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
             } else {
                 $canonicalUrl = "{$currentBaseUrl}/{$seccionActiva['slug']}";
+                $storeSchema = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
+                $breadcrumbSchema = \App\Services\SeoSchemaService::generateBreadcrumbSchema([
+                    ['name' => 'Inicio', 'url' => "{$currentBaseUrl}"],
+                    ['name' => $seccionActiva['nombre'] ?? ucfirst($cleanSlug), 'url' => $canonicalUrl],
+                ]);
+                $schemaJsonLd = \App\Services\SeoSchemaService::wrapInGraph([$storeSchema, $breadcrumbSchema]);
             }
-
-            $schemaJsonLd = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
             $seoType = 'website';
         }
 

@@ -1063,7 +1063,7 @@ class PlantillaForm
 
                             TextInput::make('estilos.metodos_pago_carrito.yape.titular')
                                 ->label('Nombre del titular de la cuenta YAPE (Opcional)')
-                                ->placeholder('Ej. Lismer Corp SRL'),
+                                ->placeholder('Ej. Mi Empresa S.A.C.'),
 
                             TextInput::make('estilos.metodos_pago_carrito.yape.instruccion')
                                 ->label('Instrucción junto al QR')
