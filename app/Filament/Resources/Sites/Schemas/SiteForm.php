@@ -126,20 +126,32 @@ class SiteForm
                                                 Grid::make(2)->schema([
                                                     TextInput::make('estilos.seo.title')
                                                         ->label('Título SEO (Google)')
-                                                        ->placeholder('Ej: Lismercorp — Equipamiento Eléctrico e Industrial')
+                                                        ->placeholder('Ej: Mi Tienda — Herramientas y Equipamiento')
                                                         ->helperText('Título que aparecerá en la pestaña y en los resultados de búsqueda de Google.')
                                                         ->columnSpan(2),
                                                     Textarea::make('estilos.seo.description')
                                                         ->label('Metadescripción (Google)')
-                                                        ->placeholder('Ej: Empresa líder en venta de equipamiento eléctrico, megóhmetros, interruptores y cables industriales con envíos a todo el Perú.')
+                                                        ->placeholder('Ej: Venta de productos y equipamiento con la mejor calidad, garantía y envíos rápidos a todo el país.')
                                                         ->rows(3)
                                                         ->helperText('Resumen de 120–160 caracteres que aparecerá debajo del título en Google.')
                                                         ->columnSpan(2),
                                                     TextInput::make('estilos.seo.keywords')
                                                         ->label('Palabras clave (Keywords)')
-                                                        ->placeholder('Ej: equipamiento electrico, megohmetro, lismercorp, perú')
+                                                        ->placeholder('Ej: herramientas, ferretería, equipamiento, calidad')
                                                         ->helperText('Separadas por comas.')
                                                         ->columnSpan(2),
+                                                    FileUpload::make('estilos.seo.og_image')
+                                                        ->label('Imagen para Redes Sociales y WhatsApp (OG Image)')
+                                                        ->image()
+                                                        ->disk('public')
+                                                        ->directory('sites/seo')
+                                                        ->helperText('Medida sugerida: 1200 x 630 px. Si se deja vacío, se utilizará el logo del sitio o la foto del producto.')
+                                                        ->columnSpan(1),
+                                                    TextInput::make('estilos.seo.google_verification')
+                                                        ->label('Código de Verificación de Google Search Console')
+                                                        ->placeholder('Ej: google-site-verification=abc123xyz...')
+                                                        ->helperText('Token o etiqueta meta proporcionada por Google Search Console.')
+                                                        ->columnSpan(1),
                                                 ]),
                                             ])
                                             ->columnSpanFull(),

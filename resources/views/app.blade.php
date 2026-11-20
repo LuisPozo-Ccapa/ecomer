@@ -120,6 +120,9 @@
             @endif
             <meta name="twitter:card" content="{{ $seoImage ? 'summary_large_image' : 'summary' }}">
             <meta name="twitter:title" content="{{ $seoTitle }}">
+            @if(!empty($seoData['googleVerification']))
+                <meta name="google-site-verification" content="{{ $seoData['googleVerification'] }}">
+            @endif
 
             @if(!empty($schemaJsonLd))
                 <script type="application/ld+json">

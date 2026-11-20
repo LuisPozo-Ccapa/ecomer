@@ -197,4 +197,24 @@ class SeoMultiTenantTest extends TestCase
         $this->assertStringContainsString('"priceCurrency": "PEN"', $content);
         $this->assertStringContainsString('https://schema.org/InStock', $content);
     }
+
+    public function test_configuraciones_opcionales_filament_seo_se_renderizan_correctamente(): void
+    {
+        $this->site->update([
+            'estilos' => array_merge($this->site->estilos ?? [], [
+                'seo' => [
+                    'og_image'            => 'sites/seo/banner-redes-custom.webp',
+                    'google_verification' => 'google-site-verification=abc123token456',
+                ],
+            ]),
+        ]);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+
+        $content = $response->getContent();
+
+        $this->assertStringContainsString('<meta name="google-site-verification" content="abc123token456">', $content);
+        $this->assertStringContainsString('sites/seo/banner-redes-custom.webp', $content);
+    }
 }

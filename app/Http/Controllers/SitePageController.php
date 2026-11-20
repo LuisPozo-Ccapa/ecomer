@@ -387,7 +387,12 @@ class SitePageController extends Controller
                 ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
 
             $seoDescription = mb_substr(strip_tags((string) $rawDescription), 0, 160);
-            $seoImage = $site->imagen ? asset('storage/' . ltrim($site->imagen, '/')) : asset('/favicon.png');
+
+            $customOgImage = ! empty($estilos['seo']['og_image'])
+                ? (filter_var($estilos['seo']['og_image'], FILTER_VALIDATE_URL) ? $estilos['seo']['og_image'] : asset('storage/' . ltrim($estilos['seo']['og_image'], '/')))
+                : null;
+
+            $seoImage = $customOgImage ?: ($site->imagen ? asset('storage/' . ltrim($site->imagen, '/')) : asset('/favicon.png'));
 
             $cleanSlug = strtolower($seccionActiva['slug'] ?? 'inicio');
             if (in_array($cleanSlug, ['inicio', 'hero', 'home'])) {
@@ -398,6 +403,15 @@ class SitePageController extends Controller
 
             $schemaJsonLd = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
             $seoType = 'website';
+        }
+
+        $googleVerification = $estilos['seo']['google_verification'] ?? null;
+        if (! empty($googleVerification)) {
+            if (preg_match('/content=[\'"]([^\'"]+)[\'"]/i', $googleVerification, $matches)) {
+                $googleVerification = $matches[1];
+            } else {
+                $googleVerification = preg_replace('/^google-site-verification[:=\s]*/i', '', trim($googleVerification));
+            }
         }
 
         // ─── LCP Preload: primer slide del hero para acelerar la carga en móvil y desktop ───
@@ -439,13 +453,14 @@ class SitePageController extends Controller
 
         Inertia::share([
             '_seo' => [
-                'title'        => $seoTitle,
-                'description'  => $seoDescription,
-                'keywords'     => $seoCustomKeywords,
-                'image'        => $seoImage,
-                'canonical'    => $canonicalUrl,
-                'type'         => $seoType,
-                'schemaJsonLd' => $schemaJsonLd,
+                'title'              => $seoTitle,
+                'description'        => $seoDescription,
+                'keywords'           => $seoCustomKeywords,
+                'image'              => $seoImage,
+                'canonical'          => $canonicalUrl,
+                'type'               => $seoType,
+                'googleVerification' => $googleVerification,
+                'schemaJsonLd'       => $schemaJsonLd,
             ],
             '_heroPreload' => $heroPreload,
         ]);
