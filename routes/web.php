@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PlantillasController;
+use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitePageController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\LibroReclamacionesController;
@@ -8,10 +9,15 @@ use App\Models\Site;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
+Route::get('/robots.txt', [RobotsController::class, 'index'])->name('robots.txt');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/sitemap', [SitemapController::class, 'index']);
 Route::get('/sitemap_index.xml', [SitemapController::class, 'index']);
 Route::get('/sitemap.php', [SitemapController::class, 'index']);
+
+Route::get('/producto/{slug}', function (string $slug) {
+    return redirect('/productos?producto=' . urlencode($slug), 301);
+})->name('producto.clean');
 
 
 

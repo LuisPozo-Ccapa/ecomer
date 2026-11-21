@@ -7,8 +7,11 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-export default function HeroSection({ seccionData }) {
+export default function HeroSection({ seccionData, site }) {
     if (!seccionData) return null;
+
+    const siteNombre = site?.nombre || '';
+    const fallbackH1 = siteNombre ? `${siteNombre} — Catálogo Oficial y Soluciones` : 'Tienda Oficial';
 
     const getItem = (label) =>
         seccionData?.contenido?.find(
@@ -155,7 +158,7 @@ export default function HeroSection({ seccionData }) {
                 {slide.tablet && <source media="(min-width: 640px)" srcSet={slide.tablet} />}
                 <img
                     src={fallbackUrl}
-                    alt={`Hero slide ${idx + 1}`}
+                    alt={`${siteNombre || 'Hero'} — Slide ${idx + 1}`}
                     width={1920}
                     height={1080}
                     fetchPriority={idx === 0 ? "high" : "low"}
@@ -259,7 +262,7 @@ export default function HeroSection({ seccionData }) {
 
             {/* Contenedor de texto si existen datos */}
             {!hasTextContent && (
-                <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+                <h1 className="sr-only">{fallbackH1}</h1>
             )}
             {hasTextContent && (
                 <div className="absolute inset-0 z-20 mx-auto flex w-full max-w-7xl items-center justify-start px-5 sm:px-8 lg:px-12 py-6 sm:py-12 pointer-events-none">
@@ -274,7 +277,7 @@ export default function HeroSection({ seccionData }) {
                                 {renderFormattedTitle(tituloHero)}
                             </h1>
                         ) : (
-                            <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+                            <h1 className="sr-only">{fallbackH1}</h1>
                         )}
 
                         {descripcionHero && (

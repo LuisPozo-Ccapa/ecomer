@@ -3,8 +3,10 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionPlaceholderGuide from '@/components/SectionPlaceholderGuide';
 
-export default function GaleriaSection({ seccionData }) {
+export default function GaleriaSection({ seccionData, site }) {
     if (!seccionData) return null;
+
+    const siteNombre = site?.nombre || 'Galería';
 
     const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
@@ -186,7 +188,7 @@ export default function GaleriaSection({ seccionData }) {
                                 >
                                     <img
                                         src={item.url}
-                                        alt={`Promoción ${item.posicion}`}
+                                        alt={`${siteNombre} — Promoción ${item.posicion}`}
                                         width={800}
                                         height={400}
                                         loading="lazy"
@@ -213,7 +215,7 @@ export default function GaleriaSection({ seccionData }) {
                             >
                                 <img
                                     src={itemPos5.url}
-                                    alt={`Promoción ${itemPos5.posicion}`}
+                                    alt={`${siteNombre} — Promoción ${itemPos5.posicion}`}
                                     width={600}
                                     height={600}
                                     loading="lazy"
@@ -236,7 +238,7 @@ export default function GaleriaSection({ seccionData }) {
                                         >
                                             <img
                                                 src={item.url}
-                                                alt={`Producto ${item.posicion}`}
+                                                alt={`${siteNombre} — Producto destacado ${item.posicion}`}
                                                 width={400}
                                                 height={400}
                                                 loading="lazy"
