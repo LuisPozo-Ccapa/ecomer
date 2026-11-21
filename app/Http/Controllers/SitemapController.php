@@ -19,11 +19,9 @@ class SitemapController extends Controller
         $urls = [];
 
         // 1. Identificar el sitio correspondiente al dominio actual o primer sitio publicado
+        $cleanHost = preg_replace('/^www\./i', '', strtolower($host));
         $site = Site::where('estado', 'publicado')
-            ->where(function ($q) use ($host) {
-                $q->where('slug', $host)
-                  ->orWhere('dominio', $host);
-            })
+            ->whereIn('slug', array_unique([$host, $cleanHost]))
             ->with(['plantilla.secciones', 'servicios.servicios', 'marcas', 'tiendas'])
             ->first();
 
