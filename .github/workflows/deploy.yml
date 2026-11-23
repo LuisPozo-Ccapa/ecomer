@@ -65,7 +65,11 @@ jobs:
             **/vendor/**
             .htaccess
             bootstrap/cache/*.php
-            storage/**
+            storage/app/public/**
+            storage/framework/sessions/*
+            storage/framework/views/*
+            storage/framework/cache/*
+            storage/logs/*.log
             public/storage/**
             tests/**
             phpunit.xml
