@@ -178,3 +178,14 @@ Route::post('/{param1}/{param2}/libro-de-reclamaciones', [LibroReclamacionesCont
 Route::get('/{seccion}', [SitePageController::class, 'show'])->name('sitios.seccion');
 Route::get('/{dominio}/{seccion}', [SitePageController::class, 'show'])->name('sitios.show');
 Route::get('/{param1}/{param2}/{param3}', [SitePageController::class, 'show'])->name('sitios.show3');
+
+use App\Http\Controllers\DeployWebhookController;
+
+Route::post('/api/deploy/run-tasks', [DeployWebhookController::class, 'handle'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+    ->middleware('throttle:5,1');
+
+Route::post('/deploy/run-tasks', [DeployWebhookController::class, 'handle'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+    ->middleware('throttle:5,1');
+
