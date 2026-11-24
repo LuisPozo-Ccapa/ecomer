@@ -847,10 +847,11 @@ class PlantillaForm
                 ->rows(3)
                 ->placeholder('Escribe el contenido aquí...'),
 
-            // imagen con estructura array → FileUpload múltiple con límite
+            // imagen con estructura array → FileUpload múltiple con límite y diseño grid compacto
             'imagen' => $pregunta->estructura === 'array'
                 ? FileUpload::make($statePath)
                     ->multiple()
+                    ->panelLayout('grid')
                     ->maxFiles($pregunta->max_items ?? null)
                     ->webp5Mb($contentDirectory, 'public')
                     ->orientImagesFromExif(false)
@@ -869,6 +870,7 @@ class PlantillaForm
 
             'galeria' => FileUpload::make($statePath)
                 ->multiple()
+                ->panelLayout('grid')
                 ->webp5Mb($contentDirectory, 'public')
                 ->orientImagesFromExif(false)
                 ->uploadingMessage('Subiendo imágenes...')
@@ -892,130 +894,9 @@ class PlantillaForm
                         return self::camposFallbackResponsive($contentDirectory);
                     }
 
-                    return $children->map(function (Pregunta $child) use ($contentDirectory) {
-                        $childPath = $child->label;
-
-                        // Un child con estructura=array e imagen usa múltiple
-                        $subField = match ($child->tipo) {
-                            'area' => Textarea::make($childPath)->rows(2),
-                            'imagen' => $child->estructura === 'array'
-                                ? FileUpload::make($childPath)->multiple()->maxFiles($child->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
-                                : FileUpload::make($childPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
-                            'galeria' => FileUpload::make($childPath)->multiple()->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
-                            'color' => ColorPicker::make($childPath),
-                            'icono' => IconPicker::make($childPath),
-                            'enlace' => TextInput::make($childPath)->placeholder('https://ejemplo.com'),
-
-                            // ── Hijo tipo grupo → Repeater con sus propios sub-campos ──
-                            'grupo' => Repeater::make($childPath)
-                                ->schema(function () use ($child, $contentDirectory) {
-                                    $grandChildren = self::asegurarSubcamposResponsive($child);
-                                    if ($grandChildren->isEmpty() && in_array(strtolower($child->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
-                                        return self::camposFallbackResponsive($contentDirectory);
-                                    }
-
-                                    return $grandChildren->map(function (Pregunta $grandChild) use ($contentDirectory) {
-                                        $gcPath = $grandChild->label;
-
-                                        $gcField = match ($grandChild->tipo) {
-                                            'area' => Textarea::make($gcPath)->rows(2),
-                                            'imagen' => $grandChild->estructura === 'array'
-                                                ? FileUpload::make($gcPath)->multiple()->maxFiles($grandChild->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
-                                                : FileUpload::make($gcPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
-                                            'galeria' => FileUpload::make($gcPath)->multiple()->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
-                                            'color' => ColorPicker::make($gcPath),
-                                            'icono' => IconPicker::make($gcPath),
-                                            'enlace' => TextInput::make($gcPath)->placeholder('https://ejemplo.com'),
-
-                                            // ── Bisnieto tipo grupo (ej. Cards -> Lineas) → Sub-Repeater ──
-                                            'grupo' => Repeater::make($gcPath)
-                                                ->schema(function () use ($grandChild, $contentDirectory) {
-                                                    $greatGrandChildren = $grandChild->children;
-                                                    if ($greatGrandChildren->isEmpty() && isset($grandChild->id)) {
-                                                        $greatGrandChildren = Pregunta::where('parent_id', $grandChild->id)->orderBy('orden')->get();
-                                                    }
-
-                                                    return $greatGrandChildren->map(function (Pregunta $ggc) use ($contentDirectory) {
-                                                        $ggcPath = $ggc->label;
-                                                        $ggcField = match ($ggc->tipo) {
-                                                            'area' => Textarea::make($ggcPath)->rows(2),
-                                                            'color' => ColorPicker::make($ggcPath),
-                                                            'icono' => IconPicker::make($ggcPath),
-                                                            'enlace' => TextInput::make($ggcPath)->placeholder('https://ejemplo.com'),
-                                                            default => TextInput::make($ggcPath),
-                                                        };
-
-                                                        $ggcField = $ggcField->label($ggc->label);
-                                                        if ($ggc->ayuda) {
-                                                             $ggcField->helperText($ggc->ayuda);
-                                                        }
-
-                                                        return $ggcField->required((bool) $ggc->requerida);
-                                                    })->all();
-                                                })
-                                                ->label($grandChild->label)
-                                                ->itemLabel(fn (array $state): ?string => $state['Etiqueta'] ?? $state['Numero'] ?? $state['etiqueta'] ?? $state['numero'] ?? null)
-                                                ->defaultItems(0)
-                                                ->addable(true)
-                                                ->deletable(true)
-                                                ->reorderable(true)
-                                                ->collapsible(),
-
-                                            default => TextInput::make($gcPath),
-                                        };
-
-                                        $gcLabel = match ($grandChild->label) {
-                                            'Imagen_pc' => 'Imagen Desktop / PC',
-                                            'Imagen_tablet' => 'Imagen Tablet',
-                                            'Imagen_cel' => 'Imagen Celular / Móvil',
-                                            default => $grandChild->label,
-                                        };
-                                        $gcField = $gcField->label($gcLabel);
-                                        if ($grandChild->ayuda) {
-                                            $gcField->helperText($grandChild->ayuda);
-                                        }
-
-                                        return $gcField->required((bool) $grandChild->requerida);
-                                    })->all();
-                                })
-                                ->label(match ($child->label) {
-                                    'Imagenes' => 'Imágenes de Portada / Banner',
-                                    default => $child->label,
-                                })
-                                ->itemLabel(fn (array $state): ?string => $state['nombre'] ?? $state['titulo'] ?? $state['label'] ?? null)
-                                ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
-                                ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
-                                ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
-                                ->validationMessages([
-                                    'max_items' => 'El campo :attribute no puede tener más de :max elementos.',
-                                    'min_items' => 'El campo :attribute debe tener al menos :min elementos.',
-                                ])
-                                ->addable(true)
-                                ->deletable(true)
-                                ->reorderable($child->estructura === 'array')
-                                ->addActionLabel('+ Agregar '.$child->label)
-                                ->collapsible(),
-
-                            default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath),
-                        };
-
-                        if ($child->tipo !== 'grupo') {
-                            $childLabel = match ($child->label) {
-                                'Imagen_pc' => 'Imagen Desktop / PC',
-                                'Imagen_tablet' => 'Imagen Tablet',
-                                'Imagen_cel' => 'Imagen Celular / Móvil',
-                                default => $child->label,
-                            };
-                            $subField->label($childLabel);
-                        }
-                        if ($child->ayuda) {
-                            $subField->helperText($child->ayuda);
-                        }
-
-                        return $subField->required((bool) $child->requerida);
-                    })->all();
+                    return self::construirEsquemaSubcampos($children, $contentDirectory);
                 })
-                ->itemLabel(fn (array $state): ?string => $state['nombre'] ?? $state['titulo'] ?? $state['label'] ?? null)
+                ->itemLabel(fn (array $state): ?string => self::generarItemLabel($state))
                 ->defaultItems($pregunta->estructura === 'objeto' ? 1 : 0)
                 ->minItems(($pregunta->estructura === 'objeto' && $pregunta->requerida) ? 1 : 0)
                 ->maxItems($pregunta->estructura === 'objeto' ? 1 : $pregunta->max_items)
@@ -1027,7 +908,9 @@ class PlantillaForm
                 ->deletable(true)
                 ->reorderable($pregunta->estructura === 'array')
                 ->addActionLabel('+ Agregar '.$pregunta->label)
-                ->collapsible(),
+                ->collapsible()
+                ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
+                ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
 
             default => $pregunta->estructura === 'array'
                 ? TagsInput::make($statePath)
@@ -1048,10 +931,19 @@ class PlantillaForm
             return $field;
         }
 
-        return [
-            $field,
-            LinkPicker::make($linkPath),
-        ];
+        // Filtros internos, tags o códigos numéricos no requieren botón de enlace
+        $labelNorm = strtolower($pregunta->label);
+        if (in_array($labelNorm, ['filtro_producto', 'filtro', 'idvideo', 'id_video', 'numero'])) {
+            return $field;
+        }
+
+        // Colocar campo de texto y LinkPicker en la misma fila horizontal (8 cols input, 4 cols botón)
+        return Grid::make(['default' => 1, 'md' => 12])
+            ->schema([
+                $field->columnSpan(['default' => 12, 'md' => 8]),
+                LinkPicker::make($linkPath)->columnSpan(['default' => 12, 'md' => 4]),
+            ])
+            ->columnSpanFull();
     }
 
     public static function tiposPregunta(): array
@@ -1437,35 +1329,181 @@ class PlantillaForm
     public static function camposFallbackResponsive(mixed $contentDirectory): array
     {
         return [
-            FileUpload::make('Imagen_pc')
-                ->label('Imagen Desktop / PC')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 1920x800 o proporción panorámica. Formato WebP.'),
+            Grid::make(['default' => 1, 'md' => 3])
+                ->schema([
+                    FileUpload::make('Imagen_pc')
+                        ->label('🖥️ Desktop / PC')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Panorámica 1920x800 px (WebP).'),
 
-            FileUpload::make('Imagen_tablet')
-                ->label('Imagen Tablet')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 1024x600 o proporción estándar. Formato WebP.'),
+                    FileUpload::make('Imagen_tablet')
+                        ->label('📱 Tablet')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Estándar 1024x600 px (WebP).'),
 
-            FileUpload::make('Imagen_cel')
-                ->label('Imagen Celular / Móvil')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 768x800 o proporción vertical. Formato WebP.'),
+                    FileUpload::make('Imagen_cel')
+                        ->label('📲 Celular / Móvil')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Vertical 768x800 px (WebP).'),
+                ])
+                ->columnSpanFull(),
         ];
+    }
+
+    /**
+     * Construye un esquema de alta densidad para subcampos de un grupo o repetidor,
+     * agrupando imágenes responsivas (PC, tablet, celular) en un triplete horizontal (Grid 3 cols).
+     *
+     * @return array<int, Component>
+     */
+    private static function construirEsquemaSubcampos(Collection $children, mixed $contentDirectory): array
+    {
+        $responsiveLabels = ['imagen_pc', 'imagen_tablet', 'imagen_cel'];
+
+        $responsiveChildren = $children->filter(fn (Pregunta $c) => in_array(strtolower($c->label), $responsiveLabels))->sortBy('orden');
+        $otherChildren = $children->reject(fn (Pregunta $c) => in_array(strtolower($c->label), $responsiveLabels))->sortBy('orden');
+
+        $components = [];
+
+        // 1. Triplete Responsivo en Grilla de 3 columnas (Desktop / Tablet / Celular)
+        if ($responsiveChildren->isNotEmpty()) {
+            $responsiveFields = $responsiveChildren->map(function (Pregunta $child) use ($contentDirectory) {
+                $childPath = $child->label;
+                $label = match (strtolower($child->label)) {
+                    'imagen_pc' => '🖥️ Desktop / PC',
+                    'imagen_tablet' => '📱 Tablet',
+                    'imagen_cel' => '📲 Celular / Móvil',
+                    default => $child->label,
+                };
+
+                $field = FileUpload::make($childPath)
+                    ->label($label)
+                    ->webp5Mb($contentDirectory, 'public')
+                    ->orientImagesFromExif(false)
+                    ->uploadingMessage('Subiendo imagen...')
+                    ->deletable(true)
+                    ->openable()
+                    ->downloadable()
+                    ->helperText(match (strtolower($child->label)) {
+                        'imagen_pc' => 'Panorámica 1920x800',
+                        'imagen_tablet' => 'Estándar 1024x600',
+                        'imagen_cel' => 'Vertical 768x800',
+                        default => 'Formato WebP',
+                    });
+
+                if ($child->ayuda) {
+                    $field->helperText($child->ayuda);
+                }
+
+                return $field->required((bool) $child->requerida);
+            })->all();
+
+            $components[] = Grid::make(['default' => 1, 'md' => count($responsiveFields)])
+                ->schema($responsiveFields)
+                ->columnSpanFull();
+        }
+
+        // 2. Mapear los demás campos (textos, áreas, grupos anidados, etc.)
+        $normalFields = [];
+        foreach ($otherChildren as $child) {
+            $childPath = $child->label;
+
+            $subField = match ($child->tipo) {
+                'area' => Textarea::make($childPath)->rows(2),
+                'imagen' => $child->estructura === 'array'
+                    ? FileUpload::make($childPath)->multiple()->panelLayout('grid')->maxFiles($child->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
+                    : FileUpload::make($childPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
+                'galeria' => FileUpload::make($childPath)->multiple()->panelLayout('grid')->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
+                'color' => ColorPicker::make($childPath),
+                'icono' => IconPicker::make($childPath),
+                'enlace' => TextInput::make($childPath)->placeholder('https://ejemplo.com'),
+
+                // Sub-grupo anidado
+                'grupo' => Repeater::make($childPath)
+                    ->schema(function () use ($child, $contentDirectory) {
+                        $grandChildren = self::asegurarSubcamposResponsive($child);
+                        if ($grandChildren->isEmpty() && in_array(strtolower($child->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
+                            return self::camposFallbackResponsive($contentDirectory);
+                        }
+
+                        return self::construirEsquemaSubcampos($grandChildren, $contentDirectory);
+                    })
+                    ->label(match ($child->label) {
+                        'Imagenes' => 'Imágenes de Portada / Banner',
+                        default => $child->label,
+                    })
+                    ->itemLabel(fn (array $state): ?string => self::generarItemLabel($state))
+                    ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
+                    ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
+                    ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
+                    ->collapsible()
+                    ->reorderable($child->estructura === 'array')
+                    ->addActionLabel('+ Agregar '.$child->label),
+
+                default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath),
+            };
+
+            if ($child->tipo !== 'grupo') {
+                $subField->label($child->label);
+            }
+            if ($child->ayuda) {
+                $subField->helperText($child->ayuda);
+            }
+            $subField->required((bool) $child->requerida);
+
+            $normalFields[] = $subField;
+        }
+
+        if (! empty($normalFields)) {
+            $components[] = Grid::make(['default' => 1, 'md' => count($normalFields) > 1 ? 2 : 1])
+                ->schema($normalFields)
+                ->columnSpanFull();
+        }
+
+        return $components;
+    }
+
+    /**
+     * Genera un resumen inteligente para cabeceras de repeaters colapsados.
+     */
+    private static function generarItemLabel(array $state): ?string
+    {
+        $title = $state['Titulo'] ?? $state['titulo'] ?? $state['Label'] ?? $state['label'] ?? $state['nombre'] ?? $state['Nombre'] ?? $state['pregunta'] ?? $state['texto'] ?? $state['Etiqueta'] ?? $state['Numero'] ?? null;
+        if ($title) {
+            return Str::limit((string) $title, 55);
+        }
+
+        if (! empty($state['Imagen_pc'])) {
+            $file = is_array($state['Imagen_pc']) ? array_values($state['Imagen_pc'])[0] : $state['Imagen_pc'];
+
+            return 'Slide ('.basename((string) $file).')';
+        }
+
+        if (! empty($state['IdVideo'])) {
+            return 'TikTok ID: '.$state['IdVideo'];
+        }
+
+        if (! empty($state['imagen'])) {
+            $file = is_array($state['imagen']) ? array_values($state['imagen'])[0] : $state['imagen'];
+
+            return 'Elemento ('.basename((string) $file).')';
+        }
+
+        return null;
     }
 }
