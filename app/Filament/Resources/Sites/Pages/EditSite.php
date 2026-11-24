@@ -21,6 +21,12 @@ class EditSite extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('view_site')
+                ->label('Ver Tienda ↗')
+                ->icon('heroicon-m-arrow-top-right-on-square')
+                ->color('gray')
+                ->url(fn (): string => url('/'.($this->record->slug ?: $this->record->id)))
+                ->openUrlInNewTab(),
             DeleteAction::make(),
             RestoreAction::make(),
             ForceDeleteAction::make(),
