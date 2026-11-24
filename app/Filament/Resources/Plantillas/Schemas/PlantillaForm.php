@@ -652,9 +652,10 @@ class PlantillaForm
             // 2. Páginas Secundarias (Nosotros completa, Servicios completa, Contacto completa)
             if ($slugNorm === 'nosotros' && $nombreNorm !== 'sobrenosotros') {
                 $meta = $secundariasMetadata['nosotros'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'nosotros');
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema([
+                    ->schema(! empty($bloques) ? $bloques : [
                         Section::make($meta['titulo'])
                             ->description($meta['descripcion'])
                             ->schema($fields)
@@ -665,9 +666,10 @@ class PlantillaForm
 
             if (in_array($slugNorm, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio'])) {
                 $meta = $secundariasMetadata['servicios'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'servicios');
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema([
+                    ->schema(! empty($bloques) ? $bloques : [
                         Section::make($meta['titulo'])
                             ->description($meta['descripcion'])
                             ->schema($fields)
@@ -678,9 +680,10 @@ class PlantillaForm
 
             if (in_array($slugNorm, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos'])) {
                 $meta = $secundariasMetadata['contacto'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'contacto');
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema([
+                    ->schema(! empty($bloques) ? $bloques : [
                         Section::make($meta['titulo'])
                             ->description($meta['descripcion'])
                             ->schema($fields)
@@ -805,6 +808,186 @@ class PlantillaForm
     }
 
     /**
+     * Organiza las preguntas de una página secundaria en bloques modulares,
+     * numerados y colapsables con estética ejecutiva de alta densidad.
+     *
+     * @return array<int, Component>
+     */
+    private static function organizarBloquesSecundaria(Seccion $seccion, string $tipo): array
+    {
+        $diccionarios = [
+            'nosotros' => [
+                'portada' => [
+                    'titulo' => 'Portada & Encabezado Principal',
+                    'descripcion' => 'Banner responsive (Desktop, Tablet, Celular), antetítulo, títulos, botones de acción e indicadores clave.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'historia' => [
+                    'titulo' => 'Historia & Trayectoria Institucional',
+                    'descripcion' => 'Reseña corporativa, hitos cronológicos, años de fundación y evolución en el mercado.',
+                    'icono' => 'heroicon-o-clock',
+                ],
+                'mision' => [
+                    'titulo' => 'Misión & Visión Corporativa',
+                    'descripcion' => 'Tarjetas con íconos, títulos y textos de propósito estratégico y metas empresariales.',
+                    'icono' => 'heroicon-o-flag',
+                ],
+                'misionvision' => [
+                    'titulo' => 'Misión & Visión Corporativa',
+                    'descripcion' => 'Tarjetas con íconos, títulos y textos de propósito estratégico y metas empresariales.',
+                    'icono' => 'heroicon-o-flag',
+                ],
+                'valores' => [
+                    'titulo' => 'Principios & Valores Organizacionales',
+                    'descripcion' => 'Pilares éticos, cultura organizacional y tarjetas de valores de la empresa.',
+                    'icono' => 'heroicon-o-shield-check',
+                ],
+                'elegirnos' => [
+                    'titulo' => '¿Por qué Elegirnos? (Propuesta de Valor)',
+                    'descripcion' => 'Diferenciales competitivos, ventajas del servicio y garantías comerciales clave.',
+                    'icono' => 'heroicon-o-sparkles',
+                ],
+                'accion' => [
+                    'titulo' => 'Llamada a la Acción Final (CTA)',
+                    'descripcion' => 'Bloque interactivo de cierre con botones de contacto, cotización o visita.',
+                    'icono' => 'heroicon-o-chat-bubble-bottom-center-text',
+                ],
+            ],
+            'servicios' => [
+                'hero' => [
+                    'titulo' => 'Portada de Servicios',
+                    'descripcion' => 'Banner panorámico responsive, títulos principales y presentación general de la oferta técnica/comercial.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'portada' => [
+                    'titulo' => 'Portada de Servicios',
+                    'descripcion' => 'Banner panorámico responsive, títulos principales y presentación general de la oferta técnica/comercial.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'servicios' => [
+                    'titulo' => 'Catálogo de Servicios Especializados',
+                    'descripcion' => 'Listado estructurado de servicios, especificaciones técnicas, íconos y alcances.',
+                    'icono' => 'heroicon-o-wrench-screwdriver',
+                ],
+                'servicio' => [
+                    'titulo' => 'Catálogo de Servicios Especializados',
+                    'descripcion' => 'Listado estructurado de servicios, especificaciones técnicas, íconos y alcances.',
+                    'icono' => 'heroicon-o-wrench-screwdriver',
+                ],
+                'procesos' => [
+                    'titulo' => 'Proceso & Metodología de Trabajo',
+                    'descripcion' => 'Etapas paso a paso para la cotización, contratación, ejecución y entrega del servicio.',
+                    'icono' => 'heroicon-o-arrow-path',
+                ],
+                'video' => [
+                    'titulo' => 'Video Demostrativo & Indicadores',
+                    'descripcion' => 'Presentación audiovisual, indicadores de satisfacción y métricas de desempeño.',
+                    'icono' => 'heroicon-o-play-circle',
+                ],
+            ],
+            'contacto' => [
+                'contacto' => [
+                    'titulo' => 'Canales de Contacto, Redes, Sedes & Ubicación',
+                    'descripcion' => 'Configuración integral de canales de soporte, mapa interactivo, redes sociales, locales y formas de pago.',
+                    'icono' => 'heroicon-o-envelope',
+                ],
+                'whatsap' => [
+                    'titulo' => 'Atención por WhatsApp',
+                    'descripcion' => 'Números, enlaces directos y mensajes predeterminados para chat.',
+                    'icono' => 'heroicon-o-chat-bubble-oval-left-ellipsis',
+                ],
+                'direccion' => [
+                    'titulo' => 'Dirección & Ubicación Principal',
+                    'descripcion' => 'Sede central, mapa de Google Maps y horarios de atención al público.',
+                    'icono' => 'heroicon-o-map-pin',
+                ],
+            ],
+        ];
+
+        $diccionario = $diccionarios[$tipo] ?? [];
+        $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+
+        if ($preguntas->isEmpty()) {
+            return [];
+        }
+
+        $camposEscalares = [];
+        $bloquesGrupos = [];
+
+        foreach ($preguntas as $pregunta) {
+            $campo = self::campoRespuesta($pregunta);
+            if (empty($campo)) {
+                continue;
+            }
+
+            if ($pregunta->tipo !== 'grupo') {
+                if (is_array($campo)) {
+                    array_push($camposEscalares, ...$campo);
+                } else {
+                    $camposEscalares[] = $campo;
+                }
+                continue;
+            }
+
+            $labelNorm = self::normalizarSlug($pregunta->label);
+            $meta = $diccionario[$labelNorm] ?? null;
+
+            if (! $meta) {
+                foreach ($diccionario as $key => $dMeta) {
+                    if (str_contains($labelNorm, $key) || str_contains($key, $labelNorm)) {
+                        $meta = $dMeta;
+                        break;
+                    }
+                }
+            }
+
+            $bloquesGrupos[] = [
+                'pregunta' => $pregunta,
+                'campo' => is_array($campo) ? $campo : [$campo],
+                'meta' => $meta,
+            ];
+        }
+
+        $seccionesFinales = [];
+
+        // 1. Campos escalares (si hay textos o datos sueltos fuera de grupos)
+        if (! empty($camposEscalares)) {
+            $seccionesFinales[] = Section::make('Información General de la Página')
+                ->description('Configuración básica, encabezados y textos preliminares.')
+                ->icon('heroicon-o-document-text')
+                ->collapsible()
+                ->collapsed(false)
+                ->schema($camposEscalares)
+                ->columns(2)
+                ->columnSpanFull();
+        }
+
+        // 2. Bloques modulares agrupados
+        foreach ($bloquesGrupos as $item) {
+            $meta = $item['meta'];
+            $labelHumano = self::formatearLabelHumano($item['pregunta']->label);
+            $num = count($seccionesFinales) + 1;
+
+            $titulo = $meta ? "{$num}. {$meta['titulo']}" : "{$num}. {$labelHumano}";
+            $descripcion = $meta ? $meta['descripcion'] : ($item['pregunta']->ayuda ?? "Configuración del bloque {$labelHumano}.");
+            $icono = $meta ? $meta['icono'] : 'heroicon-o-rectangle-stack';
+
+            // El primer bloque arranca abierto, los siguientes colapsados para una navegación ejecutiva limpia
+            $isCollapsed = count($seccionesFinales) > 0;
+
+            $seccionesFinales[] = Section::make($titulo)
+                ->description($descripcion)
+                ->icon($icono)
+                ->collapsible()
+                ->collapsed($isCollapsed)
+                ->schema($item['campo'])
+                ->columnSpanFull();
+        }
+
+        return $seccionesFinales;
+    }
+
+    /**
      * Normaliza un slug o nombre eliminando tildes, espacios y caracteres especiales.
      */
     private static function normalizarSlug(?string $slug): string
@@ -908,11 +1091,13 @@ class PlantillaForm
                     'max_items' => 'El campo :attribute no puede tener más de :max elementos.',
                     'min_items' => 'El campo :attribute debe tener al menos :min elementos.',
                 ])
-                ->addable(true)
-                ->deletable(true)
+                ->addable($pregunta->estructura === 'array')
+                ->deletable($pregunta->estructura === 'array')
                 ->reorderable($pregunta->estructura === 'array')
-                ->addActionLabel('+ Agregar '.$humanLabel)
+                ->collapsed($pregunta->estructura === 'array')
                 ->collapsible()
+                ->columnSpanFull()
+                ->addActionLabel('+ Agregar '.$humanLabel)
                 ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
                 ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
 
@@ -1462,8 +1647,14 @@ class PlantillaForm
                     ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
                     ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
                     ->collapsible()
+                    ->collapsed($child->estructura === 'array')
+                    ->addable($child->estructura === 'array')
+                    ->deletable($child->estructura === 'array')
                     ->reorderable($child->estructura === 'array')
-                    ->addActionLabel('+ Agregar '.$humanChildLabel),
+                    ->columnSpanFull()
+                    ->addActionLabel('+ Agregar '.$humanChildLabel)
+                    ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
+                    ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
 
                 default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath)->placeholder($humanChildPlaceholder),
             };
@@ -1489,29 +1680,81 @@ class PlantillaForm
     }
 
     /**
+     * Extrae de forma segura un valor como texto plano, descartando arrays y objetos no convertibles.
+     */
+    private static function extraerTextoPlano(mixed $val): ?string
+    {
+        if (is_null($val)) {
+            return null;
+        }
+
+        if (is_string($val) || is_numeric($val)) {
+            $str = trim((string) $val);
+
+            return $str !== '' ? $str : null;
+        }
+
+        return null;
+    }
+
+    /**
      * Genera un resumen inteligente para cabeceras de repeaters colapsados.
      */
     private static function generarItemLabel(array $state): ?string
     {
-        $title = $state['Titulo'] ?? $state['titulo'] ?? $state['Label'] ?? $state['label'] ?? $state['nombre'] ?? $state['Nombre'] ?? $state['pregunta'] ?? $state['texto'] ?? $state['Etiqueta'] ?? $state['Numero'] ?? null;
+        $year = self::extraerTextoPlano($state['año'] ?? $state['ano'] ?? $state['anio'] ?? null);
+        $title = self::extraerTextoPlano($state['Titulo'] ?? $state['titulo'] ?? $state['Label'] ?? $state['label'] ?? $state['nombre'] ?? $state['Nombre'] ?? $state['pregunta'] ?? $state['texto'] ?? $state['Texto'] ?? $state['Etiqueta'] ?? $state['Numero'] ?? null);
+
+        if ($year && $title) {
+            return "{$year} — " . Str::limit($title, 45);
+        }
+
+        $cifra = self::extraerTextoPlano($state['cifra'] ?? $state['Cifra'] ?? $state['numero'] ?? $state['Numero'] ?? null);
+        $desc = self::extraerTextoPlano($state['descripcion'] ?? $state['Descripcion'] ?? null);
+        if ($cifra && $desc) {
+            return "{$cifra} — " . Str::limit($desc, 40);
+        }
+
+        if ($title && $desc && ! $year) {
+            return "{$title} — " . Str::limit($desc, 35);
+        }
+
+        $platform = self::extraerTextoPlano($state['Plataforma'] ?? $state['plataforma'] ?? $state['Red'] ?? $state['red'] ?? null);
+        if ($platform) {
+            return "Red: {$platform}" . ($title ? " ({$title})" : '');
+        }
+
+        $sede = self::extraerTextoPlano($state['Sede'] ?? $state['sede'] ?? $state['Ciudad'] ?? $state['ciudad'] ?? null);
+        $dir = self::extraerTextoPlano($state['Direccion'] ?? $state['direccion'] ?? null);
+        if ($sede || $dir) {
+            return "Sede: " . ($sede ?? $title ?? Str::limit($dir, 40));
+        }
+
+        $pct = self::extraerTextoPlano($state['Porcentaje'] ?? $state['porcentaje'] ?? null);
+        if ($pct && $title) {
+            return "{$title} ({$pct}%)";
+        }
+
         if ($title) {
-            return Str::limit((string) $title, 55);
+            return Str::limit($title, 55);
         }
 
         if (! empty($state['Imagen_pc'])) {
             $file = is_array($state['Imagen_pc']) ? array_values($state['Imagen_pc'])[0] : $state['Imagen_pc'];
-
-            return 'Slide ('.basename((string) $file).')';
+            if (is_string($file)) {
+                return 'Slide ('.basename($file).')';
+            }
         }
 
-        if (! empty($state['IdVideo'])) {
+        if (! empty($state['IdVideo']) && is_scalar($state['IdVideo'])) {
             return 'TikTok ID: '.$state['IdVideo'];
         }
 
         if (! empty($state['imagen'])) {
             $file = is_array($state['imagen']) ? array_values($state['imagen'])[0] : $state['imagen'];
-
-            return 'Elemento ('.basename((string) $file).')';
+            if (is_string($file)) {
+                return 'Elemento ('.basename($file).')';
+            }
         }
 
         return null;
@@ -1557,6 +1800,17 @@ class PlantillaForm
             'imagen_pc' => '🖥️ Desktop / PC',
             'imagen_tablet' => '📱 Tablet',
             'imagen_cel' => '📲 Celular / Móvil',
+            'año', 'ano' => 'Año / Hito Cronológico',
+            'porcentaje' => 'Porcentaje (%)',
+            'tarjetas_pago' => 'Tarjetas y Métodos de Pago',
+            'redes' => 'Redes Sociales',
+            'sedes' => 'Sedes y Sucursales',
+            'historia' => 'Hitos de Historia',
+            'mision/vision' => 'Misión y Visión',
+            'valores' => 'Valores Corporativos',
+            'elegirnos' => 'Propuesta de Valor',
+            'servicio_detallado' => 'Servicios Detallados',
+            'procesos' => 'Fases del Proceso',
             default => ucfirst(str_replace('_', ' ', $label)),
         };
     }
