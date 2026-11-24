@@ -7,6 +7,7 @@ use App\Filament\Forms\Components\LinkPicker;
 use App\Models\Categoria;
 use App\Models\Plantilla;
 use App\Models\Pregunta;
+use App\Models\Seccion;
 use App\Models\Site;
 use App\Models\Subcategoria;
 use Filament\Forms\Components\CheckboxList;
@@ -488,40 +489,334 @@ class PlantillaForm
         }
 
         $secciones = $plantilla->secciones->sortBy('orden');
-        $subTabs = [];
+
+        if ($secciones->isEmpty()) {
+            return [];
+        }
+
+        // Definición de metadatos, títulos amigables y orden para los bloques de la Página de Inicio (Home)
+        $inicioMetadata = [
+            'hero' => [
+                'prioridad' => 1,
+                'titulo' => 'Portada Principal / Hero Slider',
+                'descripcion' => 'Carrusel interactivo de bienvenida con imágenes adaptadas para PC, Tablet y Celular.',
+                'icono' => 'heroicon-o-sparkles',
+            ],
+            'inicio' => [
+                'prioridad' => 1,
+                'titulo' => 'Portada Principal / Hero Slider',
+                'descripcion' => 'Carrusel interactivo de bienvenida con imágenes adaptadas para PC, Tablet y Celular.',
+                'icono' => 'heroicon-o-sparkles',
+            ],
+            'galeria' => [
+                'prioridad' => 2,
+                'titulo' => 'Galería / Mosaico Visual',
+                'descripcion' => 'Mosaico visual de fotos o banners secundarios destacados.',
+                'icono' => 'heroicon-o-photo',
+            ],
+            'marcas' => [
+                'prioridad' => 3,
+                'titulo' => 'Marcas Aliadas',
+                'descripcion' => 'Carrusel de logotipos de fabricantes y marcas asociadas.',
+                'icono' => 'heroicon-o-tag',
+            ],
+            'liquidacion' => [
+                'prioridad' => 4,
+                'titulo' => 'Liquidación (Filtro de Productos en Remate)',
+                'descripcion' => 'Configuración de la etiqueta/filtro para listar productos en liquidación en la tienda y menú.',
+                'icono' => 'heroicon-o-receipt-percent',
+            ],
+            'ofertas' => [
+                'prioridad' => 5,
+                'titulo' => 'Ofertas Destacadas (Banner Promocional)',
+                'descripcion' => 'Banner gráfico y categoría vinculada para la sección de ofertas en la página de inicio.',
+                'icono' => 'heroicon-o-fire',
+            ],
+            'categoria' => [
+                'prioridad' => 6,
+                'titulo' => 'Categorías y Productos en Inicio',
+                'descripcion' => 'Vitrinas de categorías o productos destacados en la portada.',
+                'icono' => 'heroicon-o-shopping-bag',
+            ],
+            'tortasdestacadas' => [
+                'prioridad' => 6,
+                'titulo' => 'Productos Destacados',
+                'descripcion' => 'Selección de productos estrella para la portada.',
+                'icono' => 'heroicon-o-star',
+            ],
+            'productos' => [
+                'prioridad' => 6,
+                'titulo' => 'Vitrina de Productos',
+                'descripcion' => 'Listado o grid de productos visibles en la portada.',
+                'icono' => 'heroicon-o-shopping-bag',
+            ],
+            'banerproducto' => [
+                'prioridad' => 7,
+                'titulo' => 'Banner Intermedio de Productos',
+                'descripcion' => 'Banner publicitario intercalado entre los bloques de productos de la tienda.',
+                'icono' => 'heroicon-o-photo',
+            ],
+            'sectores' => [
+                'prioridad' => 8,
+                'titulo' => 'Sectores Atendidos',
+                'descripcion' => 'Tarjetas informativas de sectores e industrias (Minería, Construcción, Comercio, etc.).',
+                'icono' => 'heroicon-o-building-office-2',
+            ],
+            'sobrenosotros' => [
+                'prioridad' => 9,
+                'titulo' => 'Sobre Nosotros (Resumen en Inicio)',
+                'descripcion' => 'Resumen institucional, imagen destacada, métricas clave y enlace a la página completa.',
+                'icono' => 'heroicon-o-user-group',
+            ],
+            'elegirnos' => [
+                'prioridad' => 10,
+                'titulo' => '¿Por Qué Elegirnos?',
+                'descripcion' => 'Beneficios principales, fortalezas y valores agregados del negocio.',
+                'icono' => 'heroicon-o-check-badge',
+            ],
+            'comocomprar' => [
+                'prioridad' => 11,
+                'titulo' => 'Cómo Comprar / Guía de Cotización',
+                'descripcion' => 'Pasos explicativos para comprar o solicitar cotizaciones en la tienda.',
+                'icono' => 'heroicon-o-shopping-cart',
+            ],
+            'sedes' => [
+                'prioridad' => 12,
+                'titulo' => 'Sedes y Puntos de Atención',
+                'descripcion' => 'Locales físicos, direcciones, horarios de atención y mapas en el inicio.',
+                'icono' => 'heroicon-o-map-pin',
+            ],
+            'faq' => [
+                'prioridad' => 13,
+                'titulo' => 'Preguntas Frecuentes (FAQ)',
+                'descripcion' => 'Acordeón de dudas habituales y respuestas para los clientes.',
+                'icono' => 'heroicon-o-question-mark-circle',
+            ],
+            'tiktok' => [
+                'prioridad' => 14,
+                'titulo' => 'Videos de TikTok',
+                'descripcion' => 'Feed multimedia interactivo con IDs numéricos de videos de TikTok.',
+                'icono' => 'heroicon-o-video-camera',
+            ],
+            'banerpie' => [
+                'prioridad' => 15,
+                'titulo' => 'Banner Promocional Inferior',
+                'descripcion' => 'Banner de ancho completo de llamada a la acción previo al pie de página.',
+                'icono' => 'heroicon-o-megaphone',
+            ],
+        ];
+
+        // Metadatos para Páginas Secundarias independientes
+        $secundariasMetadata = [
+            'nosotros' => [
+                'titulo' => 'Página: Nosotros',
+                'descripcion' => 'Página institucional completa: Portada, Historia cronológica, Misión, Visión, Valores y CTA.',
+                'icono' => 'heroicon-o-information-circle',
+            ],
+            'servicios' => [
+                'titulo' => 'Página: Servicios',
+                'descripcion' => 'Página completa de catálogo de servicios especializados, proceso y cotización.',
+                'icono' => 'heroicon-o-wrench-screwdriver',
+            ],
+            'contacto' => [
+                'titulo' => 'Página: Contacto',
+                'descripcion' => 'Página completa de contacto, sedes, canales de atención y formulario.',
+                'icono' => 'heroicon-o-envelope',
+            ],
+        ];
+
+        $bloquesInicio = [];
+        $tabsSecundarias = [];
+        $camposNav = [];
+        $bloquesOtras = [];
 
         foreach ($secciones as $seccion) {
-            $fields = [];
+            $fields = self::camposDeSeccion($seccion);
+            if (empty($fields)) {
+                continue;
+            }
 
-            $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+            $slugNorm = self::normalizarSlug($seccion->slug);
+            $nombreNorm = self::normalizarSlug($seccion->nombre);
 
-            foreach ($preguntas as $pregunta) {
-                $campo = self::campoRespuesta($pregunta);
-                if (is_array($campo)) {
-                    array_push($fields, ...$campo);
-                } else {
-                    $fields[] = $campo;
+            // 1. Cabecera y Navegación (Nav)
+            if (in_array($slugNorm, ['nav', 'navfooter']) || in_array($nombreNorm, ['nav', 'navfooter', 'cabecera'])) {
+                $camposNav[] = Section::make('Barra Superior de Anuncios y Accesos Rápidos')
+                    ->description('Personaliza el mensaje promocional superior (ej. "Hasta un 15% de descuento") y los accesos directos.')
+                    ->icon('heroicon-o-bars-3')
+                    ->schema($fields)
+                    ->columns(2);
+                continue;
+            }
+
+            // 2. Páginas Secundarias (Nosotros completa, Servicios completa, Contacto completa)
+            if ($slugNorm === 'nosotros' && $nombreNorm !== 'sobrenosotros') {
+                $meta = $secundariasMetadata['nosotros'];
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->schema([
+                        Section::make($meta['titulo'])
+                            ->description($meta['descripcion'])
+                            ->schema($fields)
+                            ->columns(2),
+                    ]);
+                continue;
+            }
+
+            if (in_array($slugNorm, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio'])) {
+                $meta = $secundariasMetadata['servicios'];
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->schema([
+                        Section::make($meta['titulo'])
+                            ->description($meta['descripcion'])
+                            ->schema($fields)
+                            ->columns(2),
+                    ]);
+                continue;
+            }
+
+            if (in_array($slugNorm, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos'])) {
+                $meta = $secundariasMetadata['contacto'];
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->schema([
+                        Section::make($meta['titulo'])
+                            ->description($meta['descripcion'])
+                            ->schema($fields)
+                            ->columns(2),
+                    ]);
+                continue;
+            }
+
+            // 3. Bloques de Página de Inicio (Home)
+            $matchedKey = null;
+            foreach ($inicioMetadata as $key => $meta) {
+                if ($slugNorm === $key || $nombreNorm === $key || str_contains($slugNorm, $key) || str_contains($nombreNorm, $key)) {
+                    $matchedKey = $key;
+                    break;
                 }
             }
 
-            if (! empty($fields)) {
-                $subTabs[] = Tab::make($seccion->nombre)
-                    ->icon('heroicon-o-document-text')
-                    ->schema($fields)
-                    ->columns(2);
+            if ($matchedKey) {
+                $meta = $inicioMetadata[$matchedKey];
+                $bloquesInicio[] = [
+                    'prioridad' => $meta['prioridad'],
+                    'titulo' => $meta['titulo'],
+                    'descripcion' => $meta['descripcion'],
+                    'icono' => $meta['icono'],
+                    'fields' => $fields,
+                ];
+                continue;
             }
+
+            // 4. Otras Secciones (adicionales o personalizadas)
+            $bloquesOtras[] = Section::make($seccion->nombre)
+                ->description("Sección adicional: {$seccion->slug}")
+                ->icon('heroicon-o-document-text')
+                ->collapsible()
+                ->collapsed(true)
+                ->schema($fields)
+                ->columns(2);
         }
 
-        if (empty($subTabs)) {
+        // Ordenar los bloques de inicio según el flujo natural de la tienda
+        usort($bloquesInicio, fn ($a, $b) => $a['prioridad'] <=> $b['prioridad']);
+
+        $componentesInicio = [];
+        foreach ($bloquesInicio as $idx => $bloque) {
+            $num = $idx + 1;
+            $componentesInicio[] = Section::make("{$num}. {$bloque['titulo']}")
+                ->description($bloque['descripcion'])
+                ->icon($bloque['icono'])
+                ->collapsible()
+                ->collapsed($idx > 0) // El primer bloque abierto, los demás colapsados
+                ->schema($bloque['fields'])
+                ->columns(2);
+        }
+
+        // Ensamblar las Pestañas Principales del CMS
+        $tabsPrincipales = [];
+
+        if (! empty($componentesInicio)) {
+            $tabsPrincipales[] = Tab::make('Página de Inicio')
+                ->icon('heroicon-o-home')
+                ->badge(count($componentesInicio) . ' bloques')
+                ->schema($componentesInicio);
+        }
+
+        if (! empty($tabsSecundarias)) {
+            $tabsPrincipales[] = Tab::make('Páginas Secundarias')
+                ->icon('heroicon-o-document-duplicate')
+                ->badge(count($tabsSecundarias) . ' páginas')
+                ->schema([
+                    Tabs::make('SubTabsPaginasSecundarias')
+                        ->persistTabInQueryString(false)
+                        ->tabs($tabsSecundarias)
+                        ->columnSpanFull(),
+                ]);
+        }
+
+        if (! empty($camposNav)) {
+            $tabsPrincipales[] = Tab::make('Cabecera & Navegación')
+                ->icon('heroicon-o-bars-3')
+                ->schema($camposNav);
+        }
+
+        if (! empty($bloquesOtras)) {
+            $tabsPrincipales[] = Tab::make('Otras Secciones')
+                ->icon('heroicon-o-squares-plus')
+                ->badge(count($bloquesOtras))
+                ->schema($bloquesOtras);
+        }
+
+        if (empty($tabsPrincipales)) {
             return [];
         }
 
         return [
             Tabs::make('SubTabsSeccionesRespuestas')
                 ->persistTabInQueryString(false)
-                ->tabs($subTabs)
+                ->tabs($tabsPrincipales)
                 ->columnSpanFull(),
         ];
+    }
+
+    /**
+     * Extrae y construye recursivamente los campos de preguntas de una sección.
+     *
+     * @return array<int, Component>
+     */
+    private static function camposDeSeccion(Seccion $seccion): array
+    {
+        $fields = [];
+        $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+
+        foreach ($preguntas as $pregunta) {
+            $campo = self::campoRespuesta($pregunta);
+            if (is_array($campo)) {
+                array_push($fields, ...$campo);
+            } else {
+                $fields[] = $campo;
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Normaliza un slug o nombre eliminando tildes, espacios y caracteres especiales.
+     */
+    private static function normalizarSlug(?string $slug): string
+    {
+        if (blank($slug)) {
+            return '';
+        }
+
+        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', (string) $slug);
+        $clean = $clean !== false ? $clean : (string) $slug;
+
+        return strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $clean) ?? '');
     }
 
     /**

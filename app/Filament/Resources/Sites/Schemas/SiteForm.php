@@ -378,8 +378,8 @@ class SiteForm
                                 PlantillaForm::metodosPagoSection(),
                             ]),
 
-                        Tab::make('Respuestas / Contenido')
-                            ->icon('heroicon-o-document-text')
+                        Tab::make('Contenido y Secciones Web')
+                            ->icon('heroicon-o-paint-brush')
                             ->visible(fn (Get $get) => filled($get('plantilla_id')))
                             ->schema(fn (Get $get): array => self::respuestasFields($get)),
 
