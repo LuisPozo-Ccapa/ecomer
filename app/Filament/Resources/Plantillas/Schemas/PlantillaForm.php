@@ -841,11 +841,15 @@ class PlantillaForm
             return "plantillas/{$folder}/contenido";
         };
 
+        $humanLabel = self::formatearLabelHumano($pregunta->label);
+        $humanAyuda = self::formatearAyudaHumana($pregunta->label, $pregunta->ayuda);
+        $humanPlaceholder = self::formatearPlaceholderHumano($pregunta->label, null);
+
         // Construir el campo principal
         $field = match ($pregunta->tipo) {
             'area' => Textarea::make($statePath)
                 ->rows(3)
-                ->placeholder('Escribe el contenido aquí...'),
+                ->placeholder($humanPlaceholder),
 
             // imagen con estructura array → FileUpload múltiple con límite y diseño grid compacto
             'imagen' => $pregunta->estructura === 'array'
@@ -907,7 +911,7 @@ class PlantillaForm
                 ->addable(true)
                 ->deletable(true)
                 ->reorderable($pregunta->estructura === 'array')
-                ->addActionLabel('+ Agregar '.$pregunta->label)
+                ->addActionLabel('+ Agregar '.$humanLabel)
                 ->collapsible()
                 ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
                 ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
@@ -918,14 +922,17 @@ class PlantillaForm
                     ->helperText('Puedes agregar múltiples elementos de texto.')
                     ->required((bool) $pregunta->requerida)
                 : TextInput::make($statePath)
-                    ->placeholder('Ingresa el valor...'),
+                    ->placeholder($humanPlaceholder),
         };
 
         // Aplicar propiedades comunes
         $field = $field
-            ->label($pregunta->label)
-            ->helperText($pregunta->ayuda)
+            ->label($humanLabel)
             ->required((bool) $pregunta->requerida);
+
+        if ($humanAyuda) {
+            $field->helperText($humanAyuda);
+        }
 
         if ($pregunta->tipo === 'enlace' || ($pregunta->tipo === 'grupo' && $pregunta->estructura === 'array')) {
             return $field;
@@ -1422,9 +1429,12 @@ class PlantillaForm
         $normalFields = [];
         foreach ($otherChildren as $child) {
             $childPath = $child->label;
+            $humanChildLabel = self::formatearLabelHumano($child->label);
+            $humanChildAyuda = self::formatearAyudaHumana($child->label, $child->ayuda);
+            $humanChildPlaceholder = self::formatearPlaceholderHumano($child->label, null);
 
             $subField = match ($child->tipo) {
-                'area' => Textarea::make($childPath)->rows(2),
+                'area' => Textarea::make($childPath)->rows(2)->placeholder($humanChildPlaceholder),
                 'imagen' => $child->estructura === 'array'
                     ? FileUpload::make($childPath)->multiple()->panelLayout('grid')->maxFiles($child->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
                     : FileUpload::make($childPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
@@ -1445,7 +1455,7 @@ class PlantillaForm
                     })
                     ->label(match ($child->label) {
                         'Imagenes' => 'Imágenes de Portada / Banner',
-                        default => $child->label,
+                        default => $humanChildLabel,
                     })
                     ->itemLabel(fn (array $state): ?string => self::generarItemLabel($state))
                     ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
@@ -1453,16 +1463,16 @@ class PlantillaForm
                     ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
                     ->collapsible()
                     ->reorderable($child->estructura === 'array')
-                    ->addActionLabel('+ Agregar '.$child->label),
+                    ->addActionLabel('+ Agregar '.$humanChildLabel),
 
-                default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath),
+                default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath)->placeholder($humanChildPlaceholder),
             };
 
             if ($child->tipo !== 'grupo') {
-                $subField->label($child->label);
+                $subField->label($humanChildLabel);
             }
-            if ($child->ayuda) {
-                $subField->helperText($child->ayuda);
+            if ($humanChildAyuda) {
+                $subField->helperText($humanChildAyuda);
             }
             $subField->required((bool) $child->requerida);
 
@@ -1505,5 +1515,95 @@ class PlantillaForm
         }
 
         return null;
+    }
+
+    /**
+     * Traduce etiquetas crudas de base de datos a nombres legibles y profesionales.
+     */
+    private static function formatearLabelHumano(string $label): string
+    {
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto', 'filtro' => 'Etiqueta o Categoría de Filtro',
+            'idvideo', 'id_video' => 'ID Numérico del Video (TikTok)',
+            'sub' => 'Subtítulo / Antetítulo',
+            'titulo', 'título' => 'Título Principal',
+            'subtitulo', 'sub_titulo' => 'Subtítulo',
+            'parrafo', 'párrafo', 'descripcion', 'descripción' => 'Descripción / Párrafo',
+            'boton' => 'Texto del Botón Principal',
+            'boton1' => 'Texto del Primer Botón',
+            'boton2' => 'Texto del Segundo Botón',
+            'boton_texto' => 'Texto del Botón',
+            'boton_enlace' => 'Enlace o URL del Botón',
+            'badge', 'badge_destacado' => 'Insignia / Badge Destacado',
+            'badge_texto' => 'Texto de la Insignia',
+            'mensaje' => 'Mensaje de la Barra Superior',
+            'accion' => 'Accesos Rápidos de Cabecera',
+            'categorias' => 'Categorías Asociadas',
+            'posicion' => 'Posición en el Mosaico',
+            'cifra' => 'Cifra Numérica Destacada',
+            'etiqueta' => 'Etiqueta de la Métrica',
+            'mapa' => 'Enlace o Ubicación de Google Maps',
+            'horarios' => 'Horario de Atención al Público',
+            'direccion' => 'Dirección Física del Local',
+            'pregunta' => 'Pregunta del Cliente',
+            'respuesta' => 'Respuesta Informativa',
+            'faqs' => 'Listado de Preguntas Frecuentes',
+            'pasos' => 'Pasos de Compra / Cotización',
+            'metricas' => 'Métricas e Indicadores Clave',
+            'info' => 'Tarjetas de Información',
+            'cards' => 'Tarjetas de Contenido',
+            'imagen_pc' => '🖥️ Desktop / PC',
+            'imagen_tablet' => '📱 Tablet',
+            'imagen_cel' => '📲 Celular / Móvil',
+            default => ucfirst(str_replace('_', ' ', $label)),
+        };
+    }
+
+    /**
+     * Provee texto de ayuda explicativo si el campo carece de descripción en la base de datos.
+     */
+    private static function formatearAyudaHumana(string $label, ?string $ayudaOriginal): ?string
+    {
+        if (filled($ayudaOriginal)) {
+            return $ayudaOriginal;
+        }
+
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto' => 'Escribe la etiqueta o categoría para filtrar productos en este bloque (ej. "liquidacion", "ofertas").',
+            'idvideo', 'id_video' => 'Código numérico de la URL del video en TikTok (ej. 7661860945529933064).',
+            'sub' => 'Texto introductorio en tamaño reducido ubicado justo encima del título principal.',
+            'mensaje' => 'Frase publicitaria visible para todos los clientes en la barra superior de la tienda.',
+            'categorias' => 'Presiona Enter tras cada término para asociar múltiples categorías.',
+            'posicion' => 'Orden de aparición numérica dentro del mosaico de fotos.',
+            'mapa' => 'Pega el enlace de Google Maps para abrir la ruta en el móvil del cliente.',
+            default => null,
+        };
+    }
+
+    /**
+     * Provee un placeholder contextual y amigable según el tipo de campo.
+     */
+    private static function formatearPlaceholderHumano(string $label, ?string $placeholderOriginal): string
+    {
+        if (filled($placeholderOriginal)) {
+            return $placeholderOriginal;
+        }
+
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto' => 'Ej: liquidacion',
+            'idvideo', 'id_video' => 'Ej: 7661860945529933064',
+            'sub' => 'Ej: NUESTRA EMPRESA o CATÁLOGO EXCLUSIVO',
+            'mensaje' => 'Ej: ¡Aprovecha hasta un 15% de descuento en pedidos hoy!',
+            'boton', 'boton1' => 'Ej: Ver Catálogo, Cotizar Ahora',
+            'boton2' => 'Ej: Más Información, Contáctanos',
+            'mapa' => 'https://maps.google.com/?q=...',
+            default => 'Ingresa el valor...',
+        };
     }
 }
