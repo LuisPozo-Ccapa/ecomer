@@ -41,341 +41,366 @@ class SiteForm
                         Tab::make('Configuración del Sitio')
                             ->icon('heroicon-o-cog')
                             ->schema([
-                                Section::make('General')
-                                    ->schema([
-                                        Grid::make(2)->schema([
-                                            Select::make('user_id')
-                                                ->label('Usuario')
-                                                ->options(fn () => User::pluck('name', 'id'))
-                                                ->default(fn () => auth()->id())
-                                                ->required()
-                                                ->searchable()
-                                                ->live(onBlur: true),
-                                            Select::make('plantilla_id')
-                                                ->label('Plantilla')
-                                                ->options(fn () => Plantilla::where('activa', true)->get()->pluck('nombre_con_tipo', 'id'))
-                                                ->required()
-                                                ->searchable()
-                                                ->live()
-                                                ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
-                                                    $plantilla = Plantilla::with('respuestas')->find($state);
-
-                                                    $set('estilos', $plantilla?->estilos ?? []);
-
-                                                    if (blank($get('respuestas'))) {
-                                                        $set('respuestas', $plantilla?->respuestas
-                                                            ->mapWithKeys(function (Respuesta $respuesta): array {
-                                                                $valor = $respuesta->valor;
-                                                                if (is_string($valor) && is_array($decoded = json_decode($valor, true))) {
-                                                                    $valor = $decoded;
-                                                                }
-
-                                                                return [
-                                                                    $respuesta->pregunta_id => [
-                                                                        'valor' => $valor,
-                                                                        'enlace' => $respuesta->enlace,
-                                                                    ],
-                                                                ];
-                                                            })
-                                                            ->all() ?? []);
-                                                    }
-                                                }),
-                                            Select::make('estado')
-                                                ->options([
-                                                    'borrador' => 'Borrador',
-                                                    'publicado' => 'Publicado',
-                                                ])
-                                                ->default('borrador')
-                                                ->required(),
-                                            TextInput::make('nombre')
-                                                ->required()
-                                                ->maxLength(255)
-                                                ->live(onBlur: true)
-                                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                                            TextInput::make('slug')
-                                                ->required()
-                                                ->maxLength(255),
-                                            TextInput::make('estilos.direccion')
-                                                ->label('Dirección de la tienda / negocio')
-                                                ->placeholder('Ej: Av. Gran Chimú N°680, San Juan de Lurigancho')
-                                                ->prefixIcon('heroicon-m-map-pin')
-                                                ->helperText('Dirección física visible en pie de página, cabecera y sección de contacto.')
-                                                ->columnSpan(2),
-                                            TextInput::make('estilos.mapa_url')
-                                                ->label('Enlace o Ubicación de Google Maps (Opcional)')
-                                                ->placeholder('https://maps.google.com/?q=... o enlace de compartir')
-                                                ->prefixIcon('heroicon-m-globe-alt')
-                                                ->helperText('Opcional. Si se deja en blanco, el mapa se generará automáticamente a partir de la dirección.')
-                                                ->columnSpan(2),
-                                            FileUpload::make('imagen')
-                                                ->label('Logo / imagen')
-                                                ->webp5Mb(fn (Get $get, ?Model $record) => 'sites/'.(Str::slug($get('slug') ?? $record?->slug) ?: 'general'), 'public')
-                                                ->orientImagesFromExif(false)
-                                                ->uploadingMessage('Subiendo imagen...')
-                                                ->deletable(true)
-                                                ->openable()
-                                                ->downloadable()
-                                                ->columnSpanFull(),
-                                        ]),
-
-                                        Section::make('SEO y Posicionamiento en Google')
-                                            ->icon('heroicon-o-magnifying-glass-circle')
-                                            ->description('Personaliza cómo aparece este sitio web en los resultados de búsqueda de Google y al compartir enlaces por WhatsApp.')
-                                            ->collapsible()
+                                Tabs::make('SubTabsConfiguracion')
+                                    ->persistTabInQueryString(false)
+                                    ->tabs([
+                                        Tab::make('Identidad & General')
+                                            ->icon('heroicon-o-building-storefront')
                                             ->schema([
-                                                Grid::make(2)->schema([
-                                                    TextInput::make('estilos.seo.title')
-                                                        ->label('Título SEO (Google)')
-                                                        ->placeholder('Ej: Mi Tienda — Herramientas y Equipamiento')
-                                                        ->helperText('Título que aparecerá en la pestaña y en los resultados de búsqueda de Google.')
-                                                        ->columnSpan(2),
-                                                    Textarea::make('estilos.seo.description')
-                                                        ->label('Metadescripción (Google)')
-                                                        ->placeholder('Ej: Venta de productos y equipamiento con la mejor calidad, garantía y envíos rápidos a todo el país.')
-                                                        ->rows(3)
-                                                        ->helperText('Resumen de 120–160 caracteres que aparecerá debajo del título en Google.')
-                                                        ->columnSpan(2),
-                                                    TextInput::make('estilos.seo.keywords')
-                                                        ->label('Palabras clave (Keywords)')
-                                                        ->placeholder('Ej: herramientas, ferretería, equipamiento, calidad')
-                                                        ->helperText('Separadas por comas.')
-                                                        ->columnSpan(2),
-                                                    FileUpload::make('estilos.seo.og_image')
-                                                        ->label('Imagen para Redes Sociales y WhatsApp (OG Image)')
-                                                        ->image()
-                                                        ->disk('public')
-                                                        ->directory('sites/seo')
-                                                        ->helperText('Medida sugerida: 1200 x 630 px. Si se deja vacío, se utilizará el logo del sitio o la foto del producto.')
-                                                        ->columnSpan(1),
-                                                    TextInput::make('estilos.seo.google_verification')
-                                                        ->label('Código de Verificación de Google Search Console')
-                                                        ->placeholder('Ej: google-site-verification=abc123xyz...')
-                                                        ->helperText('Token o etiqueta meta proporcionada por Google Search Console.')
-                                                        ->columnSpan(1),
-                                                ]),
-                                            ])
-                                            ->columnSpanFull(),
+                                                Section::make('Datos Principales del Sitio')
+                                                    ->description('Información básica de acceso, nombre de la tienda y plantilla activa.')
+                                                    ->schema([
+                                                        Grid::make(2)->schema([
+                                                            Select::make('user_id')
+                                                                ->label('Usuario Administrador')
+                                                                ->options(fn () => User::pluck('name', 'id'))
+                                                                ->default(fn () => auth()->id())
+                                                                ->required()
+                                                                ->searchable()
+                                                                ->live(onBlur: true),
+                                                            Select::make('plantilla_id')
+                                                                ->label('Plantilla Visual')
+                                                                ->options(fn () => Plantilla::where('activa', true)->get()->pluck('nombre_con_tipo', 'id'))
+                                                                ->required()
+                                                                ->searchable()
+                                                                ->live()
+                                                                ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
+                                                                    $plantilla = Plantilla::with('respuestas')->find($state);
 
-                                        Section::make('Datos de Contacto Globales')
-                                            ->icon('heroicon-o-phone')
-                                            ->description('Define números de WhatsApp, correos electrónicos y horarios globales del sitio.')
-                                            ->collapsible()
+                                                                    $set('estilos', $plantilla?->estilos ?? []);
+
+                                                                    if (blank($get('respuestas'))) {
+                                                                        $set('respuestas', $plantilla?->respuestas
+                                                                            ->mapWithKeys(function (Respuesta $respuesta): array {
+                                                                                $valor = $respuesta->valor;
+                                                                                if (is_string($valor) && is_array($decoded = json_decode($valor, true))) {
+                                                                                    $valor = $decoded;
+                                                                                }
+
+                                                                                return [
+                                                                                    $respuesta->pregunta_id => [
+                                                                                        'valor' => $valor,
+                                                                                        'enlace' => $respuesta->enlace,
+                                                                                    ],
+                                                                                ];
+                                                                            })
+                                                                            ->all() ?? []);
+                                                                    }
+                                                                }),
+                                                            Select::make('estado')
+                                                                ->label('Estado de Publicación')
+                                                                ->options([
+                                                                    'borrador' => 'Borrador',
+                                                                    'publicado' => 'Publicado',
+                                                                ])
+                                                                ->default('borrador')
+                                                                ->required(),
+                                                            TextInput::make('nombre')
+                                                                ->label('Nombre de la Tienda')
+                                                                ->required()
+                                                                ->maxLength(255)
+                                                                ->live(onBlur: true)
+                                                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                                            TextInput::make('slug')
+                                                                ->label('Slug / Dominio de Acceso')
+                                                                ->required()
+                                                                ->maxLength(255)
+                                                                ->columnSpan(2),
+                                                            TextInput::make('estilos.direccion')
+                                                                ->label('Dirección de la tienda / negocio')
+                                                                ->placeholder('Ej: Av. Gran Chimú N°680, San Juan de Lurigancho')
+                                                                ->prefixIcon('heroicon-m-map-pin')
+                                                                ->helperText('Dirección física visible en pie de página, cabecera y sección de contacto.')
+                                                                ->columnSpan(2),
+                                                            TextInput::make('estilos.mapa_url')
+                                                                ->label('Enlace o Ubicación de Google Maps (Opcional)')
+                                                                ->placeholder('https://maps.google.com/?q=... o enlace de compartir')
+                                                                ->prefixIcon('heroicon-m-globe-alt')
+                                                                ->helperText('Opcional. Si se deja en blanco, el mapa se generará automáticamente a partir de la dirección.')
+                                                                ->columnSpan(2),
+                                                            FileUpload::make('imagen')
+                                                                ->label('Logo de la Tienda / Marca')
+                                                                ->webp5Mb(fn (Get $get, ?Model $record) => 'sites/'.(Str::slug($get('slug') ?? $record?->slug) ?: 'general'), 'public')
+                                                                ->orientImagesFromExif(false)
+                                                                ->uploadingMessage('Subiendo imagen...')
+                                                                ->deletable(true)
+                                                                ->openable()
+                                                                ->downloadable()
+                                                                ->columnSpanFull(),
+                                                        ]),
+                                                    ]),
+                                            ]),
+
+                                        Tab::make('Diseño & Colores')
+                                            ->icon('heroicon-o-swatch')
+                                            ->visible(fn (Get $get) => filled($get('plantilla_id')))
                                             ->schema([
-                                                Repeater::make('estilos.acciones_nav')
-                                                    ->label('WhatsApp, Correos y Contacto')
+                                                Section::make('Paleta de Colores y Tipografías')
+                                                    ->description('Sobrescribe los colores de marca y tipografías para este sitio.')
                                                     ->schema([
                                                         Grid::make(3)->schema([
-                                                            Select::make('icono')
-                                                                ->label('Tipo / Ícono')
-                                                                ->options([
-                                                                    'FaWhatsapp' => 'WhatsApp',
-                                                                    'FaEnvelope' => 'Correo Electrónico',
-                                                                    'FaBriefcase' => 'Correo de Trabajo / Maletín',
-                                                                    'FaPhone' => 'Teléfono Fijo / Móvil',
-                                                                    'FaClock' => 'Horario de Atención',
-                                                                    'FaLocationDot' => 'Ubicación / Dirección',
-                                                                ])
-                                                                ->default('FaWhatsapp')
-                                                                ->required(),
-                                                            TextInput::make('Label')
-                                                                ->label('Etiqueta')
-                                                                ->placeholder('Ej. WhatsApp Ventas, Correo, Horario')
-                                                                ->required(),
-                                                            Textarea::make('texto')
-                                                                ->label('Número(s) o Correo(s)')
-                                                                ->placeholder("Ej. 987654321 o correo@gmail.com\n(Soporta múltiples líneas)")
-                                                                ->rows(2)
-                                                                ->required(),
+                                                            ColorPicker::make('estilos.color_primario')
+                                                                ->label('Color Primario'),
+                                                            ColorPicker::make('estilos.color_secundario')
+                                                                ->label('Color Secundario'),
+                                                            ColorPicker::make('estilos.color_acento')
+                                                                ->label('Color de Acento / Destacados')
+                                                                ->helperText('Para tarjetas destacadas y badges. Si se deja vacío, toma el primario.')
+                                                                ->nullable(),
+                                                            Select::make('estilos.tipografia_titulos')
+                                                                ->label('Tipografía para Títulos')
+                                                                ->options(PlantillaForm::fuentes())
+                                                                ->searchable(),
+                                                            Select::make('estilos.tipografia_texto')
+                                                                ->label('Tipografía para Textos / Párrafos')
+                                                                ->options(PlantillaForm::fuentes())
+                                                                ->searchable(),
+                                                            FileUpload::make('estilos.favicon')
+                                                                ->label('Favicon / Ícono del Sitio (.ico, .png, .svg)')
+                                                                ->image()
+                                                                ->disk('public')
+                                                                ->directory('sites/favicons')
+                                                                ->visibility('public')
+                                                                ->preserveFilenames()
+                                                                ->formatStateUsing(function ($state) {
+                                                                    if (is_array($state)) {
+                                                                        return array_values($state)[0] ?? null;
+                                                                    }
+                                                                    if (is_string($state) && str_starts_with(trim($state), '{')) {
+                                                                        $decoded = json_decode($state, true);
+                                                                        if (is_array($decoded)) {
+                                                                            return array_values($decoded)[0] ?? null;
+                                                                        }
+                                                                    }
+                                                                    return $state;
+                                                                })
+                                                                ->dehydrateStateUsing(function ($state) {
+                                                                    if (is_array($state)) {
+                                                                        return array_values($state)[0] ?? null;
+                                                                    }
+                                                                    return $state;
+                                                                }),
+                                                            TextInput::make('estilos.radio_bordes')
+                                                                ->label('Radio de Bordes')
+                                                                ->placeholder('0.5rem'),
+                                                            TextInput::make('estilos.espaciado')
+                                                                ->label('Espaciado General')
+                                                                ->placeholder('1rem'),
                                                         ]),
-                                                    ])
-                                                    ->collapsible()
-                                                    ->itemLabel(fn (array $state): ?string => ($state['Label'] ?? '') ? ($state['Label'].': '.($state['texto'] ?? '')) : null)
-                                                    ->columnSpanFull(),
-                                            ])
-                                            ->columnSpanFull(),
+                                                    ]),
+                                                PlantillaForm::redesSocialesSection(),
+                                            ]),
 
-                                        Section::make('Almacenes')
+                                        Tab::make('Catálogo & Almacenes')
                                             ->icon('heroicon-o-shopping-bag')
-                                            ->description('Asocia los almacenes del sitio y personaliza el subtítulo, título e ícono de la sección de Productos / Almacenes.')
-                                            ->collapsible()
                                             ->schema([
-                                                CheckboxList::make('tiendas')
-                                                    ->label('Almacenes asociados')
-                                                    ->relationship('tiendas', 'nombre')
-                                                    ->columns(3)
-                                                    ->searchable()
-                                                    ->bulkToggleable(),
-
-                                                Grid::make(4)->schema([
-                                                    TextInput::make('estilos.seccion_productos.sub_titulo')
-                                                        ->label('Subtítulo de Productos / Almacén')
-                                                        ->placeholder('Ej: Catálogo Completo'),
-                                                    TextInput::make('estilos.seccion_productos.titulo')
-                                                        ->label('Título de Productos / Almacén')
-                                                        ->placeholder('Ej: Nuestras Tortas y Creaciones'),
-                                                    IconPicker::make('estilos.seccion_productos.icono')
-                                                        ->label('Ícono de Productos / Almacén'),
-                                                    TextInput::make('estilos.seccion_productos.orden')
-                                                        ->label('Orden en el Menú')
-                                                        ->numeric()
-                                                        ->placeholder('Ej: 2'),
-                                                ]),
-                                            ])
-                                             ->columnSpanFull(),
-
-                                        Section::make('Servicios')
-                                            ->icon('heroicon-o-wrench-screwdriver')
-                                            ->collapsible()
-                                            ->schema([
-                                                Grid::make(2)->schema([
-                                                    CheckboxList::make('servicios')
-                                                        ->label('Servicios asociados')
-                                                        ->relationship('servicios', 'nombre')
-                                                        ->columns(3)
-                                                        ->searchable()
-                                                        ->bulkToggleable(),
-                                                    TextInput::make('estilos.seccion_servicios.orden')
-                                                        ->label('Orden en el Menú')
-                                                        ->numeric()
-                                                        ->placeholder('Ej: 3'),
-                                                ]),
-                                            ])
-                                            ->columnSpanFull(),
-
-                                        Section::make('Marcas')
-                                            ->icon('heroicon-o-tag')
-                                            ->collapsible()
-                                            ->schema([
-                                                Grid::make(2)->schema([
-                                                    CheckboxList::make('marcas')
-                                                        ->label('Marcas asociadas')
-                                                        ->relationship('marcas', 'titulo')
-                                                        ->columns(3)
-                                                        ->searchable()
-                                                        ->bulkToggleable(),
-                                                    TextInput::make('estilos.seccion_marcas.orden')
-                                                        ->label('Orden en el Menú')
-                                                        ->numeric()
-                                                        ->placeholder('Ej: 5'),
-                                                ]),
-                                            ])
-                                            ->columnSpanFull(),
-
-                                        Section::make('Catálogo de Productos')
-                                            ->icon('heroicon-o-book-open')
-                                            ->description('Configura la disponibilidad del catálogo, enlace directo PDF o catálogo dinámico.')
-                                            ->collapsible()
-                                            ->schema([
-                                                Toggle::make('estilos.catalogo.activo')
-                                                    ->label('Activar Catálogo en la Navegación')
-                                                    ->helperText('Muestra el enlace de Catálogo en el menú superior, menú móvil y footer.')
-                                                    ->default(false)
-                                                    ->live(),
-
-                                                Grid::make(3)->schema([
-                                                    TextInput::make('estilos.catalogo.titulo')
-                                                        ->label('Título en el Menú')
-                                                        ->placeholder('Ej: Catálogo, Ver Catálogo, Catálogo PDF')
-                                                        ->default('Catálogo')
-                                                        ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo')),
-
-                                                    TextInput::make('estilos.catalogo.enlace')
-                                                        ->label('Enlace Externo o PDF (Opcional)')
-                                                        ->placeholder('https://ejemplo.com/catalogo.pdf')
-                                                        ->helperText('Si ingresas un enlace, el botón abrirá este archivo/URL. Si lo dejas vacío, cargará el catálogo dinámico de productos.')
-                                                        ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo'))
-                                                        ->live(onBlur: true),
-
-                                                    TextInput::make('estilos.catalogo.orden')
-                                                        ->label('Orden en el Menú')
-                                                        ->numeric()
-                                                        ->placeholder('Ej: 4')
-                                                        ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo')),
-                                                ]),
-
-                                                Section::make('Filtro de Productos para el Catálogo')
-                                                    ->description('Aplica cuando no se proporciona enlace externo.')
-                                                    ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo') && blank($get('estilos.catalogo.enlace')))
+                                                Section::make('Almacenes y Sedes')
+                                                    ->icon('heroicon-o-building-office-2')
+                                                    ->description('Sedes físicas activas para control de inventario y pedidos.')
+                                                    ->collapsible()
                                                     ->schema([
-                                                        Select::make('estilos.catalogo.tipo_filtro')
-                                                            ->label('Incluir en el catálogo')
-                                                            ->options([
-                                                                'todos' => 'Todos los productos',
-                                                                'categoria' => 'Por Categoría',
-                                                                'subcategoria' => 'Por Subcategoría',
-                                                            ])
-                                                            ->default('todos')
+                                                        CheckboxList::make('tiendas')
+                                                            ->label('Almacenes asociados')
+                                                            ->relationship('tiendas', 'nombre')
+                                                            ->columns(3)
+                                                            ->searchable()
+                                                            ->bulkToggleable(),
+                                                        Grid::make(4)->schema([
+                                                            TextInput::make('estilos.seccion_productos.sub_titulo')
+                                                                ->label('Subtítulo de Productos / Almacén')
+                                                                ->placeholder('Ej: Catálogo Completo'),
+                                                            TextInput::make('estilos.seccion_productos.titulo')
+                                                                ->label('Título de Productos / Almacén')
+                                                                ->placeholder('Ej: Nuestras Creaciones'),
+                                                            IconPicker::make('estilos.seccion_productos.icono')
+                                                                ->label('Ícono de Productos / Almacén'),
+                                                            TextInput::make('estilos.seccion_productos.orden')
+                                                                ->label('Orden en el Menú')
+                                                                ->numeric()
+                                                                ->placeholder('Ej: 2'),
+                                                        ]),
+                                                    ]),
+
+                                                Section::make('Catálogo de Productos (PDF y Filtros)')
+                                                    ->icon('heroicon-o-book-open')
+                                                    ->description('Configura la disponibilidad del catálogo, enlace directo PDF o catálogo dinámico.')
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        Toggle::make('estilos.catalogo.activo')
+                                                            ->label('Activar Catálogo en la Navegación')
+                                                            ->helperText('Muestra el enlace de Catálogo en el menú superior, menú móvil y footer.')
+                                                            ->default(false)
                                                             ->live(),
 
-                                                        MultiSelect::make('estilos.catalogo.categorias')
-                                                            ->label('Categorías a incluir')
-                                                            ->options(fn () => Categoria::pluck('nombre', 'id'))
-                                                            ->searchable()
-                                                            ->preload()
-                                                            ->visible(fn (Get $get) => $get('estilos.catalogo.tipo_filtro') === 'categoria'),
+                                                        Grid::make(3)->schema([
+                                                            TextInput::make('estilos.catalogo.titulo')
+                                                                ->label('Título en el Menú')
+                                                                ->placeholder('Ej: Catálogo, Ver Catálogo, Catálogo PDF')
+                                                                ->default('Catálogo')
+                                                                ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo')),
 
-                                                        MultiSelect::make('estilos.catalogo.subcategorias')
-                                                            ->label('Subcategorías a incluir')
-                                                            ->options(fn () => Subcategoria::with('categoria')->get()->mapWithKeys(fn ($sub) => [$sub->id => ($sub->categoria ? $sub->categoria->nombre.' > ' : '').$sub->nombre]))
-                                                            ->searchable()
-                                                            ->preload()
-                                                            ->visible(fn (Get $get) => $get('estilos.catalogo.tipo_filtro') === 'subcategoria'),
+                                                            TextInput::make('estilos.catalogo.enlace')
+                                                                ->label('Enlace Externo o PDF (Opcional)')
+                                                                ->placeholder('https://ejemplo.com/catalogo.pdf')
+                                                                ->helperText('Si ingresas un enlace, el botón abrirá este archivo/URL. Si lo dejas vacío, cargará el catálogo dinámico de productos.')
+                                                                ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo'))
+                                                                ->live(onBlur: true),
+
+                                                            TextInput::make('estilos.catalogo.orden')
+                                                                ->label('Orden en el Menú')
+                                                                ->numeric()
+                                                                ->placeholder('Ej: 4')
+                                                                ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo')),
+                                                        ]),
+
+                                                        Section::make('Filtro de Productos para el Catálogo')
+                                                            ->description('Aplica cuando no se proporciona enlace externo.')
+                                                            ->visible(fn (Get $get) => (bool) $get('estilos.catalogo.activo') && blank($get('estilos.catalogo.enlace')))
+                                                            ->schema([
+                                                                Select::make('estilos.catalogo.tipo_filtro')
+                                                                    ->label('Incluir en el catálogo')
+                                                                    ->options([
+                                                                        'todos' => 'Todos los productos',
+                                                                        'categoria' => 'Por Categoría',
+                                                                        'subcategoria' => 'Por Subcategoría',
+                                                                    ])
+                                                                    ->default('todos')
+                                                                    ->live(),
+
+                                                                MultiSelect::make('estilos.catalogo.categorias')
+                                                                    ->label('Categorías a incluir')
+                                                                    ->options(fn () => Categoria::pluck('nombre', 'id'))
+                                                                    ->searchable()
+                                                                    ->preload()
+                                                                    ->visible(fn (Get $get) => $get('estilos.catalogo.tipo_filtro') === 'categoria'),
+
+                                                                MultiSelect::make('estilos.catalogo.subcategorias')
+                                                                    ->label('Subcategorías a incluir')
+                                                                    ->options(fn () => Subcategoria::with('categoria')->get()->mapWithKeys(fn ($sub) => [$sub->id => ($sub->categoria ? $sub->categoria->nombre.' > ' : '').$sub->nombre]))
+                                                                    ->searchable()
+                                                                    ->preload()
+                                                                    ->visible(fn (Get $get) => $get('estilos.catalogo.tipo_filtro') === 'subcategoria'),
+                                                            ]),
                                                     ]),
-                                            ])
-                                            ->columnSpanFull(),
-                                    ]),
-                                Section::make('Estilos globales')
-                                    ->description('Sobrescribe los estilos por defecto de la plantilla.')
-                                    ->visible(fn (Get $get) => filled($get('plantilla_id')))
-                                    ->schema([
-                                        Grid::make(3)->schema([
-                                            FileUpload::make('estilos.favicon')
-                                                ->label('Favicon / Ícono del Sitio (.ico, .png, .svg)')
-                                                ->image()
-                                                ->disk('public')
-                                                ->directory('sites/favicons')
-                                                ->visibility('public')
-                                                ->preserveFilenames()
-                                                ->formatStateUsing(function ($state) {
-                                                    if (is_array($state)) {
-                                                        return array_values($state)[0] ?? null;
-                                                    }
-                                                    if (is_string($state) && str_starts_with(trim($state), '{')) {
-                                                        $decoded = json_decode($state, true);
-                                                        if (is_array($decoded)) {
-                                                            return array_values($decoded)[0] ?? null;
-                                                        }
-                                                    }
-                                                    return $state;
-                                                })
-                                                ->dehydrateStateUsing(function ($state) {
-                                                    if (is_array($state)) {
-                                                        return array_values($state)[0] ?? null;
-                                                    }
-                                                    return $state;
-                                                }),
-                                            ColorPicker::make('estilos.color_primario')
-                                                ->label('Color primario'),
-                                            ColorPicker::make('estilos.color_secundario')
-                                                ->label('Color secundario'),
-                                            ColorPicker::make('estilos.color_acento')
-                                                ->label('Color de acento / Cards destacadas')
-                                                ->helperText('Color para tarjetas destacadas (Llámanos, Asesor WhatsApp y badges). Si se deja vacío, tomará el color primario.')
-                                                ->nullable(),
-                                            Select::make('estilos.tipografia_titulos')
-                                                ->options(PlantillaForm::fuentes())
-                                                ->searchable(),
-                                            Select::make('estilos.tipografia_texto')
-                                                ->options(PlantillaForm::fuentes())
-                                                ->searchable(),
-                                            TextInput::make('estilos.radio_bordes')
-                                                ->placeholder('0.5rem'),
-                                            TextInput::make('estilos.espaciado')
-                                                ->placeholder('1rem'),
-                                        ]),
-                                    ]),
-                                PlantillaForm::redesSocialesSection(),
-                                PlantillaForm::metodosPagoSection(),
+
+                                                Grid::make(2)->schema([
+                                                    Section::make('Marcas Aliadas')
+                                                        ->icon('heroicon-o-tag')
+                                                        ->description('Selecciona las marcas que comercializa esta tienda.')
+                                                        ->collapsible()
+                                                        ->schema([
+                                                            CheckboxList::make('marcas')
+                                                                ->label('Marcas asociadas')
+                                                                ->relationship('marcas', 'titulo')
+                                                                ->columns(2)
+                                                                ->searchable()
+                                                                ->bulkToggleable(),
+                                                            TextInput::make('estilos.seccion_marcas.orden')
+                                                                ->label('Orden en el Menú')
+                                                                ->numeric()
+                                                                ->placeholder('Ej: 5'),
+                                                        ]),
+
+                                                    Section::make('Servicios Ofrecidos')
+                                                        ->icon('heroicon-o-wrench-screwdriver')
+                                                        ->description('Servicios complementarios mostrados en la tienda.')
+                                                        ->collapsible()
+                                                        ->schema([
+                                                            CheckboxList::make('servicios')
+                                                                ->label('Servicios asociados')
+                                                                ->relationship('servicios', 'nombre')
+                                                                ->columns(2)
+                                                                ->searchable()
+                                                                ->bulkToggleable(),
+                                                            TextInput::make('estilos.seccion_servicios.orden')
+                                                                ->label('Orden en el Menú')
+                                                                ->numeric()
+                                                                ->placeholder('Ej: 3'),
+                                                        ]),
+                                                ]),
+                                            ]),
+
+                                        Tab::make('SEO, Contacto & Pagos')
+                                            ->icon('heroicon-o-globe-alt')
+                                            ->schema([
+                                                Section::make('SEO y Posicionamiento en Google')
+                                                    ->icon('heroicon-o-magnifying-glass-circle')
+                                                    ->description('Personaliza cómo aparece este sitio web en los resultados de búsqueda de Google y al compartir enlaces por WhatsApp.')
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        Grid::make(2)->schema([
+                                                            TextInput::make('estilos.seo.title')
+                                                                ->label('Título SEO (Google)')
+                                                                ->placeholder('Ej: Mi Tienda — Herramientas y Equipamiento')
+                                                                ->helperText('Título que aparecerá en la pestaña y en los resultados de búsqueda de Google.')
+                                                                ->columnSpan(2),
+                                                            Textarea::make('estilos.seo.description')
+                                                                ->label('Metadescripción (Google)')
+                                                                ->placeholder('Ej: Venta de productos y equipamiento con la mejor calidad, garantía y envíos rápidos a todo el país.')
+                                                                ->rows(3)
+                                                                ->helperText('Resumen de 120–160 caracteres que aparecerá debajo del título en Google.')
+                                                                ->columnSpan(2),
+                                                            TextInput::make('estilos.seo.keywords')
+                                                                ->label('Palabras clave (Keywords)')
+                                                                ->placeholder('Ej: herramientas, ferretería, equipamiento, calidad')
+                                                                ->helperText('Separadas por comas.')
+                                                                ->columnSpan(2),
+                                                            FileUpload::make('estilos.seo.og_image')
+                                                                ->label('Imagen para Redes Sociales y WhatsApp (OG Image)')
+                                                                ->image()
+                                                                ->disk('public')
+                                                                ->directory('sites/seo')
+                                                                ->helperText('Medida sugerida: 1200 x 630 px. Si se deja vacío, se utilizará el logo del sitio o la foto del producto.')
+                                                                ->columnSpan(1),
+                                                            TextInput::make('estilos.seo.google_verification')
+                                                                ->label('Código de Verificación de Google Search Console')
+                                                                ->placeholder('Ej: google-site-verification=abc123xyz...')
+                                                                ->helperText('Token o etiqueta meta proporcionada por Google Search Console.')
+                                                                ->columnSpan(1),
+                                                        ]),
+                                                    ]),
+
+                                                Section::make('Datos de Contacto Globales')
+                                                    ->icon('heroicon-o-phone')
+                                                    ->description('Define números de WhatsApp, correos electrónicos y horarios globales del sitio.')
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        Repeater::make('estilos.acciones_nav')
+                                                            ->label('WhatsApp, Correos y Contacto')
+                                                            ->schema([
+                                                                Grid::make(3)->schema([
+                                                                    Select::make('icono')
+                                                                        ->label('Tipo / Ícono')
+                                                                        ->options([
+                                                                            'FaWhatsapp' => 'WhatsApp',
+                                                                            'FaEnvelope' => 'Correo Electrónico',
+                                                                            'FaBriefcase' => 'Correo de Trabajo / Maletín',
+                                                                            'FaPhone' => 'Teléfono Fijo / Móvil',
+                                                                            'FaClock' => 'Horario de Atención',
+                                                                            'FaLocationDot' => 'Ubicación / Dirección',
+                                                                        ])
+                                                                        ->default('FaWhatsapp')
+                                                                        ->required(),
+                                                                    TextInput::make('Label')
+                                                                        ->label('Etiqueta')
+                                                                        ->placeholder('Ej. WhatsApp Ventas, Correo, Horario')
+                                                                        ->required(),
+                                                                    Textarea::make('texto')
+                                                                        ->label('Número(s) o Correo(s)')
+                                                                        ->placeholder("Ej. 987654321 o correo@gmail.com\n(Soporta múltiples líneas)")
+                                                                        ->rows(2)
+                                                                        ->required(),
+                                                                ]),
+                                                            ])
+                                                            ->collapsible()
+                                                            ->itemLabel(fn (array $state): ?string => ($state['Label'] ?? '') ? ($state['Label'].': '.($state['texto'] ?? '')) : null)
+                                                            ->columnSpanFull(),
+                                                    ]),
+
+                                                PlantillaForm::metodosPagoSection(),
+                                            ]),
+                                    ])
+                                    ->columnSpanFull(),
                             ]),
 
                         Tab::make('Contenido y Secciones Web')
