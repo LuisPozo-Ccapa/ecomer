@@ -4,6 +4,9 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Resources\Plantillas\Schemas\PlantillaForm;
+use App\Filament\Widgets\ExecutiveStatsOverview;
+use App\Filament\Widgets\QuickServerActionsWidget;
+use App\Filament\Widgets\RecentContactosWidget;
 use App\Helpers\IconRegistry;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -148,8 +151,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                ExecutiveStatsOverview::class,
+                QuickServerActionsWidget::class,
+                RecentContactosWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
