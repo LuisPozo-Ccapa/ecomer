@@ -30,9 +30,26 @@ class ContactoResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Cotizaciones y Contacto';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Mis sitios';
+    protected static string|UnitEnum|null $navigationGroup = 'CRM & Atención';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        try {
+            $count = static::getModel()::where(function ($q) {
+                $q->where('estado', 'nuevo')->orWhere('estado', 'pendiente');
+            })->count();
+            return $count > 0 ? (string) $count : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
 
     public static function canCreate(): bool
     {

@@ -23,9 +23,9 @@ class TallaResource extends Resource
 
     protected static ?string $navigationLabel = 'Tallas';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo & Almacén';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema
     {

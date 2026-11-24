@@ -23,7 +23,7 @@ class MarcaResource extends Resource
 
     protected static ?string $navigationLabel = 'Marcas';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo & Almacén';
 
     protected static ?int $navigationSort = 4;
 

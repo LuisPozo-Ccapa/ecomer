@@ -23,9 +23,9 @@ class SiteResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
 
-    protected static ?string $navigationLabel = 'Mis sitios';
+    protected static ?string $navigationLabel = 'Páginas & Contenido';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Mis sitios';
+    protected static string|UnitEnum|null $navigationGroup = 'CMS & Diseño Web';
 
     protected static ?int $navigationSort = 1;
 
