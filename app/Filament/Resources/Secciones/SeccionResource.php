@@ -22,6 +22,13 @@ class SeccionResource extends Resource
 {
     protected static ?string $model = Seccion::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     protected static ?string $recordTitleAttribute = 'nombre';
 
     protected static int $globalSearchResultsLimit = 8;
