@@ -37,6 +37,7 @@ class SiteForm
             ->components([
                 Tabs::make('SiteFormTabs')
                     ->persistTabInQueryString(false)
+                    ->activeTab(fn () => request()->filled('seccion') ? 2 : 1)
                     ->tabs([
                         Tab::make('Configuración del Sitio')
                             ->icon('heroicon-o-cog')

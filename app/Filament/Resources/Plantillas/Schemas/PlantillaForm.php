@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Plantillas\Schemas;
 
 use App\Filament\Forms\Components\IconPicker;
 use App\Filament\Forms\Components\LinkPicker;
+use App\Filament\Resources\Secciones\SeccionResource;
 use App\Models\Categoria;
 use App\Models\Plantilla;
 use App\Models\Pregunta;
@@ -686,12 +687,20 @@ class PlantillaForm
 
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-nosotros',
+                        'data-cms-seccion' => 'nosotros',
+                    ])
                     ->schema([
                         $toggleSecundaria,
                         $avisoSecundaria,
                         ...(! empty($bloques) ? $bloques : [
                             Section::make($meta['titulo'])
                                 ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-nosotros',
+                                    'data-cms-seccion' => 'nosotros',
+                                ])
                                 ->schema($fields)
                                 ->columns(2),
                         ]),
@@ -733,12 +742,20 @@ class PlantillaForm
 
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-servicios',
+                        'data-cms-seccion' => 'servicios',
+                    ])
                     ->schema([
                         $toggleSecundaria,
                         $avisoSecundaria,
                         ...(! empty($bloques) ? $bloques : [
                             Section::make($meta['titulo'])
                                 ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-servicios',
+                                    'data-cms-seccion' => 'servicios',
+                                ])
                                 ->schema($fields)
                                 ->columns(2),
                         ]),
@@ -780,12 +797,20 @@ class PlantillaForm
 
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-contacto',
+                        'data-cms-seccion' => 'contacto',
+                    ])
                     ->schema([
                         $toggleSecundaria,
                         $avisoSecundaria,
                         ...(! empty($bloques) ? $bloques : [
                             Section::make($meta['titulo'])
                                 ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-contacto',
+                                    'data-cms-seccion' => 'contacto',
+                                ])
                                 ->schema($fields)
                                 ->columns(2),
                         ]),
@@ -828,11 +853,15 @@ class PlantillaForm
         // Ordenar los bloques de inicio según el flujo natural de la tienda
         usort($bloquesInicio, fn ($a, $b) => $a['prioridad'] <=> $b['prioridad']);
 
+        $rawSec = request()->query('seccion');
+        $secParam = $rawSec ? SeccionResource::normalizeCanonicalSlug((string) $rawSec) : null;
+
         $componentesInicio = [];
         foreach ($bloquesInicio as $idx => $bloque) {
             $num = $idx + 1;
             $slugKey = $bloque['slug'] ?? 'bloque_'.$idx;
             $visibilidadField = "estilos.secciones_visibilidad.{$slugKey}";
+            $isRequested = $secParam === $slugKey;
 
             $toggleVisibilidad = Toggle::make($visibilidadField)
                 ->label('Visibilidad en la Tienda')
@@ -865,7 +894,11 @@ class PlantillaForm
                 ->description($bloque['descripcion'])
                 ->icon($bloque['icono'])
                 ->collapsible()
-                ->collapsed($idx > 0)
+                ->collapsed(fn () => $isRequested ? false : ($idx > 0))
+                ->extraAttributes([
+                    'id' => "cms-seccion-{$slugKey}",
+                    'data-cms-seccion' => $slugKey,
+                ])
                 ->schema([
                     $toggleVisibilidad,
                     $avisoOculto,
@@ -885,12 +918,19 @@ class PlantillaForm
         }
 
         if (! empty($tabsSecundarias)) {
+            $activeSubTabSec = match ($secParam) {
+                'servicios' => 2,
+                'contacto' => 3,
+                default => 1,
+            };
+
             $tabsPrincipales[] = Tab::make('Páginas Secundarias')
                 ->icon('heroicon-o-document-duplicate')
                 ->badge(count($tabsSecundarias) . ' páginas')
                 ->schema([
                     Tabs::make('SubTabsPaginasSecundarias')
                         ->persistTabInQueryString(false)
+                        ->activeTab($activeSubTabSec)
                         ->tabs($tabsSecundarias)
                         ->columnSpanFull(),
                 ]);
@@ -913,11 +953,54 @@ class PlantillaForm
             return [];
         }
 
+        $activeTabPrincipal = match (true) {
+            in_array($secParam, ['nosotros', 'servicios', 'contacto']) => 2,
+            $secParam === 'nav' => 3,
+            default => 1,
+        };
+
+        $autoScrollScript = Placeholder::make('cms_autoscroll_script')
+            ->hiddenLabel()
+            ->content(function () use ($secParam) {
+                if (! $secParam) {
+                    return new HtmlString('');
+                }
+
+                $target = e($secParam);
+
+                return new HtmlString('
+                    <script>
+                        (function() {
+                            const target = "' . $target . '";
+                            if (!target) return;
+                            function focusCmsSection() {
+                                const el = document.getElementById("cms-seccion-" + target) || document.querySelector("[data-cms-seccion=\'" + target + "\']");
+                                if (el) {
+                                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                    el.classList.add("ring-2", "ring-primary-500", "ring-offset-2", "transition-all", "duration-500");
+                                    setTimeout(() => {
+                                        el.classList.remove("ring-2", "ring-primary-500", "ring-offset-2");
+                                    }, 3500);
+                                }
+                            }
+                            if (document.readyState === "complete") {
+                                setTimeout(focusCmsSection, 350);
+                            } else {
+                                window.addEventListener("load", () => setTimeout(focusCmsSection, 350));
+                            }
+                        })();
+                    </script>
+                ');
+            })
+            ->columnSpanFull();
+
         return [
             Tabs::make('SubTabsSeccionesRespuestas')
                 ->persistTabInQueryString(false)
+                ->activeTab($activeTabPrincipal)
                 ->tabs($tabsPrincipales)
                 ->columnSpanFull(),
+            $autoScrollScript,
         ];
     }
 
