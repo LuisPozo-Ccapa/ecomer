@@ -126,6 +126,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('ECOMER SaaS')
             ->font('Plus Jakarta Sans')
             ->sidebarCollapsibleOnDesktop()
+            ->globalSearchDebounce('500ms')
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
                 'primary' => Color::Indigo,
                 'gray' => Color::Slate,
