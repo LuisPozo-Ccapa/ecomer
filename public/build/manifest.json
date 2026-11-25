@@ -142,8 +142,8 @@
       "_vendor-react-icons-DB-ZOtwU.js"
     ]
   },
-  "_MarcasSection-ChrOP7Vk.js": {
-    "file": "assets/MarcasSection-ChrOP7Vk.js",
+  "_MarcasSection-vjE2OAyg.js": {
+    "file": "assets/MarcasSection-vjE2OAyg.js",
     "name": "MarcasSection",
     "imports": [
       "_rolldown-runtime-BWaJ3C7D.js",
@@ -371,7 +371,7 @@
     "src": "_vendor-swiper-DBDkIWrS.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BpBkK0wn.css",
+    "file": "assets/app-MiWXKYti.css",
     "name": "app",
     "names": [
       "app.css"
@@ -380,7 +380,7 @@
     "isEntry": true
   },
   "resources/css/filament/admin/theme.css": {
-    "file": "assets/theme-CZtwGHss.css",
+    "file": "assets/theme-B6XuQTcg.css",
     "name": "theme",
     "names": [
       "theme.css"
@@ -389,7 +389,7 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-BNyORuNR.js",
+    "file": "assets/app-BnaG41Ir.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -420,7 +420,7 @@
       "_FaqSection-CRa4LZBQ.js",
       "_GaleriaSection-C0jlht45.js",
       "_HeroSection-DaGV4fEL.js",
-      "_MarcasSection-ChrOP7Vk.js",
+      "_MarcasSection-vjE2OAyg.js",
       "_OfertasSection-CGsC8BjF.js",
       "_ProductosDestacadosSection-D0QzpbtT.js",
       "_SectoresSection-BFSs87gt.js",
@@ -583,7 +583,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/Index.jsx": {
-    "file": "assets/Index-Makl_Hyn.js",
+    "file": "assets/Index-DJcP5UnS.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Ecomer/Index.jsx",
     "isDynamicEntry": true,
@@ -682,7 +682,7 @@
     ]
   },
   "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-fw1sp6pG.js",
+    "file": "assets/SectionInicio-DsubXt1o.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Ecomer/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -693,7 +693,7 @@
       "_HeroSection-DaGV4fEL.js",
       "_GaleriaSection-C0jlht45.js",
       "_OfertasSection-CGsC8BjF.js",
-      "_MarcasSection-ChrOP7Vk.js",
+      "_MarcasSection-vjE2OAyg.js",
       "_CategoriaSection-BobiP3aW.js",
       "_ProductosDestacadosSection-D0QzpbtT.js",
       "_SectoresSection-BFSs87gt.js",
@@ -970,7 +970,7 @@
     ]
   },
   "resources/js/pages/sites/TiendaMinimal/Index.jsx": {
-    "file": "assets/Index-D7FCRfrw.js",
+    "file": "assets/Index-B7FIGi4R.js",
     "name": "Index",
     "src": "resources/js/pages/sites/TiendaMinimal/Index.jsx",
     "isDynamicEntry": true,
@@ -989,7 +989,7 @@
     ]
   },
   "resources/js/pages/sites/TiendaMinimal/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-Bb2KqI6l.js",
+    "file": "assets/SectionInicio-CuHEc4Q6.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/TiendaMinimal/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,
@@ -1090,7 +1090,7 @@
     ]
   },
   "resources/js/pages/sites/Tortas/Index.jsx": {
-    "file": "assets/Index-BBrHUdDr.js",
+    "file": "assets/Index-FM0rkIl6.js",
     "name": "Index",
     "src": "resources/js/pages/sites/Tortas/Index.jsx",
     "isDynamicEntry": true,
@@ -1109,7 +1109,7 @@
     ]
   },
   "resources/js/pages/sites/Tortas/components/Inicio/SectionInicio.jsx": {
-    "file": "assets/SectionInicio-BSsThcu8.js",
+    "file": "assets/SectionInicio-xdNP0s0j.js",
     "name": "SectionInicio",
     "src": "resources/js/pages/sites/Tortas/components/Inicio/SectionInicio.jsx",
     "isDynamicEntry": true,

@@ -5,10 +5,16 @@ export function useInicioData(
     seccionesData = null,
     initialProductosDestacados = null
 ) {
+    const isActiva = (sec) => {
+        if (!sec) return false;
+        if (sec.activa === false) return false;
+        return true;
+    };
+
     const findSeccion = (slugKey) => {
         if (!seccionesData) {
-return null;
-}
+            return null;
+        }
 
         const normalize = (str) =>
             String(str || '')
@@ -20,26 +26,26 @@ return null;
         const target = normalize(slugKey);
 
         if (!target) {
-return null;
-}
+            return null;
+        }
 
         // 1. Acceso directo por clave de objeto ('sobre-nosotros', 'sobre_nosotros', etc.)
         if (typeof seccionesData === 'object' && !Array.isArray(seccionesData)) {
             if (seccionesData[slugKey]) {
-return seccionesData[slugKey];
-}
+                return isActiva(seccionesData[slugKey]) ? seccionesData[slugKey] : null;
+            }
 
             const dashKey = String(slugKey).toLowerCase().replace(/_/g, '-');
 
             if (seccionesData[dashKey]) {
-return seccionesData[dashKey];
-}
+                return isActiva(seccionesData[dashKey]) ? seccionesData[dashKey] : null;
+            }
 
             const underKey = String(slugKey).toLowerCase().replace(/-/g, '_');
 
             if (seccionesData[underKey]) {
-return seccionesData[underKey];
-}
+                return isActiva(seccionesData[underKey]) ? seccionesData[underKey] : null;
+            }
         }
 
         const list = Array.isArray(seccionesData)
@@ -49,14 +55,14 @@ return seccionesData[underKey];
         // 2. Coincidencia EXACTA por slug o nombre
         for (const item of list) {
             if (!item) {
-continue;
-}
+                continue;
+            }
 
             const itemSlug = normalize(item.slug || '');
             const itemNom = normalize(item.nombre || '');
 
             if (itemSlug === target || itemNom === target) {
-                return item;
+                return isActiva(item) ? item : null;
             }
         }
 
@@ -64,7 +70,7 @@ continue;
         if (typeof seccionesData === 'object' && !Array.isArray(seccionesData)) {
             for (const key in seccionesData) {
                 if (normalize(key) === target) {
-                    return seccionesData[key];
+                    return isActiva(seccionesData[key]) ? seccionesData[key] : null;
                 }
             }
         }
@@ -74,7 +80,9 @@ continue;
 
     // Identifica las secciones del sitio
     const isInicioSection = seccionActiva?.slug?.toLowerCase() === 'inicio' || seccionActiva?.slug?.toLowerCase() === 'hero';
-    const inicio = isInicioSection ? seccionActiva : (findSeccion('inicio') || findSeccion('hero') || null);
+    const inicioRaw = isInicioSection ? seccionActiva : (findSeccion('inicio') || findSeccion('hero') || null);
+    const inicio = isActiva(inicioRaw) ? inicioRaw : null;
+
     const galeria = findSeccion('galeria') || null;
     const ofertas = findSeccion('ofertas') || null;
     const marcas = findSeccion('marcas') || null;
@@ -87,6 +95,8 @@ continue;
     const sedes = findSeccion('sedes') || findSeccion('sucursales') || findSeccion('puntos_venta') || findSeccion('puntos-de-venta') || null;
     const faq = findSeccion('faq') || findSeccion('faqs') || findSeccion('preguntas_frecuentes') || findSeccion('preguntas-frecuentes') || null;
     const contancto = findSeccion('contacto') || null;
+    const categoria = findSeccion('categoria') || null;
+    const productosSec = findSeccion('productos') || findSeccion('tortasdestacadas') || null;
 
     return {
         inicio,
@@ -103,6 +113,8 @@ continue;
         sedes,
         faq,
         contacto: contancto,
+        categoria,
+        productosSec,
         productosDestacados: initialProductosDestacados || [],
         loading: false,
         error: null,

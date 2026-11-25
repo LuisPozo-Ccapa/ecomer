@@ -43,6 +43,8 @@ export default function SectionInicio({
         comoComprar,
         sedes,
         faq,
+        categoria,
+        productosSec,
         productosDestacados: productos,
         loading,
         error,
@@ -53,6 +55,9 @@ export default function SectionInicio({
         seccionesData,
         listaProductos
     );
+
+    const isProductosVisible = seccionesData?.productos ? seccionesData.productos.activa !== false : true;
+    const isCategoriaVisible = seccionesData?.categoria ? seccionesData.categoria.activa !== false : true;
 
     if (loading) {
         return (
@@ -77,18 +82,23 @@ export default function SectionInicio({
         <main className="flex-1">
             <HeroSection seccionData={inicio} site={site} />
             <GaleriaSection seccionData={galeria} site={site} />
-            <div className="content-auto">
-                <MarcasSection
-                    seccionData={marcas}
-                    productos={initialProductos.length > 0 ? initialProductos : productos}
-                    marcasSitio={marcasSitio}
+            {marcas && (
+                <div className="content-auto">
+                    <MarcasSection
+                        seccionData={marcas}
+                        productos={initialProductos.length > 0 ? initialProductos : productos}
+                        marcasSitio={marcasSitio}
+                        onSeleccionarProducto={onSeleccionarProducto}
+                    />
+                </div>
+            )}
+            {isProductosVisible && (
+                <ProductosDestacadosSection
+                    seccionData={productosSec}
+                    productos={productos}
                     onSeleccionarProducto={onSeleccionarProducto}
                 />
-            </div>
-            <ProductosDestacadosSection
-                productos={productos}
-                onSeleccionarProducto={onSeleccionarProducto}
-            />
+            )}
             <div className="content-auto">
                 <OfertasSection
                     seccionData={ofertas}
@@ -96,14 +106,17 @@ export default function SectionInicio({
                     onSeleccionarProducto={onSeleccionarProducto}
                 />
             </div>
-            <div className="content-auto">
-                <CategoriaSection
-                    productos={initialProductos.length > 0 ? initialProductos : productos}
-                    dominio={dominio}
-                    siteSlug={siteSlug}
-                    onSeleccionarProducto={onSeleccionarProducto}
-                />
-            </div>
+            {isCategoriaVisible && (
+                <div className="content-auto">
+                    <CategoriaSection
+                        seccionData={categoria}
+                        productos={initialProductos.length > 0 ? initialProductos : productos}
+                        dominio={dominio}
+                        siteSlug={siteSlug}
+                        onSeleccionarProducto={onSeleccionarProducto}
+                    />
+                </div>
+            )}
             <div className="content-auto">
                 <SectoresSection seccionData={sectores} />
             </div>

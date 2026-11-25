@@ -14,6 +14,7 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MultiSelect;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -29,6 +30,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PlantillaForm
@@ -653,13 +655,46 @@ class PlantillaForm
             if ($slugNorm === 'nosotros' && $nombreNorm !== 'sobrenosotros') {
                 $meta = $secundariasMetadata['nosotros'];
                 $bloques = self::organizarBloquesSecundaria($seccion, 'nosotros');
+                $visibilidadField = 'estilos.secciones_visibilidad.nosotros';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['nosotros'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_nosotros')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema(! empty($bloques) ? $bloques : [
-                        Section::make($meta['titulo'])
-                            ->description($meta['descripcion'])
-                            ->schema($fields)
-                            ->columns(2),
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
                     ]);
                 continue;
             }
@@ -667,13 +702,46 @@ class PlantillaForm
             if (in_array($slugNorm, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio'])) {
                 $meta = $secundariasMetadata['servicios'];
                 $bloques = self::organizarBloquesSecundaria($seccion, 'servicios');
+                $visibilidadField = 'estilos.secciones_visibilidad.servicios';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['servicios'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_servicios')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema(! empty($bloques) ? $bloques : [
-                        Section::make($meta['titulo'])
-                            ->description($meta['descripcion'])
-                            ->schema($fields)
-                            ->columns(2),
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
                     ]);
                 continue;
             }
@@ -681,13 +749,46 @@ class PlantillaForm
             if (in_array($slugNorm, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos'])) {
                 $meta = $secundariasMetadata['contacto'];
                 $bloques = self::organizarBloquesSecundaria($seccion, 'contacto');
+                $visibilidadField = 'estilos.secciones_visibilidad.contacto';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['contacto'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_contacto')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
                 $tabsSecundarias[] = Tab::make($meta['titulo'])
                     ->icon($meta['icono'])
-                    ->schema(! empty($bloques) ? $bloques : [
-                        Section::make($meta['titulo'])
-                            ->description($meta['descripcion'])
-                            ->schema($fields)
-                            ->columns(2),
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
                     ]);
                 continue;
             }
@@ -704,6 +805,7 @@ class PlantillaForm
             if ($matchedKey) {
                 $meta = $inicioMetadata[$matchedKey];
                 $bloquesInicio[] = [
+                    'slug' => $matchedKey,
                     'prioridad' => $meta['prioridad'],
                     'titulo' => $meta['titulo'],
                     'descripcion' => $meta['descripcion'],
@@ -729,12 +831,46 @@ class PlantillaForm
         $componentesInicio = [];
         foreach ($bloquesInicio as $idx => $bloque) {
             $num = $idx + 1;
+            $slugKey = $bloque['slug'] ?? 'bloque_'.$idx;
+            $visibilidadField = "estilos.secciones_visibilidad.{$slugKey}";
+
+            $toggleVisibilidad = Toggle::make($visibilidadField)
+                ->label('Visibilidad en la Tienda')
+                ->helperText('Si se desactiva, este bloque queda oculto en la tienda pública. La información se conserva guardada.')
+                ->default(true)
+                ->formatStateUsing(function ($state, ?Model $record) use ($slugKey) {
+                    if ($state !== null) {
+                        return (bool) $state;
+                    }
+                    if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                        $parentVis = $record->plantilla->estilos['secciones_visibilidad'][$slugKey] ?? null;
+                        if ($parentVis !== null) {
+                            return (bool) $parentVis;
+                        }
+                    }
+                    return true;
+                })
+                ->onColor('success')
+                ->offColor('gray')
+                ->live()
+                ->columnSpanFull();
+
+            $avisoOculto = Placeholder::make("aviso_oculto_{$slugKey}")
+                ->hiddenLabel()
+                ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta sección está <strong>oculta en la tienda pública</strong>. La información permanece guardada, pero no será visible para los clientes.</span></div>'))
+                ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                ->columnSpanFull();
+
             $componentesInicio[] = Section::make("{$num}. {$bloque['titulo']}")
                 ->description($bloque['descripcion'])
                 ->icon($bloque['icono'])
                 ->collapsible()
-                ->collapsed($idx > 0) // El primer bloque abierto, los demás colapsados
-                ->schema($bloque['fields'])
+                ->collapsed($idx > 0)
+                ->schema([
+                    $toggleVisibilidad,
+                    $avisoOculto,
+                    ...$bloque['fields'],
+                ])
                 ->columns(2);
         }
 
