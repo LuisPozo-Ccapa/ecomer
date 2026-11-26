@@ -70,7 +70,6 @@ class ProductosResourceTest extends TestCase
         Livewire::test(CreateCategoria::class)
             ->fillForm([
                 'site_id' => $this->site->id,
-                'tienda_id' => $this->tienda->id,
                 'nombre' => 'Ropa',
                 'slug' => 'ropa',
                 'activa' => true,
@@ -88,7 +87,7 @@ class ProductosResourceTest extends TestCase
         ]);
 
         $this->assertSame($categoria->id, $subcategoria->categoria_id);
-        $this->assertSame($this->tienda->id, $subcategoria->categoria->tienda_id);
+        $this->assertSame('Ropa', $subcategoria->categoria->nombre);
     }
 
     public function test_producto_pages_render(): void
