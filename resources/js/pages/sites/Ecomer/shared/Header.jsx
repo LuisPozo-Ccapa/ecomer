@@ -30,7 +30,7 @@ const parseOrden = (val, fallback) => {
     return fallback;
 };
 
-export default function Header({ site, dominio, siteSlug, secciones, seccionActiva, tieneTienda, productos, seccionesData, serviciosSitio, marcasSitio = [], estilos, esDetalleProducto = false }) {
+export default function Header({ site, dominio, siteSlug, secciones, seccionActiva, tieneTienda, productos, seccionesData, serviciosSitio, marcasSitio = [], marcasCatalogo = [], estilos, esDetalleProducto = false }) {
     const [isScrolled, setIsScrolled] = useState(false);
     const headerRef = useRef(null);
     const [headerHeight, setHeaderHeight] = useState(0);
@@ -425,9 +425,13 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     const marcasArbol = useMemo(() => {
         const map = new Map();
 
-        // 1. Desde marcasSitio (backend)
-        if (Array.isArray(marcasSitio) && marcasSitio.length > 0) {
-            marcasSitio.forEach((m) => {
+        // 1. Desde marcasCatalogo (todas las marcas comerciales activas del panel) o marcasSitio
+        const fuenteMarcas = (Array.isArray(marcasCatalogo) && marcasCatalogo.length > 0)
+            ? marcasCatalogo
+            : (Array.isArray(marcasSitio) ? marcasSitio : []);
+
+        if (fuenteMarcas.length > 0) {
+            fuenteMarcas.forEach((m) => {
                 const name = typeof m === 'string' ? m : (m.titulo || m.nombre || '');
                 if (!name) return;
                 const key = name.toLowerCase().trim();
@@ -444,7 +448,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             });
         }
 
-        // 2. Desde los productos
+        // 2. Asociar productos y sus marcas
         if (Array.isArray(productos) && productos.length > 0) {
             productos.forEach((prod) => {
                 let mName = null;
@@ -487,7 +491,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
         }
 
         return Array.from(map.values());
-    }, [marcasSitio, productos]);
+    }, [marcasCatalogo, marcasSitio, productos]);
 
     const activeMarcaData = useMemo(() => {
         if (!activeHoverMarca) return null;
