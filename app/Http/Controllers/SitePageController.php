@@ -160,7 +160,10 @@ class SitePageController extends Controller
             ->where('activo', true);
 
         if (! empty($tiendaIds)) {
-            $productosQuery->whereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds));
+            $productosQuery->where(function ($q) use ($tiendaIds) {
+                $q->whereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds))
+                    ->orWhereIn('tienda_id', $tiendaIds);
+            });
         } else {
             $productosQuery->whereRaw('1 = 0');
         }
@@ -214,6 +217,22 @@ class SitePageController extends Controller
             ->map(fn (Marca $m) => [
                 'id' => $m->id,
                 'titulo' => $m->titulo,
+                'slug' => $m->slug,
+                'imagen' => $m->imagen ? asset('storage/'.$m->imagen) : null,
+                'descripcion' => $m->descripcion,
+            ])
+            ->toArray();
+
+        // Serializar todas las marcas comerciales activas para catálogo y desplegable del menú
+        $marcasCatalogo = Marca::query()
+            ->where('activa', true)
+            ->orderBy('orden')
+            ->orderBy('titulo')
+            ->get()
+            ->map(fn (Marca $m) => [
+                'id' => $m->id,
+                'titulo' => $m->titulo,
+                'nombre' => $m->titulo,
                 'slug' => $m->slug,
                 'imagen' => $m->imagen ? asset('storage/'.$m->imagen) : null,
                 'descripcion' => $m->descripcion,
@@ -508,6 +527,7 @@ class SitePageController extends Controller
             'estilos' => $estilos,
             'serviciosSitio' => $serviciosSitio,
             'marcasSitio' => $marcasSitio,
+            'marcasCatalogo' => $marcasCatalogo,
         ]);
     }
 
