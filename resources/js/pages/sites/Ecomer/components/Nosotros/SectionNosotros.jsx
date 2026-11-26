@@ -56,11 +56,9 @@ export default function SectionNosotros({
             </div>
 
             {/* Seccion 4: Valores y Compromiso (Cuadrícula de tarjetas con números 01, 02...) */}
-            {valores?.valor && (
-                <div className="content-auto">
-                    <ValoresSection seccionData={valores} />
-                </div>
-            )}
+            <div className="content-auto">
+                <ValoresSection seccionData={valores} />
+            </div>
 
             {/* Seccion 5: Elegirnos (Cuadrícula de tarjetas blancas con insignia numérica) */}
             <div className="content-auto">

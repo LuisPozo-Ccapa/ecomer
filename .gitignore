@@ -29,6 +29,9 @@ error_log
 /storage/framework/sessions/*
 /storage/framework/views/*
 !/storage/framework/views/.gitkeep
+/storage/framework/testing/*
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
 /vendor
 /scratch
 /composer-setup.php
@@ -37,6 +40,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+*.zip
 *.zip/erp
 /docs
 /deploy

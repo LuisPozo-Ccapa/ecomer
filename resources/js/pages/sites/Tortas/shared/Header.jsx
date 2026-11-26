@@ -4,6 +4,14 @@ import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
 import CartOffcanvas from '@/components/CartOffcanvas';
 
+const parseOrden = (val, fallback) => {
+    if (val !== undefined && val !== null && val !== '') {
+        const num = Number(val);
+        if (!isNaN(num) && num > 0) return num;
+    }
+    return fallback;
+};
+
 export default function Header({ site, dominio, siteSlug, secciones, seccionActiva, tieneTienda, productos, seccionesData, estilos }) {
     const { url: currentUrl } = usePage();
     const [isScrolled, setIsScrolled] = useState(false);
@@ -38,9 +46,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
     const navSecciones = useMemo(() => {
         let list = Array.isArray(secciones) ? [...secciones] : [];
 
-        const prodOrden = estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== ''
-            ? Number(estilos.seccion_productos.orden)
-            : 2;
+        const prodOrden = parseOrden(estilos?.seccion_productos?.orden, 3);
 
         const hasProductosOrTienda = list.some((s) => {
             const slug = (s.slug || '').toLowerCase();
@@ -56,15 +62,15 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
         list = list.map((s) => {
             const slug = (s.slug || '').toLowerCase();
             if (slug === 'productos' || slug === 'tienda' || slug === 'tiendas') {
-                return { ...s, orden: estilos?.seccion_productos?.orden !== undefined && estilos?.seccion_productos?.orden !== '' ? Number(estilos.seccion_productos.orden) : (s.orden ?? 2) };
+                return { ...s, orden: parseOrden(estilos?.seccion_productos?.orden, parseOrden(s.orden, 3)) };
             }
             if (slug === 'servicios' || slug === 'servicio') {
-                return { ...s, orden: estilos?.seccion_servicios?.orden !== undefined && estilos?.seccion_servicios?.orden !== '' ? Number(estilos.seccion_servicios.orden) : (s.orden ?? 3) };
+                return { ...s, orden: parseOrden(estilos?.seccion_servicios?.orden, parseOrden(s.orden, 6)) };
             }
             // Excluir catálogo del nav — va como botón flotante
             if (slug === 'catalogo') return null;
             if (['sectores', 'sobre_nosotros', 'sobre-nosotros', 'sobrenosotros'].includes(slug)) return null;
-            return { ...s, orden: s.orden ?? 99 };
+            return { ...s, orden: parseOrden(s.orden, 99) };
         }).filter(Boolean);
 
         list.sort((a, b) => Number(a.orden ?? 99) - Number(b.orden ?? 99));

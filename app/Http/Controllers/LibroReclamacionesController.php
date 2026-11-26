@@ -18,6 +18,15 @@ class LibroReclamacionesController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        // Protección anti-bot Honeypot: si el campo trampa tiene contenido, descartar silenciosamente
+        if (! empty($request->input('_hp_website'))) {
+            return response()->json([
+                'success' => true,
+                'codigo' => 'REC-'.date('Y').'-0001',
+                'mensaje' => 'Reclamación registrada exitosamente.',
+            ]);
+        }
+
         $validator = Validator::make($request->all(), [
             'site_id' => 'required|exists:sites,id',
             'tipo' => 'required|in:reclamo,queja',

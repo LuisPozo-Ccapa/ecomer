@@ -162,7 +162,7 @@ export function useServiciosData(seccion, seccionesData, serviciosSitio = []) {
     }
 
     const serviciosBlock = {
-        subIcono: serviciosDataObj.SubIcono || serviciosDataObj.subicono || 'MdOutlineCake',
+        subIcono: serviciosDataObj.SubIcono || serviciosDataObj.subicono || 'FaTools',
         sub: serviciosDataObj.sub || serviciosDataObj.Sub || '',
         titulo: serviciosDataObj.Titulo || serviciosDataObj.titulo || '',
         items: itemsFinales,
@@ -180,7 +180,7 @@ export function useServiciosData(seccion, seccionesData, serviciosSitio = []) {
     const imagenFondo = Array.isArray(imagenFondoRaw) ? imagenFondoRaw[0] : (typeof imagenFondoRaw === 'string' ? imagenFondoRaw : null);
 
     const procesosBlock = {
-        subIcono: procesosDataObj.SubIcono || procesosDataObj.subicono || 'PiCakeBold',
+        subIcono: procesosDataObj.SubIcono || procesosDataObj.subicono || 'FaCogs',
         sub: procesosDataObj.Sub || procesosDataObj.sub || '',
         titulo: procesosDataObj.Titulo || procesosDataObj.titulo || '',
         imagenFondo: imagenFondo,

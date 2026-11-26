@@ -187,7 +187,7 @@ return new class extends Migration
             );
 
             // 7. Seed inicial para los sites que usan ecomer (ej. Lismercorp) con los 4 sectores de muestra
-            $sites = Site::where('plantilla_id', $plantilla->id)->get();
+            $sites = \Illuminate\Support\Facades\DB::table('sites')->where('plantilla_id', $plantilla->id)->get();
             foreach ($sites as $site) {
                 // Solo si no tiene respuesta para pSectores todavía
                 $existing = Respuesta::where('site_id', $site->id)->where('pregunta_id', $pSectores->id)->first();

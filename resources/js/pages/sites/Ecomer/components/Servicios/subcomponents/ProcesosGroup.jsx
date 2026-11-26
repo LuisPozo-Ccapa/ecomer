@@ -1,12 +1,61 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function ProcesosGroup({ procesosBlock }) {
-    if (!procesosBlock || !procesosBlock.items || procesosBlock.items.length === 0) {
-        return null;
-    }
+    const subIcono = procesosBlock?.subIcono || 'FaCogs';
+    const sub = procesosBlock?.sub || 'PASO A PASO';
+    const titulo = procesosBlock?.titulo || '¿Cómo trabajamos /*nuestros servicios*/?';
+    const imagenFondo = procesosBlock?.imagenFondo;
 
-    const { subIcono, sub, titulo, imagenFondo, items } = procesosBlock;
+    const rawItems = Array.isArray(procesosBlock?.items) ? procesosBlock.items : [];
+    const items = rawItems.length > 0 ? rawItems : [
+        {
+            numero: '01',
+            titulo: 'Recepción y Diagnóstico',
+            descripcion: 'Recibimos tu solicitud y evaluamos las especificaciones técnicas requeridas para ofrecerte la solución precisa.',
+        },
+        {
+            numero: '02',
+            titulo: 'Cotización y Planificación',
+            descripcion: 'Elaboramos una propuesta formal y transparente con costos detallados, plazos de entrega y asesoría experta.',
+        },
+        {
+            numero: '03',
+            titulo: 'Ejecución y Entrega Garantizada',
+            descripcion: 'Realizamos el suministro o servicio con estricto control de calidad, acompañamiento y garantía oficial.',
+        },
+    ];
+
+    const renderFormattedTitle = (text) => {
+        if (!text) return null;
+        const regex = /\/\*(.*?)\*\//g;
+        const parts = [];
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                parts.push({ text: text.slice(lastIndex, match.index), isHighlight: false });
+            }
+            parts.push({ text: match[1], isHighlight: true });
+            lastIndex = regex.lastIndex;
+        }
+        if (lastIndex < text.length) {
+            parts.push({ text: text.slice(lastIndex), isHighlight: false });
+        }
+
+        if (parts.length === 0) return <span>{text}</span>;
+
+        return parts.map((part, idx) => (
+            <span
+                key={idx}
+                className={part.isHighlight ? 'text-[var(--color-primario)]' : ''}
+            >
+                {part.text}
+            </span>
+        ));
+    };
 
     return (
         <section className="relative overflow-hidden bg-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8 text-gray-900">
@@ -46,7 +95,7 @@ export default function ProcesosGroup({ procesosBlock }) {
                             className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight"
                             style={{ fontFamily: 'var(--tipografia-titulos)' }}
                         >
-                            {titulo}
+                            {renderFormattedTitle(titulo)}
                         </h2>
                     )}
                 </div>

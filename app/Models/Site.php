@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['user_id', 'plantilla_id', 'tienda_id', 'moneda_id', 'nombre', 'slug', 'imagen', 'estado', 'estilos'])]
 class Site extends Model
 {
+    use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::saved(function (Site $site) {
+            \App\Observers\ProductoObserver::clearCatalogCache($site->id);
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -69,6 +79,11 @@ class Site extends Model
     public function libroReclamaciones(): HasMany
     {
         return $this->hasMany(LibroReclamacion::class);
+    }
+
+    public function contactos(): HasMany
+    {
+        return $this->hasMany(Contacto::class);
     }
 
     /**

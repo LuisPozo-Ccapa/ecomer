@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['site_id', 'tienda_id', 'moneda_id', 'categoria_id', 'subcategoria_id', 'marca_id', 'nombre', 'slug', 'descripcion_corta', 'descripcion', 'precio', 'precio_oferta', 'precio_dolares', 'precio_oferta_dolares', 'precio_euros', 'precio_oferta_euros', 'cantidad', 'stock', 'sku', 'codigo_referencia', 'enlace', 'imagen', 'imagenes', 'activo', 'destacado', 'es_liquidacion', 'orden'])]
 class Producto extends Model
 {
+    use SoftDeletes;
     private static function normalizeStoragePath(mixed $value): ?string
     {
         if ($value === null || $value === '') {

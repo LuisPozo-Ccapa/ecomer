@@ -45,7 +45,7 @@ class LibroReclamacionResource extends Resource
 
     public static function canDelete(Model $record): bool
     {
-        return true;
+        return false;
     }
 
     public static function form(Schema $schema): Schema
