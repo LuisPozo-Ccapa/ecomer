@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { router } from '@inertiajs/react';
 import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
 
@@ -97,7 +98,9 @@ export default function MarcasSection({
         return Array.from(map.values());
     }, [productos]);
 
-    // Combinar y deduplicar marcas manteniendo el orden de prioridad: Backend > Productos > CMS
+    // Combinar y deduplicar marcas para el carrusel de inicio:
+    // SOLO marcasFromBackend (Marcas Aliadas del sitio) y marcasFromCMS (logos del CMS de portada).
+    // EXCLUIMOS marcasFromProductos para que las marcas de productos NO se mezclen en el carrusel de inicio.
     const marcasList = useMemo(() => {
         const result = [];
         const seenKeys = new Set();
@@ -111,11 +114,10 @@ export default function MarcasSection({
         };
 
         marcasFromBackend.forEach(addMarca);
-        marcasFromProductos.forEach(addMarca);
         marcasFromCMS.forEach(addMarca);
 
         return result;
-    }, [marcasFromBackend, marcasFromProductos, marcasFromCMS]);
+    }, [marcasFromBackend, marcasFromCMS]);
 
     // Pista base para el marquee: asegurar suficientes marcas para cualquier resolución y loop uniforme
     const marcasTrack = useMemo(() => {
@@ -221,6 +223,14 @@ export default function MarcasSection({
         }
     };
 
+    const handleMarcaClick = (m) => {
+        const marcaParam = m.slug || m.titulo;
+        if (!marcaParam || typeof window === 'undefined') return;
+        const currentPath = window.location.pathname.replace(/\/inicio\/?$/, '').replace(/\/+$/, '');
+        const targetUrl = `${currentPath || ''}/productos?marca=${encodeURIComponent(marcaParam)}`;
+        router.visit(targetUrl);
+    };
+
     if (!seccionData && marcasList.length === 0 && productos.length === 0) return null;
 
     return (
@@ -270,6 +280,8 @@ export default function MarcasSection({
                                 {marcasTrack.map((m, idx) => (
                                     <div
                                         key={`m1-${idx}`}
+                                        onClick={() => handleMarcaClick(m)}
+                                        title={m.titulo ? `Ver productos de ${m.titulo}` : 'Ver marca'}
                                         className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
                                     >
                                         {m.imagen ? (
@@ -299,6 +311,8 @@ export default function MarcasSection({
                                 {marcasTrack.map((m, idx) => (
                                     <div
                                         key={`m2-${idx}`}
+                                        onClick={() => handleMarcaClick(m)}
+                                        title={m.titulo ? `Ver productos de ${m.titulo}` : 'Ver marca'}
                                         className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
                                     >
                                         {m.imagen ? (
