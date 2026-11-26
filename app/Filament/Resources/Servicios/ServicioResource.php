@@ -25,9 +25,9 @@ class ServicioResource extends Resource
 
     protected static ?string $navigationLabel = 'Servicios';
 
-    protected static UnitEnum|string|null $navigationGroup = 'Almacén';
+    protected static UnitEnum|string|null $navigationGroup = 'Catálogo & Almacén';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 7;
 
     public static function form(Schema $schema): Schema
     {

@@ -3,11 +3,15 @@
 namespace App\Filament\Resources\Productos\Tables;
 
 use App\Models\Producto;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -20,6 +24,13 @@ class ProductosTable
     {
         return $table
             ->columns([
+                ImageColumn::make('imagen')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->square()
+                    ->size(40)
+                    ->extraImgAttributes(['class' => 'rounded-lg object-cover shadow-sm', 'loading' => 'lazy'])
+                    ->toggleable(),
                 TextColumn::make('codigo_referencia')
                     ->label('Cód. Ref.')
                     ->formatStateUsing(fn ($state, Producto $record) => $state ?: 'PROD-'.str_pad((string) $record->id, 5, '0', STR_PAD_LEFT))
@@ -27,16 +38,20 @@ class ProductosTable
                     ->sortable()
                     ->badge()
                     ->color('gray')
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable()
                     ->sortable()
                     ->placeholder('—')
+                    ->fontFamily('mono')
                     ->toggleable(),
                 TextColumn::make('nombre')
+                    ->label('Producto')
+                    ->weight('bold')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (Producto $record): ?string => $record->marca?->nombre ? "Marca: {$record->marca->nombre}" : null),
                 TextColumn::make('almacenes_con_stock')
                     ->label('Almacenes')
                     ->state(function (Producto $record): array {
@@ -52,15 +67,16 @@ class ProductosTable
                         })->toArray();
                     })
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('categoria_id')
                     ->label('Categoría')
+                    ->badge()
+                    ->color('gray')
                     ->formatStateUsing(fn (Producto $record): ?string => $record->subcategoria?->nombre ?? $record->categoria?->nombre),
-                TextColumn::make('variantes_count')
-                    ->label('Variantes')
-                    ->numeric(),
                 TextColumn::make('precio')
                     ->label('Precio')
+                    ->weight('bold')
                     ->formatStateUsing(function (Producto $record): string {
                         $simbolo = $record->tiendas->first()?->moneda?->simbolo ?? 'S/';
 
@@ -81,18 +97,21 @@ class ProductosTable
                         return $record->stock !== null ? (string) $record->stock : 'Ilimitado';
                     })
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'danger',
-                        'Ilimitado' => 'success',
-                        default => 'primary',
+                    ->color(fn (string $state): string => match (true) {
+                        $state === '0' || $state === 'Agotado' => 'danger',
+                        is_numeric($state) && (int) $state <= 5 => 'warning',
+                        default => 'success',
                     })
                     ->sortable(),
-                TextColumn::make('activo')
-                    ->formatStateUsing(fn ($state) => $state ? '✓ Activo' : '✗ Inactivo'),
+                ToggleColumn::make('activo')
+                    ->label('En Tienda')
+                    ->onColor('success')
+                    ->offColor('gray'),
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->with([
                 'categoria',
                 'subcategoria',
+                'marca',
                 'tiendas.moneda',
                 'productoTiendas.tienda',
             ])->withCount('variantes'))
@@ -124,6 +143,11 @@ class ProductosTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                Action::make('ver_web')
+                    ->label('Ver Web')
+                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                    ->color('gray')
+                    ->url(fn (Producto $record) => url('/producto/' . ($record->slug ?: $record->id)), shouldOpenInNewTab: true),
                 EditAction::make(),
                 DeleteAction::make()
                     ->label('Borrar'),

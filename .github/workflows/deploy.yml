@@ -65,7 +65,11 @@ jobs:
             **/vendor/**
             .htaccess
             bootstrap/cache/*.php
-            storage/**
+            storage/app/public/**
+            storage/framework/sessions/*
+            storage/framework/views/*
+            storage/framework/cache/*
+            storage/logs/*.log
             public/storage/**
             tests/**
             phpunit.xml
@@ -83,7 +87,12 @@ jobs:
 
       - name: 8. Ejecucion Post-Deploy Remota (Migraciones Seguras y Cache)
         run: |
-          echo "Ejecutando post-deploy seguro en ${{ secrets.PROD_URL }}..."
-          curl --fail-with-body -s -X POST "${{ secrets.PROD_URL }}/api/deploy/run-tasks" \
+          PROD_URL="${{ secrets.PROD_URL }}"
+          PROD_URL="${PROD_URL%/}"
+          echo "Ejecutando post-deploy seguro en ${PROD_URL}..."
+          curl --fail-with-body -s -L -X POST "${PROD_URL}/api/deploy/run-tasks" \
+            -H "X-Deploy-Token: ${{ secrets.DEPLOY_TOKEN }}" \
+            || curl --fail-with-body -s -L -X POST "${PROD_URL}/deploy/run-tasks" \
             -H "X-Deploy-Token: ${{ secrets.DEPLOY_TOKEN }}"
+
 

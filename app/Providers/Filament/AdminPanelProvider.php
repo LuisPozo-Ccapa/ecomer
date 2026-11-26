@@ -4,12 +4,16 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Resources\Plantillas\Schemas\PlantillaForm;
+use App\Filament\Widgets\ExecutiveStatsOverview;
+use App\Filament\Widgets\QuickServerActionsWidget;
+use App\Filament\Widgets\RecentContactosWidget;
 use App\Helpers\IconRegistry;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
@@ -19,6 +23,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -113,9 +118,26 @@ class AdminPanelProvider extends PanelProvider
                     ]).';</script>'
                 )
             )
+            ->renderHook(
+                PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): View => view('filament.components.topbar-actions')
+            )
             ->login(Login::class)
+            ->brandName('ECOMER SaaS')
+            ->font('Plus Jakarta Sans')
+            ->sidebarCollapsibleOnDesktop()
+            ->globalSearchDebounce('500ms')
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
+            ])
+            ->navigationGroups([
+                NavigationGroup::make('Catálogo & Almacén'),
+                NavigationGroup::make('CMS & Diseño Web'),
+                NavigationGroup::make('CRM & Atención'),
+                NavigationGroup::make('Configuración')->collapsed(),
+                NavigationGroup::make('Seguridad & Accesos')->collapsed(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -126,13 +148,14 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('sitemap.xml (Ver XML)')
                     ->url(fn (): string => url('/sitemap.xml'), shouldOpenInNewTab: true)
                     ->icon(Heroicon::OutlinedCodeBracket)
-                    ->group('Mis sitios')
+                    ->group('CMS & Diseño Web')
                     ->sort(4),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                ExecutiveStatsOverview::class,
+                QuickServerActionsWidget::class,
+                RecentContactosWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

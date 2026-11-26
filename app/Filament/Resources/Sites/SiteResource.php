@@ -21,11 +21,15 @@ class SiteResource extends Resource
 {
     protected static ?string $model = Site::class;
 
+    protected static ?string $recordTitleAttribute = 'nombre';
+
+    protected static int $globalSearchResultsLimit = 5;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
 
-    protected static ?string $navigationLabel = 'Mis sitios';
+    protected static ?string $navigationLabel = 'Páginas & Contenido';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Mis sitios';
+    protected static string|UnitEnum|null $navigationGroup = 'CMS & Diseño Web';
 
     protected static ?int $navigationSort = 1;
 
@@ -45,6 +49,28 @@ class SiteResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nombre', 'slug'];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->with('plantilla');
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        /** @var Site $record */
+        return array_filter([
+            'Identificador (Slug)' => $record->slug,
+            'Plantilla' => $record->plantilla?->nombre,
+            'Estado' => $record->estado ? ucfirst((string) $record->estado) : null,
+        ]);
     }
 
     public static function getRelations(): array

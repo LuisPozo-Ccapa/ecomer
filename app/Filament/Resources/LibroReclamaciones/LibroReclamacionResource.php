@@ -29,9 +29,24 @@ class LibroReclamacionResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Libro de Reclamaciones';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Mis sitios';
+    protected static string|UnitEnum|null $navigationGroup = 'CRM & Atención';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        try {
+            $count = static::getModel()::where('estado', 'pendiente')->count();
+            return $count > 0 ? (string) $count : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
 
     public static function canViewAny(): bool
     {

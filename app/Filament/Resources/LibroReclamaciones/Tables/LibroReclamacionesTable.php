@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LibroReclamaciones\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -92,6 +93,22 @@ class LibroReclamacionesTable
                     ]),
             ])
             ->recordActions([
+                Action::make('whatsapp')
+                    ->label('WhatsApp')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->color('success')
+                    ->url(function ($record): ?string {
+                        if (! $record->telefono) {
+                            return null;
+                        }
+                        $clean = preg_replace('/[^0-9]/', '', $record->telefono);
+                        if (! str_starts_with($clean, '51') && strlen($clean) === 9) {
+                            $clean = '51' . $clean;
+                        }
+                        $cliente = $record->nombres ? ($record->nombres . ' ' . $record->apellidos) : ($record->razon_social ?: 'Estimado/a consumidor');
+                        $msg = urlencode("Hola {$cliente}, le escribimos de " . request()->getHost() . " respecto a su Hoja de Reclamación N° {$record->codigo}.");
+                        return "https://wa.me/{$clean}?text={$msg}";
+                    }, shouldOpenInNewTab: true),
                 EditAction::make()->label('Gestionar'),
             ]);
     }

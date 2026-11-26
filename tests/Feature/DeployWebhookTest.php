@@ -29,6 +29,15 @@ class DeployWebhookTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson(['status' => 'success']);
+
+        // Probar también la ruta directa sin prefijo api (redundancia de compatibilidad)
+        $responseDirect = $this->postJson('/deploy/run-tasks', [], [
+            'X-Deploy-Token' => 'token_de_prueba_seguro_12345',
+        ]);
+
+        $responseDirect->assertStatus(200);
+        $responseDirect->assertJson(['status' => 'success']);
+
         $response->assertJsonStructure([
             'status',
             'timestamp',

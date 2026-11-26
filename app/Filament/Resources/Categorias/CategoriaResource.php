@@ -22,13 +22,17 @@ class CategoriaResource extends Resource
 {
     protected static ?string $model = Categoria::class;
 
+    protected static ?string $recordTitleAttribute = 'nombre';
+
+    protected static int $globalSearchResultsLimit = 5;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderOpen;
 
     protected static ?string $navigationLabel = 'Categorías';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo & Almacén';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {
@@ -46,6 +50,28 @@ class CategoriaResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nombre', 'slug'];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->with('site');
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        /** @var Categoria $record */
+        return array_filter([
+            'Slug' => $record->slug,
+            'Sitio' => $record->site?->nombre,
+            'Estado' => $record->activa ? 'Activa' : 'Inactiva',
+        ]);
     }
 
     public static function getRelations(): array

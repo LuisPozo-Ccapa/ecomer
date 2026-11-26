@@ -25,9 +25,9 @@ class SubcategoriaResource extends Resource
 
     protected static ?string $navigationLabel = 'Subcategorías';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo & Almacén';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

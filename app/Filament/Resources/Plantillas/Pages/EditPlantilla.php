@@ -6,6 +6,7 @@ use App\Filament\Resources\Plantillas\PlantillaResource;
 use App\Models\Pregunta;
 use App\Models\Respuesta;
 use App\Models\Site;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\DB;

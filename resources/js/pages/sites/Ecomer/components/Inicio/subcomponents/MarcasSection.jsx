@@ -9,6 +9,8 @@ export default function MarcasSection({
     marcasSitio = [],
     onSeleccionarProducto,
 }) {
+    if (!seccionData || seccionData.activa === false) return null;
+
     const addItem = useCartStore((state) => state.addItem);
     const cartItems = useCartStore((state) => state.items);
 

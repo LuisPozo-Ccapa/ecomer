@@ -261,7 +261,8 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             return slug === 'marcas' || slug === 'marca';
         });
 
-        const hasMarcasData = Array.isArray(marcasSitio) && marcasSitio.length > 0;
+        const hasMarcasData = (Array.isArray(marcasCatalogo) && marcasCatalogo.length > 0)
+            || (Array.isArray(marcasSitio) && marcasSitio.length > 0);
 
         if (hasMarcasData && !hasMarcasInList) {
             list.push({ slug: 'marcas', nombre: 'Marcas', orden: marcasOrden });
@@ -312,7 +313,7 @@ export default function Header({ site, dominio, siteSlug, secciones, seccionActi
             seenSlugs.add(key);
             return true;
         });
-    }, [secciones, hasStore, serviciosSitio, marcasSitio, estilos, isCatalogoActivo, catalogoTitulo]);
+    }, [secciones, hasStore, serviciosSitio, marcasSitio, marcasCatalogo, estilos, isCatalogoActivo, catalogoTitulo]);
 
     const getDisplayName = (seccion) => {
         const slugLower = (seccion?.slug || '').toLowerCase().trim();
