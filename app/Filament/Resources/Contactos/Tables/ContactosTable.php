@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Contactos\Tables;
 
 use App\Models\Contacto;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreAction;
@@ -104,6 +105,22 @@ class ContactosTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                Action::make('whatsapp')
+                    ->label('WhatsApp')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->color('success')
+                    ->url(function (Contacto $record): ?string {
+                        if (! $record->telefono) {
+                            return null;
+                        }
+                        $clean = preg_replace('/[^0-9]/', '', $record->telefono);
+                        if (! str_starts_with($clean, '51') && strlen($clean) === 9) {
+                            $clean = '51' . $clean;
+                        }
+                        $cliente = $record->nombre ?: 'Estimado/a';
+                        $msg = urlencode("Hola {$cliente}, le escribimos de " . request()->getHost() . " en respuesta a su consulta (Folio: {$record->folio}).");
+                        return "https://wa.me/{$clean}?text={$msg}";
+                    }, shouldOpenInNewTab: true),
                 EditAction::make()->label('Atender'),
                 DeleteAction::make()->label('Archivar'),
                 RestoreAction::make()->label('Restaurar'),

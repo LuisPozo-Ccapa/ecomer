@@ -7,6 +7,7 @@ import Monedas from './Monedas'
 import Plantillas from './Plantillas'
 import Productos from './Productos'
 import Roles from './Roles'
+import Secciones from './Secciones'
 import Servicios from './Servicios'
 import Sites from './Sites'
 import Subcategorias from './Subcategorias'
@@ -23,6 +24,7 @@ Monedas: Object.assign(Monedas, Monedas),
 Plantillas: Object.assign(Plantillas, Plantillas),
 Productos: Object.assign(Productos, Productos),
 Roles: Object.assign(Roles, Roles),
+Secciones: Object.assign(Secciones, Secciones),
 Servicios: Object.assign(Servicios, Servicios),
 Sites: Object.assign(Sites, Sites),
 Subcategorias: Object.assign(Subcategorias, Subcategorias),

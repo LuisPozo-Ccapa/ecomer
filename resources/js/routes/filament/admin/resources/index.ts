@@ -7,6 +7,7 @@ import monedas from './monedas'
 import plantillas from './plantillas'
 import productos from './productos'
 import shield from './shield'
+import secciones from './secciones'
 import servicios from './servicios'
 import sites from './sites'
 import subcategorias from './subcategorias'
@@ -23,6 +24,7 @@ monedas: Object.assign(monedas, monedas),
 plantillas: Object.assign(plantillas, plantillas),
 productos: Object.assign(productos, productos),
 shield: Object.assign(shield, shield),
+secciones: Object.assign(secciones, secciones),
 servicios: Object.assign(servicios, servicios),
 sites: Object.assign(sites, sites),
 subcategorias: Object.assign(subcategorias, subcategorias),

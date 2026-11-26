@@ -4,15 +4,18 @@ namespace App\Filament\Resources\Plantillas\Schemas;
 
 use App\Filament\Forms\Components\IconPicker;
 use App\Filament\Forms\Components\LinkPicker;
+use App\Filament\Resources\Secciones\SeccionResource;
 use App\Models\Categoria;
 use App\Models\Plantilla;
 use App\Models\Pregunta;
+use App\Models\Seccion;
 use App\Models\Site;
 use App\Models\Subcategoria;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MultiSelect;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -28,6 +31,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PlantillaForm
@@ -488,40 +492,733 @@ class PlantillaForm
         }
 
         $secciones = $plantilla->secciones->sortBy('orden');
-        $subTabs = [];
+
+        if ($secciones->isEmpty()) {
+            return [];
+        }
+
+        // Definición de metadatos, títulos amigables y orden para los bloques de la Página de Inicio (Home)
+        $inicioMetadata = [
+            'hero' => [
+                'prioridad' => 1,
+                'titulo' => 'Portada Principal / Hero Slider',
+                'descripcion' => 'Carrusel interactivo de bienvenida con imágenes adaptadas para PC, Tablet y Celular.',
+                'icono' => 'heroicon-o-sparkles',
+            ],
+            'inicio' => [
+                'prioridad' => 1,
+                'titulo' => 'Portada Principal / Hero Slider',
+                'descripcion' => 'Carrusel interactivo de bienvenida con imágenes adaptadas para PC, Tablet y Celular.',
+                'icono' => 'heroicon-o-sparkles',
+            ],
+            'galeria' => [
+                'prioridad' => 2,
+                'titulo' => 'Galería / Mosaico Visual',
+                'descripcion' => 'Mosaico visual de fotos o banners secundarios destacados.',
+                'icono' => 'heroicon-o-photo',
+            ],
+            'marcas' => [
+                'prioridad' => 3,
+                'titulo' => 'Marcas Aliadas',
+                'descripcion' => 'Carrusel de logotipos de fabricantes y marcas asociadas.',
+                'icono' => 'heroicon-o-tag',
+            ],
+            'liquidacion' => [
+                'prioridad' => 4,
+                'titulo' => 'Liquidación (Filtro de Productos en Remate)',
+                'descripcion' => 'Configuración de la etiqueta/filtro para listar productos en liquidación en la tienda y menú.',
+                'icono' => 'heroicon-o-receipt-percent',
+            ],
+            'ofertas' => [
+                'prioridad' => 5,
+                'titulo' => 'Ofertas Destacadas (Banner Promocional)',
+                'descripcion' => 'Banner gráfico y categoría vinculada para la sección de ofertas en la página de inicio.',
+                'icono' => 'heroicon-o-fire',
+            ],
+            'categoria' => [
+                'prioridad' => 6,
+                'titulo' => 'Categorías y Productos en Inicio',
+                'descripcion' => 'Vitrinas de categorías o productos destacados en la portada.',
+                'icono' => 'heroicon-o-shopping-bag',
+            ],
+            'tortasdestacadas' => [
+                'prioridad' => 6,
+                'titulo' => 'Productos Destacados',
+                'descripcion' => 'Selección de productos estrella para la portada.',
+                'icono' => 'heroicon-o-star',
+            ],
+            'productos' => [
+                'prioridad' => 6,
+                'titulo' => 'Vitrina de Productos',
+                'descripcion' => 'Listado o grid de productos visibles en la portada.',
+                'icono' => 'heroicon-o-shopping-bag',
+            ],
+            'banerproducto' => [
+                'prioridad' => 7,
+                'titulo' => 'Banner Intermedio de Productos',
+                'descripcion' => 'Banner publicitario intercalado entre los bloques de productos de la tienda.',
+                'icono' => 'heroicon-o-photo',
+            ],
+            'sectores' => [
+                'prioridad' => 8,
+                'titulo' => 'Sectores Atendidos',
+                'descripcion' => 'Tarjetas informativas de sectores e industrias (Minería, Construcción, Comercio, etc.).',
+                'icono' => 'heroicon-o-building-office-2',
+            ],
+            'sobrenosotros' => [
+                'prioridad' => 9,
+                'titulo' => 'Sobre Nosotros (Resumen en Inicio)',
+                'descripcion' => 'Resumen institucional, imagen destacada, métricas clave y enlace a la página completa.',
+                'icono' => 'heroicon-o-user-group',
+            ],
+            'elegirnos' => [
+                'prioridad' => 10,
+                'titulo' => '¿Por Qué Elegirnos?',
+                'descripcion' => 'Beneficios principales, fortalezas y valores agregados del negocio.',
+                'icono' => 'heroicon-o-check-badge',
+            ],
+            'comocomprar' => [
+                'prioridad' => 11,
+                'titulo' => 'Cómo Comprar / Guía de Cotización',
+                'descripcion' => 'Pasos explicativos para comprar o solicitar cotizaciones en la tienda.',
+                'icono' => 'heroicon-o-shopping-cart',
+            ],
+            'sedes' => [
+                'prioridad' => 12,
+                'titulo' => 'Sedes y Puntos de Atención',
+                'descripcion' => 'Locales físicos, direcciones, horarios de atención y mapas en el inicio.',
+                'icono' => 'heroicon-o-map-pin',
+            ],
+            'faq' => [
+                'prioridad' => 13,
+                'titulo' => 'Preguntas Frecuentes (FAQ)',
+                'descripcion' => 'Acordeón de dudas habituales y respuestas para los clientes.',
+                'icono' => 'heroicon-o-question-mark-circle',
+            ],
+            'tiktok' => [
+                'prioridad' => 14,
+                'titulo' => 'Videos de TikTok',
+                'descripcion' => 'Feed multimedia interactivo con IDs numéricos de videos de TikTok.',
+                'icono' => 'heroicon-o-video-camera',
+            ],
+            'banerpie' => [
+                'prioridad' => 15,
+                'titulo' => 'Banner Promocional Inferior',
+                'descripcion' => 'Banner de ancho completo de llamada a la acción previo al pie de página.',
+                'icono' => 'heroicon-o-megaphone',
+            ],
+        ];
+
+        // Metadatos para Páginas Secundarias independientes
+        $secundariasMetadata = [
+            'nosotros' => [
+                'titulo' => 'Página: Nosotros',
+                'descripcion' => 'Página institucional completa: Portada, Historia cronológica, Misión, Visión, Valores y CTA.',
+                'icono' => 'heroicon-o-information-circle',
+            ],
+            'servicios' => [
+                'titulo' => 'Página: Servicios',
+                'descripcion' => 'Página completa de catálogo de servicios especializados, proceso y cotización.',
+                'icono' => 'heroicon-o-wrench-screwdriver',
+            ],
+            'contacto' => [
+                'titulo' => 'Página: Contacto',
+                'descripcion' => 'Página completa de contacto, sedes, canales de atención y formulario.',
+                'icono' => 'heroicon-o-envelope',
+            ],
+        ];
+
+        $bloquesInicio = [];
+        $tabsSecundarias = [];
+        $camposNav = [];
+        $bloquesOtras = [];
 
         foreach ($secciones as $seccion) {
-            $fields = [];
+            $fields = self::camposDeSeccion($seccion);
+            if (empty($fields)) {
+                continue;
+            }
 
-            $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+            $slugNorm = self::normalizarSlug($seccion->slug);
+            $nombreNorm = self::normalizarSlug($seccion->nombre);
 
-            foreach ($preguntas as $pregunta) {
-                $campo = self::campoRespuesta($pregunta);
-                if (is_array($campo)) {
-                    array_push($fields, ...$campo);
-                } else {
-                    $fields[] = $campo;
+            // 1. Cabecera y Navegación (Nav)
+            if (in_array($slugNorm, ['nav', 'navfooter']) || in_array($nombreNorm, ['nav', 'navfooter', 'cabecera'])) {
+                $camposNav[] = Section::make('Barra Superior de Anuncios y Accesos Rápidos')
+                    ->description('Personaliza el mensaje promocional superior (ej. "Hasta un 15% de descuento") y los accesos directos.')
+                    ->icon('heroicon-o-bars-3')
+                    ->schema($fields)
+                    ->columns(2);
+                continue;
+            }
+
+            // 2. Páginas Secundarias (Nosotros completa, Servicios completa, Contacto completa)
+            if ($slugNorm === 'nosotros' && $nombreNorm !== 'sobrenosotros') {
+                $meta = $secundariasMetadata['nosotros'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'nosotros');
+                $visibilidadField = 'estilos.secciones_visibilidad.nosotros';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['nosotros'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_nosotros')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-nosotros',
+                        'data-cms-seccion' => 'nosotros',
+                    ])
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-nosotros',
+                                    'data-cms-seccion' => 'nosotros',
+                                ])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
+                    ]);
+                continue;
+            }
+
+            if (in_array($slugNorm, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio'])) {
+                $meta = $secundariasMetadata['servicios'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'servicios');
+                $visibilidadField = 'estilos.secciones_visibilidad.servicios';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['servicios'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_servicios')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-servicios',
+                        'data-cms-seccion' => 'servicios',
+                    ])
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-servicios',
+                                    'data-cms-seccion' => 'servicios',
+                                ])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
+                    ]);
+                continue;
+            }
+
+            if (in_array($slugNorm, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos'])) {
+                $meta = $secundariasMetadata['contacto'];
+                $bloques = self::organizarBloquesSecundaria($seccion, 'contacto');
+                $visibilidadField = 'estilos.secciones_visibilidad.contacto';
+
+                $toggleSecundaria = Toggle::make($visibilidadField)
+                    ->label("Visibilidad de Página: {$meta['titulo']}")
+                    ->helperText('Si se desactiva, esta página completa y su enlace en el menú quedarán ocultos al público. La información se conserva guardada.')
+                    ->default(true)
+                    ->formatStateUsing(function ($state, ?Model $record) {
+                        if ($state !== null) {
+                            return (bool) $state;
+                        }
+                        if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                            $parentVis = $record->plantilla->estilos['secciones_visibilidad']['contacto'] ?? null;
+                            if ($parentVis !== null) {
+                                return (bool) $parentVis;
+                            }
+                        }
+                        return true;
+                    })
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->live()
+                    ->columnSpanFull();
+
+                $avisoSecundaria = Placeholder::make('aviso_oculto_contacto')
+                    ->hiddenLabel()
+                    ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta página está <strong>oculta en la tienda pública</strong>. Su enlace en el menú desaparecerá y su contenido no será accesible para los visitantes.</span></div>'))
+                    ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                    ->columnSpanFull();
+
+                $tabsSecundarias[] = Tab::make($meta['titulo'])
+                    ->icon($meta['icono'])
+                    ->extraAttributes([
+                        'id' => 'cms-seccion-contacto',
+                        'data-cms-seccion' => 'contacto',
+                    ])
+                    ->schema([
+                        $toggleSecundaria,
+                        $avisoSecundaria,
+                        ...(! empty($bloques) ? $bloques : [
+                            Section::make($meta['titulo'])
+                                ->description($meta['descripcion'])
+                                ->extraAttributes([
+                                    'id' => 'cms-seccion-contacto',
+                                    'data-cms-seccion' => 'contacto',
+                                ])
+                                ->schema($fields)
+                                ->columns(2),
+                        ]),
+                    ]);
+                continue;
+            }
+
+            // 3. Bloques de Página de Inicio (Home)
+            $matchedKey = null;
+            foreach ($inicioMetadata as $key => $meta) {
+                if ($slugNorm === $key || $nombreNorm === $key || str_contains($slugNorm, $key) || str_contains($nombreNorm, $key)) {
+                    $matchedKey = $key;
+                    break;
                 }
             }
 
-            if (! empty($fields)) {
-                $subTabs[] = Tab::make($seccion->nombre)
-                    ->icon('heroicon-o-document-text')
-                    ->schema($fields)
-                    ->columns(2);
+            if ($matchedKey) {
+                $meta = $inicioMetadata[$matchedKey];
+                $bloquesInicio[] = [
+                    'slug' => $matchedKey,
+                    'prioridad' => $meta['prioridad'],
+                    'titulo' => $meta['titulo'],
+                    'descripcion' => $meta['descripcion'],
+                    'icono' => $meta['icono'],
+                    'fields' => $fields,
+                ];
+                continue;
             }
+
+            // 4. Otras Secciones (adicionales o personalizadas)
+            $bloquesOtras[] = Section::make($seccion->nombre)
+                ->description("Sección adicional: {$seccion->slug}")
+                ->icon('heroicon-o-document-text')
+                ->collapsible()
+                ->collapsed(true)
+                ->schema($fields)
+                ->columns(2);
         }
 
-        if (empty($subTabs)) {
+        // Ordenar los bloques de inicio según el flujo natural de la tienda
+        usort($bloquesInicio, fn ($a, $b) => $a['prioridad'] <=> $b['prioridad']);
+
+        $rawSec = request()->query('seccion');
+        $secParam = $rawSec ? SeccionResource::normalizeCanonicalSlug((string) $rawSec) : null;
+
+        $componentesInicio = [];
+        foreach ($bloquesInicio as $idx => $bloque) {
+            $num = $idx + 1;
+            $slugKey = $bloque['slug'] ?? 'bloque_'.$idx;
+            $visibilidadField = "estilos.secciones_visibilidad.{$slugKey}";
+            $isRequested = $secParam === $slugKey;
+
+            $toggleVisibilidad = Toggle::make($visibilidadField)
+                ->label('Visibilidad en la Tienda')
+                ->helperText('Si se desactiva, este bloque queda oculto en la tienda pública. La información se conserva guardada.')
+                ->default(true)
+                ->formatStateUsing(function ($state, ?Model $record) use ($slugKey) {
+                    if ($state !== null) {
+                        return (bool) $state;
+                    }
+                    if ($record && method_exists($record, 'plantilla') && $record->plantilla) {
+                        $parentVis = $record->plantilla->estilos['secciones_visibilidad'][$slugKey] ?? null;
+                        if ($parentVis !== null) {
+                            return (bool) $parentVis;
+                        }
+                    }
+                    return true;
+                })
+                ->onColor('success')
+                ->offColor('gray')
+                ->live()
+                ->columnSpanFull();
+
+            $avisoOculto = Placeholder::make("aviso_oculto_{$slugKey}")
+                ->hiddenLabel()
+                ->content(new HtmlString('<div class="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg text-xs flex items-center gap-2 mb-2 font-medium"><span>⚠️</span> <span>Esta sección está <strong>oculta en la tienda pública</strong>. La información permanece guardada, pero no será visible para los clientes.</span></div>'))
+                ->visible(fn (Get $get): bool => $get($visibilidadField) === false)
+                ->columnSpanFull();
+
+            $componentesInicio[] = Section::make("{$num}. {$bloque['titulo']}")
+                ->description($bloque['descripcion'])
+                ->icon($bloque['icono'])
+                ->collapsible()
+                ->collapsed(fn () => $isRequested ? false : ($idx > 0))
+                ->extraAttributes([
+                    'id' => "cms-seccion-{$slugKey}",
+                    'data-cms-seccion' => $slugKey,
+                ])
+                ->schema([
+                    $toggleVisibilidad,
+                    $avisoOculto,
+                    ...$bloque['fields'],
+                ])
+                ->columns(2);
+        }
+
+        // Ensamblar las Pestañas Principales del CMS
+        $tabsPrincipales = [];
+
+        if (! empty($componentesInicio)) {
+            $tabsPrincipales[] = Tab::make('Página de Inicio')
+                ->icon('heroicon-o-home')
+                ->badge(count($componentesInicio) . ' bloques')
+                ->schema($componentesInicio);
+        }
+
+        if (! empty($tabsSecundarias)) {
+            $activeSubTabSec = match ($secParam) {
+                'servicios' => 2,
+                'contacto' => 3,
+                default => 1,
+            };
+
+            $tabsPrincipales[] = Tab::make('Páginas Secundarias')
+                ->icon('heroicon-o-document-duplicate')
+                ->badge(count($tabsSecundarias) . ' páginas')
+                ->schema([
+                    Tabs::make('SubTabsPaginasSecundarias')
+                        ->persistTabInQueryString(false)
+                        ->activeTab($activeSubTabSec)
+                        ->tabs($tabsSecundarias)
+                        ->columnSpanFull(),
+                ]);
+        }
+
+        if (! empty($camposNav)) {
+            $tabsPrincipales[] = Tab::make('Cabecera & Navegación')
+                ->icon('heroicon-o-bars-3')
+                ->schema($camposNav);
+        }
+
+        if (! empty($bloquesOtras)) {
+            $tabsPrincipales[] = Tab::make('Otras Secciones')
+                ->icon('heroicon-o-squares-plus')
+                ->badge(count($bloquesOtras))
+                ->schema($bloquesOtras);
+        }
+
+        if (empty($tabsPrincipales)) {
             return [];
         }
+
+        $activeTabPrincipal = match (true) {
+            in_array($secParam, ['nosotros', 'servicios', 'contacto']) => 2,
+            $secParam === 'nav' => 3,
+            default => 1,
+        };
+
+        $autoScrollScript = Placeholder::make('cms_autoscroll_script')
+            ->hiddenLabel()
+            ->content(function () use ($secParam) {
+                if (! $secParam) {
+                    return new HtmlString('');
+                }
+
+                $target = e($secParam);
+
+                return new HtmlString('
+                    <script>
+                        (function() {
+                            const target = "' . $target . '";
+                            if (!target) return;
+                            function focusCmsSection() {
+                                const el = document.getElementById("cms-seccion-" + target) || document.querySelector("[data-cms-seccion=\'" + target + "\']");
+                                if (el) {
+                                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                    el.classList.add("ring-2", "ring-primary-500", "ring-offset-2", "transition-all", "duration-500");
+                                    setTimeout(() => {
+                                        el.classList.remove("ring-2", "ring-primary-500", "ring-offset-2");
+                                    }, 3500);
+                                }
+                            }
+                            if (document.readyState === "complete") {
+                                setTimeout(focusCmsSection, 350);
+                            } else {
+                                window.addEventListener("load", () => setTimeout(focusCmsSection, 350));
+                            }
+                        })();
+                    </script>
+                ');
+            })
+            ->columnSpanFull();
 
         return [
             Tabs::make('SubTabsSeccionesRespuestas')
                 ->persistTabInQueryString(false)
-                ->tabs($subTabs)
+                ->activeTab($activeTabPrincipal)
+                ->tabs($tabsPrincipales)
                 ->columnSpanFull(),
+            $autoScrollScript,
         ];
+    }
+
+    /**
+     * Extrae y construye recursivamente los campos de preguntas de una sección.
+     *
+     * @return array<int, Component>
+     */
+    private static function camposDeSeccion(Seccion $seccion): array
+    {
+        $fields = [];
+        $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+
+        foreach ($preguntas as $pregunta) {
+            $campo = self::campoRespuesta($pregunta);
+            if (is_array($campo)) {
+                array_push($fields, ...$campo);
+            } else {
+                $fields[] = $campo;
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Organiza las preguntas de una página secundaria en bloques modulares,
+     * numerados y colapsables con estética ejecutiva de alta densidad.
+     *
+     * @return array<int, Component>
+     */
+    private static function organizarBloquesSecundaria(Seccion $seccion, string $tipo): array
+    {
+        $diccionarios = [
+            'nosotros' => [
+                'portada' => [
+                    'titulo' => 'Portada & Encabezado Principal',
+                    'descripcion' => 'Banner responsive (Desktop, Tablet, Celular), antetítulo, títulos, botones de acción e indicadores clave.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'historia' => [
+                    'titulo' => 'Historia & Trayectoria Institucional',
+                    'descripcion' => 'Reseña corporativa, hitos cronológicos, años de fundación y evolución en el mercado.',
+                    'icono' => 'heroicon-o-clock',
+                ],
+                'mision' => [
+                    'titulo' => 'Misión & Visión Corporativa',
+                    'descripcion' => 'Tarjetas con íconos, títulos y textos de propósito estratégico y metas empresariales.',
+                    'icono' => 'heroicon-o-flag',
+                ],
+                'misionvision' => [
+                    'titulo' => 'Misión & Visión Corporativa',
+                    'descripcion' => 'Tarjetas con íconos, títulos y textos de propósito estratégico y metas empresariales.',
+                    'icono' => 'heroicon-o-flag',
+                ],
+                'valores' => [
+                    'titulo' => 'Principios & Valores Organizacionales',
+                    'descripcion' => 'Pilares éticos, cultura organizacional y tarjetas de valores de la empresa.',
+                    'icono' => 'heroicon-o-shield-check',
+                ],
+                'elegirnos' => [
+                    'titulo' => '¿Por qué Elegirnos? (Propuesta de Valor)',
+                    'descripcion' => 'Diferenciales competitivos, ventajas del servicio y garantías comerciales clave.',
+                    'icono' => 'heroicon-o-sparkles',
+                ],
+                'accion' => [
+                    'titulo' => 'Llamada a la Acción Final (CTA)',
+                    'descripcion' => 'Bloque interactivo de cierre con botones de contacto, cotización o visita.',
+                    'icono' => 'heroicon-o-chat-bubble-bottom-center-text',
+                ],
+            ],
+            'servicios' => [
+                'hero' => [
+                    'titulo' => 'Portada de Servicios',
+                    'descripcion' => 'Banner panorámico responsive, títulos principales y presentación general de la oferta técnica/comercial.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'portada' => [
+                    'titulo' => 'Portada de Servicios',
+                    'descripcion' => 'Banner panorámico responsive, títulos principales y presentación general de la oferta técnica/comercial.',
+                    'icono' => 'heroicon-o-presentation-chart-line',
+                ],
+                'servicios' => [
+                    'titulo' => 'Catálogo de Servicios Especializados',
+                    'descripcion' => 'Listado estructurado de servicios, especificaciones técnicas, íconos y alcances.',
+                    'icono' => 'heroicon-o-wrench-screwdriver',
+                ],
+                'servicio' => [
+                    'titulo' => 'Catálogo de Servicios Especializados',
+                    'descripcion' => 'Listado estructurado de servicios, especificaciones técnicas, íconos y alcances.',
+                    'icono' => 'heroicon-o-wrench-screwdriver',
+                ],
+                'procesos' => [
+                    'titulo' => 'Proceso & Metodología de Trabajo',
+                    'descripcion' => 'Etapas paso a paso para la cotización, contratación, ejecución y entrega del servicio.',
+                    'icono' => 'heroicon-o-arrow-path',
+                ],
+                'video' => [
+                    'titulo' => 'Video Demostrativo & Indicadores',
+                    'descripcion' => 'Presentación audiovisual, indicadores de satisfacción y métricas de desempeño.',
+                    'icono' => 'heroicon-o-play-circle',
+                ],
+            ],
+            'contacto' => [
+                'contacto' => [
+                    'titulo' => 'Canales de Contacto, Redes, Sedes & Ubicación',
+                    'descripcion' => 'Configuración integral de canales de soporte, mapa interactivo, redes sociales, locales y formas de pago.',
+                    'icono' => 'heroicon-o-envelope',
+                ],
+                'whatsap' => [
+                    'titulo' => 'Atención por WhatsApp',
+                    'descripcion' => 'Números, enlaces directos y mensajes predeterminados para chat.',
+                    'icono' => 'heroicon-o-chat-bubble-oval-left-ellipsis',
+                ],
+                'direccion' => [
+                    'titulo' => 'Dirección & Ubicación Principal',
+                    'descripcion' => 'Sede central, mapa de Google Maps y horarios de atención al público.',
+                    'icono' => 'heroicon-o-map-pin',
+                ],
+            ],
+        ];
+
+        $diccionario = $diccionarios[$tipo] ?? [];
+        $preguntas = $seccion->preguntas->whereNull('parent_id')->sortBy('orden');
+
+        if ($preguntas->isEmpty()) {
+            return [];
+        }
+
+        $camposEscalares = [];
+        $bloquesGrupos = [];
+
+        foreach ($preguntas as $pregunta) {
+            $campo = self::campoRespuesta($pregunta);
+            if (empty($campo)) {
+                continue;
+            }
+
+            if ($pregunta->tipo !== 'grupo') {
+                if (is_array($campo)) {
+                    array_push($camposEscalares, ...$campo);
+                } else {
+                    $camposEscalares[] = $campo;
+                }
+                continue;
+            }
+
+            $labelNorm = self::normalizarSlug($pregunta->label);
+            $meta = $diccionario[$labelNorm] ?? null;
+
+            if (! $meta) {
+                foreach ($diccionario as $key => $dMeta) {
+                    if (str_contains($labelNorm, $key) || str_contains($key, $labelNorm)) {
+                        $meta = $dMeta;
+                        break;
+                    }
+                }
+            }
+
+            $bloquesGrupos[] = [
+                'pregunta' => $pregunta,
+                'campo' => is_array($campo) ? $campo : [$campo],
+                'meta' => $meta,
+            ];
+        }
+
+        $seccionesFinales = [];
+
+        // 1. Campos escalares (si hay textos o datos sueltos fuera de grupos)
+        if (! empty($camposEscalares)) {
+            $seccionesFinales[] = Section::make('Información General de la Página')
+                ->description('Configuración básica, encabezados y textos preliminares.')
+                ->icon('heroicon-o-document-text')
+                ->collapsible()
+                ->collapsed(false)
+                ->schema($camposEscalares)
+                ->columns(2)
+                ->columnSpanFull();
+        }
+
+        // 2. Bloques modulares agrupados
+        foreach ($bloquesGrupos as $item) {
+            $meta = $item['meta'];
+            $labelHumano = self::formatearLabelHumano($item['pregunta']->label);
+            $num = count($seccionesFinales) + 1;
+
+            $titulo = $meta ? "{$num}. {$meta['titulo']}" : "{$num}. {$labelHumano}";
+            $descripcion = $meta ? $meta['descripcion'] : ($item['pregunta']->ayuda ?? "Configuración del bloque {$labelHumano}.");
+            $icono = $meta ? $meta['icono'] : 'heroicon-o-rectangle-stack';
+
+            // El primer bloque arranca abierto, los siguientes colapsados para una navegación ejecutiva limpia
+            $isCollapsed = count($seccionesFinales) > 0;
+
+            $seccionesFinales[] = Section::make($titulo)
+                ->description($descripcion)
+                ->icon($icono)
+                ->collapsible()
+                ->collapsed($isCollapsed)
+                ->schema($item['campo'])
+                ->columnSpanFull();
+        }
+
+        return $seccionesFinales;
+    }
+
+    /**
+     * Normaliza un slug o nombre eliminando tildes, espacios y caracteres especiales.
+     */
+    private static function normalizarSlug(?string $slug): string
+    {
+        if (blank($slug)) {
+            return '';
+        }
+
+        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', (string) $slug);
+        $clean = $clean !== false ? $clean : (string) $slug;
+
+        return strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $clean) ?? '');
     }
 
     /**
@@ -546,16 +1243,21 @@ class PlantillaForm
             return "plantillas/{$folder}/contenido";
         };
 
+        $humanLabel = self::formatearLabelHumano($pregunta->label);
+        $humanAyuda = self::formatearAyudaHumana($pregunta->label, $pregunta->ayuda);
+        $humanPlaceholder = self::formatearPlaceholderHumano($pregunta->label, null);
+
         // Construir el campo principal
         $field = match ($pregunta->tipo) {
             'area' => Textarea::make($statePath)
                 ->rows(3)
-                ->placeholder('Escribe el contenido aquí...'),
+                ->placeholder($humanPlaceholder),
 
-            // imagen con estructura array → FileUpload múltiple con límite
+            // imagen con estructura array → FileUpload múltiple con límite y diseño grid compacto
             'imagen' => $pregunta->estructura === 'array'
                 ? FileUpload::make($statePath)
                     ->multiple()
+                    ->panelLayout('grid')
                     ->maxFiles($pregunta->max_items ?? null)
                     ->webp5Mb($contentDirectory, 'public')
                     ->orientImagesFromExif(false)
@@ -574,6 +1276,7 @@ class PlantillaForm
 
             'galeria' => FileUpload::make($statePath)
                 ->multiple()
+                ->panelLayout('grid')
                 ->webp5Mb($contentDirectory, 'public')
                 ->orientImagesFromExif(false)
                 ->uploadingMessage('Subiendo imágenes...')
@@ -597,130 +1300,9 @@ class PlantillaForm
                         return self::camposFallbackResponsive($contentDirectory);
                     }
 
-                    return $children->map(function (Pregunta $child) use ($contentDirectory) {
-                        $childPath = $child->label;
-
-                        // Un child con estructura=array e imagen usa múltiple
-                        $subField = match ($child->tipo) {
-                            'area' => Textarea::make($childPath)->rows(2),
-                            'imagen' => $child->estructura === 'array'
-                                ? FileUpload::make($childPath)->multiple()->maxFiles($child->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
-                                : FileUpload::make($childPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
-                            'galeria' => FileUpload::make($childPath)->multiple()->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
-                            'color' => ColorPicker::make($childPath),
-                            'icono' => IconPicker::make($childPath),
-                            'enlace' => TextInput::make($childPath)->placeholder('https://ejemplo.com'),
-
-                            // ── Hijo tipo grupo → Repeater con sus propios sub-campos ──
-                            'grupo' => Repeater::make($childPath)
-                                ->schema(function () use ($child, $contentDirectory) {
-                                    $grandChildren = self::asegurarSubcamposResponsive($child);
-                                    if ($grandChildren->isEmpty() && in_array(strtolower($child->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
-                                        return self::camposFallbackResponsive($contentDirectory);
-                                    }
-
-                                    return $grandChildren->map(function (Pregunta $grandChild) use ($contentDirectory) {
-                                        $gcPath = $grandChild->label;
-
-                                        $gcField = match ($grandChild->tipo) {
-                                            'area' => Textarea::make($gcPath)->rows(2),
-                                            'imagen' => $grandChild->estructura === 'array'
-                                                ? FileUpload::make($gcPath)->multiple()->maxFiles($grandChild->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
-                                                : FileUpload::make($gcPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
-                                            'galeria' => FileUpload::make($gcPath)->multiple()->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
-                                            'color' => ColorPicker::make($gcPath),
-                                            'icono' => IconPicker::make($gcPath),
-                                            'enlace' => TextInput::make($gcPath)->placeholder('https://ejemplo.com'),
-
-                                            // ── Bisnieto tipo grupo (ej. Cards -> Lineas) → Sub-Repeater ──
-                                            'grupo' => Repeater::make($gcPath)
-                                                ->schema(function () use ($grandChild, $contentDirectory) {
-                                                    $greatGrandChildren = $grandChild->children;
-                                                    if ($greatGrandChildren->isEmpty() && isset($grandChild->id)) {
-                                                        $greatGrandChildren = Pregunta::where('parent_id', $grandChild->id)->orderBy('orden')->get();
-                                                    }
-
-                                                    return $greatGrandChildren->map(function (Pregunta $ggc) use ($contentDirectory) {
-                                                        $ggcPath = $ggc->label;
-                                                        $ggcField = match ($ggc->tipo) {
-                                                            'area' => Textarea::make($ggcPath)->rows(2),
-                                                            'color' => ColorPicker::make($ggcPath),
-                                                            'icono' => IconPicker::make($ggcPath),
-                                                            'enlace' => TextInput::make($ggcPath)->placeholder('https://ejemplo.com'),
-                                                            default => TextInput::make($ggcPath),
-                                                        };
-
-                                                        $ggcField = $ggcField->label($ggc->label);
-                                                        if ($ggc->ayuda) {
-                                                             $ggcField->helperText($ggc->ayuda);
-                                                        }
-
-                                                        return $ggcField->required((bool) $ggc->requerida);
-                                                    })->all();
-                                                })
-                                                ->label($grandChild->label)
-                                                ->itemLabel(fn (array $state): ?string => $state['Etiqueta'] ?? $state['Numero'] ?? $state['etiqueta'] ?? $state['numero'] ?? null)
-                                                ->defaultItems(0)
-                                                ->addable(true)
-                                                ->deletable(true)
-                                                ->reorderable(true)
-                                                ->collapsible(),
-
-                                            default => TextInput::make($gcPath),
-                                        };
-
-                                        $gcLabel = match ($grandChild->label) {
-                                            'Imagen_pc' => 'Imagen Desktop / PC',
-                                            'Imagen_tablet' => 'Imagen Tablet',
-                                            'Imagen_cel' => 'Imagen Celular / Móvil',
-                                            default => $grandChild->label,
-                                        };
-                                        $gcField = $gcField->label($gcLabel);
-                                        if ($grandChild->ayuda) {
-                                            $gcField->helperText($grandChild->ayuda);
-                                        }
-
-                                        return $gcField->required((bool) $grandChild->requerida);
-                                    })->all();
-                                })
-                                ->label(match ($child->label) {
-                                    'Imagenes' => 'Imágenes de Portada / Banner',
-                                    default => $child->label,
-                                })
-                                ->itemLabel(fn (array $state): ?string => $state['nombre'] ?? $state['titulo'] ?? $state['label'] ?? null)
-                                ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
-                                ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
-                                ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
-                                ->validationMessages([
-                                    'max_items' => 'El campo :attribute no puede tener más de :max elementos.',
-                                    'min_items' => 'El campo :attribute debe tener al menos :min elementos.',
-                                ])
-                                ->addable(true)
-                                ->deletable(true)
-                                ->reorderable($child->estructura === 'array')
-                                ->addActionLabel('+ Agregar '.$child->label)
-                                ->collapsible(),
-
-                            default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath),
-                        };
-
-                        if ($child->tipo !== 'grupo') {
-                            $childLabel = match ($child->label) {
-                                'Imagen_pc' => 'Imagen Desktop / PC',
-                                'Imagen_tablet' => 'Imagen Tablet',
-                                'Imagen_cel' => 'Imagen Celular / Móvil',
-                                default => $child->label,
-                            };
-                            $subField->label($childLabel);
-                        }
-                        if ($child->ayuda) {
-                            $subField->helperText($child->ayuda);
-                        }
-
-                        return $subField->required((bool) $child->requerida);
-                    })->all();
+                    return self::construirEsquemaSubcampos($children, $contentDirectory);
                 })
-                ->itemLabel(fn (array $state): ?string => $state['nombre'] ?? $state['titulo'] ?? $state['label'] ?? null)
+                ->itemLabel(fn (array $state): ?string => self::generarItemLabel($state))
                 ->defaultItems($pregunta->estructura === 'objeto' ? 1 : 0)
                 ->minItems(($pregunta->estructura === 'objeto' && $pregunta->requerida) ? 1 : 0)
                 ->maxItems($pregunta->estructura === 'objeto' ? 1 : $pregunta->max_items)
@@ -728,11 +1310,15 @@ class PlantillaForm
                     'max_items' => 'El campo :attribute no puede tener más de :max elementos.',
                     'min_items' => 'El campo :attribute debe tener al menos :min elementos.',
                 ])
-                ->addable(true)
-                ->deletable(true)
+                ->addable($pregunta->estructura === 'array')
+                ->deletable($pregunta->estructura === 'array')
                 ->reorderable($pregunta->estructura === 'array')
-                ->addActionLabel('+ Agregar '.$pregunta->label)
-                ->collapsible(),
+                ->collapsed($pregunta->estructura === 'array')
+                ->collapsible()
+                ->columnSpanFull()
+                ->addActionLabel('+ Agregar '.$humanLabel)
+                ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
+                ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
 
             default => $pregunta->estructura === 'array'
                 ? TagsInput::make($statePath)
@@ -740,23 +1326,35 @@ class PlantillaForm
                     ->helperText('Puedes agregar múltiples elementos de texto.')
                     ->required((bool) $pregunta->requerida)
                 : TextInput::make($statePath)
-                    ->placeholder('Ingresa el valor...'),
+                    ->placeholder($humanPlaceholder),
         };
 
         // Aplicar propiedades comunes
         $field = $field
-            ->label($pregunta->label)
-            ->helperText($pregunta->ayuda)
+            ->label($humanLabel)
             ->required((bool) $pregunta->requerida);
+
+        if ($humanAyuda) {
+            $field->helperText($humanAyuda);
+        }
 
         if ($pregunta->tipo === 'enlace' || ($pregunta->tipo === 'grupo' && $pregunta->estructura === 'array')) {
             return $field;
         }
 
-        return [
-            $field,
-            LinkPicker::make($linkPath),
-        ];
+        // Filtros internos, tags o códigos numéricos no requieren botón de enlace
+        $labelNorm = strtolower($pregunta->label);
+        if (in_array($labelNorm, ['filtro_producto', 'filtro', 'idvideo', 'id_video', 'numero'])) {
+            return $field;
+        }
+
+        // Colocar campo de texto y LinkPicker en la misma fila horizontal (8 cols input, 4 cols botón)
+        return Grid::make(['default' => 1, 'md' => 12])
+            ->schema([
+                $field->columnSpan(['default' => 12, 'md' => 8]),
+                LinkPicker::make($linkPath)->columnSpan(['default' => 12, 'md' => 4]),
+            ])
+            ->columnSpanFull();
     }
 
     public static function tiposPregunta(): array
@@ -1142,35 +1740,343 @@ class PlantillaForm
     public static function camposFallbackResponsive(mixed $contentDirectory): array
     {
         return [
-            FileUpload::make('Imagen_pc')
-                ->label('Imagen Desktop / PC')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 1920x800 o proporción panorámica. Formato WebP.'),
+            Grid::make(['default' => 1, 'md' => 3])
+                ->schema([
+                    FileUpload::make('Imagen_pc')
+                        ->label('🖥️ Desktop / PC')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Panorámica 1920x800 px (WebP).'),
 
-            FileUpload::make('Imagen_tablet')
-                ->label('Imagen Tablet')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 1024x600 o proporción estándar. Formato WebP.'),
+                    FileUpload::make('Imagen_tablet')
+                        ->label('📱 Tablet')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Estándar 1024x600 px (WebP).'),
 
-            FileUpload::make('Imagen_cel')
-                ->label('Imagen Celular / Móvil')
-                ->webp5Mb($contentDirectory, 'public')
-                ->orientImagesFromExif(false)
-                ->uploadingMessage('Subiendo imagen...')
-                ->deletable(true)
-                ->openable()
-                ->downloadable()
-                ->helperText('Recomendado 768x800 o proporción vertical. Formato WebP.'),
+                    FileUpload::make('Imagen_cel')
+                        ->label('📲 Celular / Móvil')
+                        ->webp5Mb($contentDirectory, 'public')
+                        ->orientImagesFromExif(false)
+                        ->uploadingMessage('Subiendo imagen...')
+                        ->deletable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->helperText('Vertical 768x800 px (WebP).'),
+                ])
+                ->columnSpanFull(),
         ];
+    }
+
+    /**
+     * Construye un esquema de alta densidad para subcampos de un grupo o repetidor,
+     * agrupando imágenes responsivas (PC, tablet, celular) en un triplete horizontal (Grid 3 cols).
+     *
+     * @return array<int, Component>
+     */
+    private static function construirEsquemaSubcampos(Collection $children, mixed $contentDirectory): array
+    {
+        $responsiveLabels = ['imagen_pc', 'imagen_tablet', 'imagen_cel'];
+
+        $responsiveChildren = $children->filter(fn (Pregunta $c) => in_array(strtolower($c->label), $responsiveLabels))->sortBy('orden');
+        $otherChildren = $children->reject(fn (Pregunta $c) => in_array(strtolower($c->label), $responsiveLabels))->sortBy('orden');
+
+        $components = [];
+
+        // 1. Triplete Responsivo en Grilla de 3 columnas (Desktop / Tablet / Celular)
+        if ($responsiveChildren->isNotEmpty()) {
+            $responsiveFields = $responsiveChildren->map(function (Pregunta $child) use ($contentDirectory) {
+                $childPath = $child->label;
+                $label = match (strtolower($child->label)) {
+                    'imagen_pc' => '🖥️ Desktop / PC',
+                    'imagen_tablet' => '📱 Tablet',
+                    'imagen_cel' => '📲 Celular / Móvil',
+                    default => $child->label,
+                };
+
+                $field = FileUpload::make($childPath)
+                    ->label($label)
+                    ->webp5Mb($contentDirectory, 'public')
+                    ->orientImagesFromExif(false)
+                    ->uploadingMessage('Subiendo imagen...')
+                    ->deletable(true)
+                    ->openable()
+                    ->downloadable()
+                    ->helperText(match (strtolower($child->label)) {
+                        'imagen_pc' => 'Panorámica 1920x800',
+                        'imagen_tablet' => 'Estándar 1024x600',
+                        'imagen_cel' => 'Vertical 768x800',
+                        default => 'Formato WebP',
+                    });
+
+                if ($child->ayuda) {
+                    $field->helperText($child->ayuda);
+                }
+
+                return $field->required((bool) $child->requerida);
+            })->all();
+
+            $components[] = Grid::make(['default' => 1, 'md' => count($responsiveFields)])
+                ->schema($responsiveFields)
+                ->columnSpanFull();
+        }
+
+        // 2. Mapear los demás campos (textos, áreas, grupos anidados, etc.)
+        $normalFields = [];
+        foreach ($otherChildren as $child) {
+            $childPath = $child->label;
+            $humanChildLabel = self::formatearLabelHumano($child->label);
+            $humanChildAyuda = self::formatearAyudaHumana($child->label, $child->ayuda);
+            $humanChildPlaceholder = self::formatearPlaceholderHumano($child->label, null);
+
+            $subField = match ($child->tipo) {
+                'area' => Textarea::make($childPath)->rows(2)->placeholder($humanChildPlaceholder),
+                'imagen' => $child->estructura === 'array'
+                    ? FileUpload::make($childPath)->multiple()->panelLayout('grid')->maxFiles($child->max_items ?? null)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable()
+                    : FileUpload::make($childPath)->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imagen...')->deletable(true)->openable()->downloadable(),
+                'galeria' => FileUpload::make($childPath)->multiple()->panelLayout('grid')->webp5Mb($contentDirectory, 'public')->orientImagesFromExif(false)->uploadingMessage('Subiendo imágenes...')->deletable(true)->openable()->downloadable(),
+                'color' => ColorPicker::make($childPath),
+                'icono' => IconPicker::make($childPath),
+                'enlace' => TextInput::make($childPath)->placeholder('https://ejemplo.com'),
+
+                // Sub-grupo anidado
+                'grupo' => Repeater::make($childPath)
+                    ->schema(function () use ($child, $contentDirectory) {
+                        $grandChildren = self::asegurarSubcamposResponsive($child);
+                        if ($grandChildren->isEmpty() && in_array(strtolower($child->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
+                            return self::camposFallbackResponsive($contentDirectory);
+                        }
+
+                        return self::construirEsquemaSubcampos($grandChildren, $contentDirectory);
+                    })
+                    ->label(match ($child->label) {
+                        'Imagenes' => 'Imágenes de Portada / Banner',
+                        default => $humanChildLabel,
+                    })
+                    ->itemLabel(fn (array $state): ?string => self::generarItemLabel($state))
+                    ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
+                    ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
+                    ->maxItems($child->estructura === 'objeto' ? 1 : $child->max_items)
+                    ->collapsible()
+                    ->collapsed($child->estructura === 'array')
+                    ->addable($child->estructura === 'array')
+                    ->deletable($child->estructura === 'array')
+                    ->reorderable($child->estructura === 'array')
+                    ->columnSpanFull()
+                    ->addActionLabel('+ Agregar '.$humanChildLabel)
+                    ->collapseAllAction(fn ($action) => $action->label('Colapsar todos'))
+                    ->expandAllAction(fn ($action) => $action->label('Expandir todos')),
+
+                default => $child->estructura === 'array' ? TagsInput::make($childPath) : TextInput::make($childPath)->placeholder($humanChildPlaceholder),
+            };
+
+            if ($child->tipo !== 'grupo') {
+                $subField->label($humanChildLabel);
+            }
+            if ($humanChildAyuda) {
+                $subField->helperText($humanChildAyuda);
+            }
+            $subField->required((bool) $child->requerida);
+
+            $normalFields[] = $subField;
+        }
+
+        if (! empty($normalFields)) {
+            $components[] = Grid::make(['default' => 1, 'md' => count($normalFields) > 1 ? 2 : 1])
+                ->schema($normalFields)
+                ->columnSpanFull();
+        }
+
+        return $components;
+    }
+
+    /**
+     * Extrae de forma segura un valor como texto plano, descartando arrays y objetos no convertibles.
+     */
+    private static function extraerTextoPlano(mixed $val): ?string
+    {
+        if (is_null($val)) {
+            return null;
+        }
+
+        if (is_string($val) || is_numeric($val)) {
+            $str = trim((string) $val);
+
+            return $str !== '' ? $str : null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Genera un resumen inteligente para cabeceras de repeaters colapsados.
+     */
+    private static function generarItemLabel(array $state): ?string
+    {
+        $year = self::extraerTextoPlano($state['año'] ?? $state['ano'] ?? $state['anio'] ?? null);
+        $title = self::extraerTextoPlano($state['Titulo'] ?? $state['titulo'] ?? $state['Label'] ?? $state['label'] ?? $state['nombre'] ?? $state['Nombre'] ?? $state['pregunta'] ?? $state['texto'] ?? $state['Texto'] ?? $state['Etiqueta'] ?? $state['Numero'] ?? null);
+
+        if ($year && $title) {
+            return "{$year} — " . Str::limit($title, 45);
+        }
+
+        $cifra = self::extraerTextoPlano($state['cifra'] ?? $state['Cifra'] ?? $state['numero'] ?? $state['Numero'] ?? null);
+        $desc = self::extraerTextoPlano($state['descripcion'] ?? $state['Descripcion'] ?? null);
+        if ($cifra && $desc) {
+            return "{$cifra} — " . Str::limit($desc, 40);
+        }
+
+        if ($title && $desc && ! $year) {
+            return "{$title} — " . Str::limit($desc, 35);
+        }
+
+        $platform = self::extraerTextoPlano($state['Plataforma'] ?? $state['plataforma'] ?? $state['Red'] ?? $state['red'] ?? null);
+        if ($platform) {
+            return "Red: {$platform}" . ($title ? " ({$title})" : '');
+        }
+
+        $sede = self::extraerTextoPlano($state['Sede'] ?? $state['sede'] ?? $state['Ciudad'] ?? $state['ciudad'] ?? null);
+        $dir = self::extraerTextoPlano($state['Direccion'] ?? $state['direccion'] ?? null);
+        if ($sede || $dir) {
+            return "Sede: " . ($sede ?? $title ?? Str::limit($dir, 40));
+        }
+
+        $pct = self::extraerTextoPlano($state['Porcentaje'] ?? $state['porcentaje'] ?? null);
+        if ($pct && $title) {
+            return "{$title} ({$pct}%)";
+        }
+
+        if ($title) {
+            return Str::limit($title, 55);
+        }
+
+        if (! empty($state['Imagen_pc'])) {
+            $file = is_array($state['Imagen_pc']) ? array_values($state['Imagen_pc'])[0] : $state['Imagen_pc'];
+            if (is_string($file)) {
+                return 'Slide ('.basename($file).')';
+            }
+        }
+
+        if (! empty($state['IdVideo']) && is_scalar($state['IdVideo'])) {
+            return 'TikTok ID: '.$state['IdVideo'];
+        }
+
+        if (! empty($state['imagen'])) {
+            $file = is_array($state['imagen']) ? array_values($state['imagen'])[0] : $state['imagen'];
+            if (is_string($file)) {
+                return 'Elemento ('.basename($file).')';
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Traduce etiquetas crudas de base de datos a nombres legibles y profesionales.
+     */
+    private static function formatearLabelHumano(string $label): string
+    {
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto', 'filtro' => 'Etiqueta o Categoría de Filtro',
+            'idvideo', 'id_video' => 'ID Numérico del Video (TikTok)',
+            'sub' => 'Subtítulo / Antetítulo',
+            'titulo', 'título' => 'Título Principal',
+            'subtitulo', 'sub_titulo' => 'Subtítulo',
+            'parrafo', 'párrafo', 'descripcion', 'descripción' => 'Descripción / Párrafo',
+            'boton' => 'Texto del Botón Principal',
+            'boton1' => 'Texto del Primer Botón',
+            'boton2' => 'Texto del Segundo Botón',
+            'boton_texto' => 'Texto del Botón',
+            'boton_enlace' => 'Enlace o URL del Botón',
+            'badge', 'badge_destacado' => 'Insignia / Badge Destacado',
+            'badge_texto' => 'Texto de la Insignia',
+            'mensaje' => 'Mensaje de la Barra Superior',
+            'accion' => 'Accesos Rápidos de Cabecera',
+            'categorias' => 'Categorías Asociadas',
+            'posicion' => 'Posición en el Mosaico',
+            'cifra' => 'Cifra Numérica Destacada',
+            'etiqueta' => 'Etiqueta de la Métrica',
+            'mapa' => 'Enlace o Ubicación de Google Maps',
+            'horarios' => 'Horario de Atención al Público',
+            'direccion' => 'Dirección Física del Local',
+            'pregunta' => 'Pregunta del Cliente',
+            'respuesta' => 'Respuesta Informativa',
+            'faqs' => 'Listado de Preguntas Frecuentes',
+            'pasos' => 'Pasos de Compra / Cotización',
+            'metricas' => 'Métricas e Indicadores Clave',
+            'info' => 'Tarjetas de Información',
+            'cards' => 'Tarjetas de Contenido',
+            'imagen_pc' => '🖥️ Desktop / PC',
+            'imagen_tablet' => '📱 Tablet',
+            'imagen_cel' => '📲 Celular / Móvil',
+            'año', 'ano' => 'Año / Hito Cronológico',
+            'porcentaje' => 'Porcentaje (%)',
+            'tarjetas_pago' => 'Tarjetas y Métodos de Pago',
+            'redes' => 'Redes Sociales',
+            'sedes' => 'Sedes y Sucursales',
+            'historia' => 'Hitos de Historia',
+            'mision/vision' => 'Misión y Visión',
+            'valores' => 'Valores Corporativos',
+            'elegirnos' => 'Propuesta de Valor',
+            'servicio_detallado' => 'Servicios Detallados',
+            'procesos' => 'Fases del Proceso',
+            default => ucfirst(str_replace('_', ' ', $label)),
+        };
+    }
+
+    /**
+     * Provee texto de ayuda explicativo si el campo carece de descripción en la base de datos.
+     */
+    private static function formatearAyudaHumana(string $label, ?string $ayudaOriginal): ?string
+    {
+        if (filled($ayudaOriginal)) {
+            return $ayudaOriginal;
+        }
+
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto' => 'Escribe la etiqueta o categoría para filtrar productos en este bloque (ej. "liquidacion", "ofertas").',
+            'idvideo', 'id_video' => 'Código numérico de la URL del video en TikTok (ej. 7661860945529933064).',
+            'sub' => 'Texto introductorio en tamaño reducido ubicado justo encima del título principal.',
+            'mensaje' => 'Frase publicitaria visible para todos los clientes en la barra superior de la tienda.',
+            'categorias' => 'Presiona Enter tras cada término para asociar múltiples categorías.',
+            'posicion' => 'Orden de aparición numérica dentro del mosaico de fotos.',
+            'mapa' => 'Pega el enlace de Google Maps para abrir la ruta en el móvil del cliente.',
+            default => null,
+        };
+    }
+
+    /**
+     * Provee un placeholder contextual y amigable según el tipo de campo.
+     */
+    private static function formatearPlaceholderHumano(string $label, ?string $placeholderOriginal): string
+    {
+        if (filled($placeholderOriginal)) {
+            return $placeholderOriginal;
+        }
+
+        $norm = strtolower(trim($label));
+
+        return match ($norm) {
+            'filtro_producto' => 'Ej: liquidacion',
+            'idvideo', 'id_video' => 'Ej: 7661860945529933064',
+            'sub' => 'Ej: NUESTRA EMPRESA o CATÁLOGO EXCLUSIVO',
+            'mensaje' => 'Ej: ¡Aprovecha hasta un 15% de descuento en pedidos hoy!',
+            'boton', 'boton1' => 'Ej: Ver Catálogo, Cotizar Ahora',
+            'boton2' => 'Ej: Más Información, Contáctanos',
+            'mapa' => 'https://maps.google.com/?q=...',
+            default => 'Ingresa el valor...',
+        };
     }
 }

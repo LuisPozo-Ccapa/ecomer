@@ -5,9 +5,11 @@ export function useInicioData(
     seccionesData = null,
     initialProductosDestacados = null
 ) {
+    const isActiva = (sec) => sec && sec.activa !== false;
+
     const findSeccion = (slugKey) => {
         if (!seccionesData) return null;
-        if (seccionesData[slugKey]) return seccionesData[slugKey];
+        if (seccionesData[slugKey]) return isActiva(seccionesData[slugKey]) ? seccionesData[slugKey] : null;
 
         // Normaliza: minúsculas, sin tildes/diacríticos, guiones en lugar de _ o espacio
         const normalize = (str) =>
@@ -21,7 +23,7 @@ export function useInicioData(
         for (const key in seccionesData) {
             const normalized = normalize(key);
             if (normalized === target || normalized.includes(target) || target.includes(normalized)) {
-                return seccionesData[key];
+                return isActiva(seccionesData[key]) ? seccionesData[key] : null;
             }
         }
         return null;

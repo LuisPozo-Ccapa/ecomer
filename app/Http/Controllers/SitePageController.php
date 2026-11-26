@@ -59,10 +59,36 @@ class SitePageController extends Controller
         }
 
         $site = $this->findSite($dominio, $siteSlug);
+        $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
+        $visibilidad = $estilos['secciones_visibilidad'] ?? [];
 
         $seccionesNav = $site->plantilla->secciones
             ->where('activa', true)
-            ->reject(fn ($s) => in_array(strtolower(str_replace(['_', ' '], '-', $s->slug)), ['nav', 'sectores', 'sobre-nosotros', 'sobre_nosotros', 'como-comprar', 'como_comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones']));
+            ->reject(function ($s) use ($visibilidad) {
+                $slugNorm = strtolower(str_replace(['_', ' '], '-', $s->slug));
+                if (in_array($slugNorm, ['nav', 'sectores', 'sobre-nosotros', 'sobre_nosotros', 'como-comprar', 'como_comprar', 'comocomprar', 'cotizacion', 'sedes', 'sucursales', 'puntos-de-venta', 'puntos_venta', 'faq', 'faqs', 'preguntas-frecuentes', 'preguntas_frecuentes', 'libro-de-reclamaciones', 'libro-reclamaciones', 'reclamaciones'])) {
+                    return true;
+                }
+
+                $nombreNorm = strtolower(str_replace(['_', ' ', '-'], '', $s->nombre));
+                $cleanSlug = strtolower(str_replace(['_', ' ', '-'], '', $s->slug));
+
+                $visKey = match (true) {
+                    $cleanSlug === 'nosotros' || $nombreNorm === 'nosotros' => 'nosotros',
+                    in_array($cleanSlug, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio']) => 'servicios',
+                    in_array($cleanSlug, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos']) => 'contacto',
+                    default => $slugNorm,
+                };
+
+                if (isset($visibilidad[$visKey]) && ! (bool) $visibilidad[$visKey]) {
+                    return true;
+                }
+                if (isset($visibilidad[$slugNorm]) && ! (bool) $visibilidad[$slugNorm]) {
+                    return true;
+                }
+
+                return false;
+            });
 
         $targetSlug = strtolower(str_replace(['_', ' '], '-', $seccionSlug));
         $seccion = $seccionesNav->first(function ($s) use ($targetSlug) {
@@ -75,6 +101,22 @@ class SitePageController extends Controller
             return $sSlug === $targetSlug || $sNombre === $targetSlug || str_contains($sSlug, $targetSlug) || str_contains($targetSlug, $sSlug);
         });
 
+        // Si se intentó ingresar directamente a una página secundaria que está oculta por switch, redirigir a inicio
+        if ($seccion) {
+            $seccionSlugNorm = strtolower(str_replace(['_', ' ', '-'], '', $seccion->slug));
+            $nombreNorm = strtolower(str_replace(['_', ' ', '-'], '', $seccion->nombre));
+            $visKey = match (true) {
+                $seccionSlugNorm === 'nosotros' || $nombreNorm === 'nosotros' => 'nosotros',
+                in_array($seccionSlugNorm, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio']) => 'servicios',
+                in_array($seccionSlugNorm, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos']) => 'contacto',
+                default => null,
+            };
+            if ($visKey && isset($visibilidad[$visKey]) && ! (bool) $visibilidad[$visKey]) {
+                $homeUrl = $siteSlug ? "/{$dominio}/{$siteSlug}" : ($dominio ? "/{$dominio}" : '/');
+                return Redirect::to($homeUrl);
+            }
+        }
+
         $siteRespuestas = $site->respuestas->keyBy('pregunta_id')->all();
         $plantillaRespuestas = Cache::remember(
             "plantilla_respuestas_{$site->plantilla_id}",
@@ -83,14 +125,51 @@ class SitePageController extends Controller
         );
         $respuestas = $siteRespuestas + $plantillaRespuestas;
 
-        // Pre-cargar el contenido de TODAS las secciones (activas e inanimadas/ocultas del nav) para renderizado instantáneo
+        // Pre-cargar el contenido de TODAS las secciones respetando el switch de visibilidad
         $seccionesData = [];
         foreach ($site->plantilla->secciones as $s) {
             $key = strtolower(str_replace(['_', ' '], '-', $s->slug));
+            $cleanKey = strtolower(str_replace(['_', ' ', '-'], '', $s->slug));
+            $nombreNorm = strtolower(str_replace(['_', ' ', '-'], '', $s->nombre));
+
+            $visKey = match (true) {
+                $cleanKey === 'nosotros' || $nombreNorm === 'nosotros' => 'nosotros',
+                in_array($cleanKey, ['servicios', 'servicio']) || in_array($nombreNorm, ['servicios', 'servicio']) => 'servicios',
+                in_array($cleanKey, ['contacto', 'contactos']) || in_array($nombreNorm, ['contacto', 'contactos']) => 'contacto',
+                $cleanKey === 'hero' || $cleanKey === 'inicio' || $nombreNorm === 'hero' || $nombreNorm === 'inicio' => 'hero',
+                str_contains($cleanKey, 'galeria') || str_contains($nombreNorm, 'galeria') => 'galeria',
+                str_contains($cleanKey, 'marca') || str_contains($nombreNorm, 'marca') => 'marcas',
+                str_contains($cleanKey, 'liquidacion') || str_contains($nombreNorm, 'liquidacion') => 'liquidacion',
+                str_contains($cleanKey, 'oferta') || str_contains($nombreNorm, 'oferta') => 'ofertas',
+                str_contains($cleanKey, 'categoria') || str_contains($nombreNorm, 'categoria') => 'categoria',
+                str_contains($cleanKey, 'tortasdestacada') || str_contains($nombreNorm, 'tortasdestacada') => 'tortasdestacadas',
+                $cleanKey === 'productos' || $nombreNorm === 'productos' => 'productos',
+                str_contains($cleanKey, 'banerproducto') || str_contains($nombreNorm, 'banerproducto') => 'banerproducto',
+                str_contains($cleanKey, 'sector') || str_contains($nombreNorm, 'sector') => 'sectores',
+                str_contains($cleanKey, 'sobrenosotros') || str_contains($nombreNorm, 'sobrenosotros') => 'sobrenosotros',
+                str_contains($cleanKey, 'elegirnos') || str_contains($nombreNorm, 'elegirnos') => 'elegirnos',
+                str_contains($cleanKey, 'comocomprar') || str_contains($nombreNorm, 'comocomprar') => 'comocomprar',
+                str_contains($cleanKey, 'sede') || str_contains($nombreNorm, 'sede') => 'sedes',
+                str_contains($cleanKey, 'faq') || str_contains($nombreNorm, 'faq') => 'faq',
+                str_contains($cleanKey, 'tiktok') || str_contains($cleanKey, 'tik-tok') || str_contains($nombreNorm, 'tiktok') => 'tiktok',
+                str_contains($cleanKey, 'banerpie') || str_contains($nombreNorm, 'banerpie') => 'banerpie',
+                default => $cleanKey,
+            };
+
+            $isActiva = true;
+            if (isset($visibilidad[$visKey]) && ! (bool) $visibilidad[$visKey]) {
+                $isActiva = false;
+            } elseif (isset($visibilidad[$cleanKey]) && ! (bool) $visibilidad[$cleanKey]) {
+                $isActiva = false;
+            } elseif (isset($visibilidad[$key]) && ! (bool) $visibilidad[$key]) {
+                $isActiva = false;
+            }
+
             $seccionesData[$key] = [
                 'slug' => $s->slug,
                 'nombre' => $s->nombre,
-                'contenido' => self::formatearPreguntas($s->preguntas, $respuestas),
+                'activa' => $isActiva,
+                'contenido' => $isActiva ? self::formatearPreguntas($s->preguntas, $respuestas) : [],
             ];
         }
 
@@ -133,6 +212,13 @@ class SitePageController extends Controller
                     : (in_array($targetSlug, ['nosotros', 'sobre-nosotros'])
                         ? 'nosotros'
                         : (in_array($targetSlug, ['contacto', 'contactos']) ? 'contacto' : 'inicio')));
+
+            // Si la página secundaria está oculta por switch, redirigir a inicio para no mostrar vista huérfana
+            if ($canonicalSlug !== 'inicio' && isset($visibilidad[$canonicalSlug]) && ! (bool) $visibilidad[$canonicalSlug]) {
+                $homeUrl = $siteSlug ? "/{$dominio}/{$siteSlug}" : ($dominio ? "/{$dominio}" : '/');
+                return Redirect::to($homeUrl);
+            }
+
             $seccionActiva = [
                 'slug' => $canonicalSlug,
                 'nombre' => ucfirst($canonicalSlug),
@@ -170,8 +256,6 @@ class SitePageController extends Controller
         if ($productosDestacados->isEmpty() && $productos->isNotEmpty()) {
             $productosDestacados = $productos->take(12)->values();
         }
-
-        $estilos = Site::mergeEstilos($site->plantilla->estilos ?? [], $site->estilos ?? []);
 
         // Serializar servicios del sitio para el frontend
         $serviciosSitio = $site->servicios
@@ -236,12 +320,15 @@ class SitePageController extends Controller
         $hasProductosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])
         );
-        if (! empty($tiendaIds) && ! $hasProductosInNav) {
+        $prodVisible = ! isset($visibilidad['productos']) || (bool) $visibilidad['productos'];
+        if ($prodVisible && ! empty($tiendaIds) && ! $hasProductosInNav) {
             $seccionesArray[] = [
                 'slug' => 'productos',
                 'nombre' => 'Productos',
                 'orden' => $prodOrden,
             ];
+        } elseif (! $prodVisible) {
+            $seccionesArray = array_values(array_filter($seccionesArray, fn ($s) => ! in_array(strtolower($s['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])));
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])) {
@@ -258,12 +345,15 @@ class SitePageController extends Controller
         $hasServiciosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['servicios', 'servicio'])
         );
-        if (! empty($serviciosSitio) && ! $hasServiciosInNav) {
+        $servVisible = ! isset($visibilidad['servicios']) || (bool) $visibilidad['servicios'];
+        if ($servVisible && ! empty($serviciosSitio) && ! $hasServiciosInNav) {
             $seccionesArray[] = [
                 'slug' => 'servicios',
                 'nombre' => 'Servicios',
                 'orden' => $servOrden,
             ];
+        } elseif (! $servVisible) {
+            $seccionesArray = array_values(array_filter($seccionesArray, fn ($s) => ! in_array(strtolower($s['slug'] ?? ''), ['servicios', 'servicio'])));
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['servicios', 'servicio'])) {
@@ -308,12 +398,15 @@ class SitePageController extends Controller
         $hasMarcasInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['marcas', 'marca'])
         );
-        if (! empty($marcasSitio) && count($marcasSitio) > 0 && ! $hasMarcasInNav) {
+        $marcasVisible = ! isset($visibilidad['marcas']) || (bool) $visibilidad['marcas'];
+        if ($marcasVisible && ! empty($marcasSitio) && count($marcasSitio) > 0 && ! $hasMarcasInNav) {
             $seccionesArray[] = [
                 'slug' => 'marcas',
                 'nombre' => 'Marcas',
                 'orden' => $marcasOrden,
             ];
+        } elseif (! $marcasVisible) {
+            $seccionesArray = array_values(array_filter($seccionesArray, fn ($s) => ! in_array(strtolower($s['slug'] ?? ''), ['marcas', 'marca'])));
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['marcas', 'marca'])) {

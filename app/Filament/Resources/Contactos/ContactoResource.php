@@ -20,6 +20,10 @@ class ContactoResource extends Resource
 {
     protected static ?string $model = Contacto::class;
 
+    protected static ?string $recordTitleAttribute = 'nombre';
+
+    protected static int $globalSearchResultsLimit = 6;
+
     protected static ?string $slug = 'cotizaciones-y-contacto';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
@@ -30,9 +34,26 @@ class ContactoResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Cotizaciones y Contacto';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Mis sitios';
+    protected static string|UnitEnum|null $navigationGroup = 'CRM & Atención';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        try {
+            $count = static::getModel()::where(function ($q) {
+                $q->where('estado', 'nuevo')->orWhere('estado', 'pendiente');
+            })->count();
+            return $count > 0 ? (string) $count : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
 
     public static function canCreate(): bool
     {
@@ -55,6 +76,37 @@ class ContactoResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['folio', 'nombre', 'email', 'telefono', 'empresa'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        /** @var Contacto $record */
+        $folio = $record->folio ? "[{$record->folio}] " : '';
+
+        return $folio . $record->nombre;
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->with('site');
+    }
+
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        /** @var Contacto $record */
+        return array_filter([
+            'Empresa' => $record->empresa,
+            'Correo' => $record->email,
+            'Teléfono' => $record->telefono,
+            'Sitio Web' => $record->site?->nombre,
+        ]);
     }
 
     public static function getRelations(): array
