@@ -6,7 +6,7 @@ import { useProductosData } from './hooks/useProductosData';
 import { useCartStore } from '@/stores/useCartStore';
 
 export default function SectionProductos({ dominio, siteSlug, seccion, seccionesData, productos: initialProductos, onSeleccionarProducto, estilos }) {
-    const { site } = usePage().props;
+    const { site, marcasCatalogo = [] } = usePage().props;
     const addItem = useCartStore((state) => state.addItem);
     const cartItems = useCartStore((state) => state.items);
 
@@ -212,13 +212,36 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
     const marcasArbol = useMemo(() => {
         const map = new Map();
 
+        // 1. Marcas comerciales activas desde el panel (marcasCatalogo)
+        if (Array.isArray(marcasCatalogo) && marcasCatalogo.length > 0) {
+            marcasCatalogo.forEach((m) => {
+                const name = typeof m === 'string' ? m : (m.titulo || m.nombre || '');
+                if (!name) return;
+                const key = name.toLowerCase().trim();
+                const rawImg = typeof m === 'object' ? (m.imagen || m.logo || null) : null;
+                const formattedImg = rawImg ? (rawImg.startsWith('http') || rawImg.startsWith('data:') ? rawImg : `/storage/${rawImg.replace(/^\/?storage\//, '')}`) : null;
+                map.set(key, {
+                    id: typeof m === 'object' ? m.id : null,
+                    nombre: name,
+                    imagen: formattedImg,
+                    slug: typeof m === 'object' ? m.slug : null,
+                    count: 0,
+                });
+            });
+        }
+
+        // 2. Marcas asociadas a productos y conteo de existencias
         productos.forEach((prod) => {
             let mName = null;
             let mImg = null;
+            let mSlug = null;
+            let mId = null;
 
             if (prod.marca_objeto && (prod.marca_objeto.titulo || prod.marca_objeto.nombre)) {
                 mName = prod.marca_objeto.titulo || prod.marca_objeto.nombre;
                 mImg = prod.marca_objeto.imagen || prod.marca_objeto.logo || null;
+                mSlug = prod.marca_objeto.slug || null;
+                mId = prod.marca_objeto.id || null;
             } else if (prod.marca && typeof prod.marca === 'string' && prod.marca.trim()) {
                 mName = prod.marca.trim();
                 mImg = prod.marca_imagen || null;
@@ -230,8 +253,10 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
 
                 if (!map.has(key)) {
                     map.set(key, {
+                        id: mId,
                         nombre: mName,
                         imagen: formattedImg,
+                        slug: mSlug,
                         count: 0,
                     });
                 }
@@ -242,7 +267,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
         });
 
         return Array.from(map.values());
-    }, [productos]);
+    }, [productos, marcasCatalogo]);
 
     // Grupos adicionales de filtros (tags, ocasión, marca, etc.)
     const otrosGruposFiltros = useMemo(() => {
@@ -440,11 +465,20 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                 return false;
             }
 
-            // Coincidencia por marca
+            // Coincidencia por marca (normalizada contra nombre y slug)
             const marcaSeleccionadas = filtrosSeleccionados.marca || [];
             if (marcaSeleccionadas.length > 0) {
                 const prodMarcaNombre = prod.marca_objeto?.titulo || prod.marca_objeto?.nombre || (typeof prod.marca === 'string' ? prod.marca : null);
-                if (!prodMarcaNombre || !marcaSeleccionadas.includes(prodMarcaNombre)) {
+                const prodMarcaSlug = prod.marca_objeto?.slug || null;
+
+                const matchesMarca = marcaSeleccionadas.some((filtro) => {
+                    const fNorm = String(filtro || '').toLowerCase().trim().replace(/[-_ ]/g, '');
+                    const mNorm = prodMarcaNombre ? String(prodMarcaNombre).toLowerCase().trim().replace(/[-_ ]/g, '') : '';
+                    const sNorm = prodMarcaSlug ? String(prodMarcaSlug).toLowerCase().trim().replace(/[-_ ]/g, '') : '';
+                    return (mNorm && fNorm === mNorm) || (sNorm && fNorm === sNorm);
+                });
+
+                if (!matchesMarca) {
                     return false;
                 }
             }
