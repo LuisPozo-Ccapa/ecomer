@@ -27,7 +27,7 @@ class ProductoResource extends JsonResource
             'precio_oferta' => $this->precio_oferta ? (float) $this->precio_oferta : null,
             'precio_soles' => $this->precio !== null ? (float) $this->precio : null,
             'precio_oferta_soles' => $this->precio_oferta ? (float) $this->precio_oferta : null,
-            'es_liquidacion' => (bool) ($this->es_liquidacion || $this->precio === null || (float) $this->precio === 0.0),
+            'es_liquidacion' => (bool) $this->es_liquidacion,
             'stock' => $this->stock !== null ? (int) $this->stock : null,
             'cantidad' => $this->cantidad,
             'precio_dolares' => $this->precio_dolares ? (float) $this->precio_dolares : null,

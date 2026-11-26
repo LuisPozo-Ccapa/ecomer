@@ -297,8 +297,8 @@ export default function ProductosDestacadosSection({
                                             {/* 3. Liquidación / Sin precio */}
                                             {(!precioSolesEfectivo || precioSolesEfectivo <= 0) && (!precioDolaresEfectivo || precioDolaresEfectivo <= 0) && (
                                                 <div>
-                                                    <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                                                        Consultar precio / Liquidación
+                                                    <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                        {esProdLiquidacion ? 'Liquidación' : 'Consultar Precio'}
                                                     </span>
                                                 </div>
                                             )}

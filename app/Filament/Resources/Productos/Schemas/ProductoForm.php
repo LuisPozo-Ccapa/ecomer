@@ -174,8 +174,8 @@ class ProductoForm
                             ->label('Precio en Soles (S/)')
                             ->numeric()
                             ->nullable()
-                            ->placeholder('Liquidación / Dejar vacío')
-                            ->helperText('Dejar vacío para productos en liquidación / consultar precio.')
+                            ->placeholder('Consultar precio / Dejar vacío')
+                            ->helperText('Dejar vacío para mostrar "Consultar Precio".')
                             ->prefix('S/')
                             ->minValue(0)
                             ->visible(fn (Get $get, ?Producto $record) => self::tieneMoneda($get, $record, 'PEN')),

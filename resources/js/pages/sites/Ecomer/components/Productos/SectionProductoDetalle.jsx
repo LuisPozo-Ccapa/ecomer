@@ -179,10 +179,7 @@ export default function SectionProductoDetalle({
     const esLiquidacion = Boolean(
         producto.es_liquidacion ||
         producto.liquidacion ||
-        producto.is_liquidacion ||
-        producto.precio == null ||
-        producto.precio_soles == null ||
-        (Number(producto.precio || producto.precio_soles || 0) === 0 && !producto.precio_oferta && !producto.precio_oferta_soles)
+        producto.is_liquidacion
     );
 
     const stockVal = producto.stock !== null && producto.stock !== undefined ? Number(producto.stock) : null;
@@ -608,8 +605,8 @@ export default function SectionProductoDetalle({
                                     {/* 3. Liquidación / Sin precio */}
                                     {(!precioSolesEfectivo || precioSolesEfectivo <= 0) && (!precioDolaresEfectivo || precioDolaresEfectivo <= 0) && (
                                         <div className="flex items-center gap-2">
-                                            <span className="px-3 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                                                Consultar precio / Liquidación
+                                            <span className="px-3 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                {esLiquidacion ? 'Liquidación' : 'Consultar Precio'}
                                             </span>
                                         </div>
                                     )}

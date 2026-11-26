@@ -442,9 +442,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
             // Coincidencia por solo liquidación
             const esLiquidacion = Boolean(
                 prod.es_liquidacion ||
-                prod.precio == null ||
-                prod.precio_soles == null ||
-                (Number(prod.precio || prod.precio_soles || 0) === 0 && !prod.precio_oferta && !prod.precio_oferta_soles)
+                prod.liquidacion
             );
 
             if (soloLiquidacion && !esLiquidacion) {
@@ -1265,10 +1263,7 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                     const esProdLiquidacion = Boolean(
                                         prod.es_liquidacion ||
                                         prod.liquidacion ||
-                                        prod.is_liquidacion ||
-                                        prod.precio == null ||
-                                        prod.precio_soles == null ||
-                                        (Number(prod.precio || prod.precio_soles || 0) === 0 && !prod.precio_oferta && !prod.precio_oferta_soles)
+                                        prod.is_liquidacion
                                     );
                                     const stockVal = prod.stock !== null && prod.stock !== undefined ? Number(prod.stock) : null;
                                     const stockTexto = prod.cantidad ? String(prod.cantidad).trim() : null;
@@ -1457,8 +1452,8 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                 {/* 3. Liquidación / Sin precio */}
                                                 {(!precioSolesEfectivo || precioSolesEfectivo <= 0) && (!precioDolaresEfectivo || precioDolaresEfectivo <= 0) && (
                                                     <div>
-                                                        <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                                                            Consultar precio / Liquidación
+                                                        <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                            {esProdLiquidacion ? 'Liquidación' : 'Consultar Precio'}
                                                         </span>
                                                     </div>
                                                 )}

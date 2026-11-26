@@ -496,7 +496,7 @@
 
                                                     {{-- Liquidación / Sin precio --}}
                                                     @if(!$precioSoles && !$precioOfertaSoles && !$precioDolares && !$precioOfertaDolares && !$precioEuros && !$precioOfertaEuros)
-                                                        <span style="font-size: 8px; color: #d97706; font-weight: bold;">Consultar precio / Liquidación</span>
+                                                        <span style="font-size: 8px; color: #d97706; font-weight: bold;">{{ $producto->es_liquidacion ? 'Liquidación' : 'Consultar Precio' }}</span>
                                                     @endif
                                                 </div>
                                             </td>
