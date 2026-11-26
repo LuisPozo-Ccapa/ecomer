@@ -148,6 +148,14 @@ export default function SectionProductoDetalle({
     const pDolReg = producto.precio_dolares != null && producto.precio_dolares !== '' ? Number(producto.precio_dolares) : 0;
     const pDolOfe = producto.precio_oferta_dolares != null && producto.precio_oferta_dolares !== '' ? Number(producto.precio_oferta_dolares) : 0;
 
+    const codigoProducto = (
+        varianteSeleccionada?.sku
+        || varianteSeleccionada?.codigo_referencia
+        || producto.sku
+        || producto.codigo_referencia
+        || producto.codigo
+    )?.toString().trim() || null;
+
     const tieneOfertaSoles = pSolesOfe > 0 && (pSolesReg === 0 || pSolesOfe < pSolesReg);
     const precioSolesEfectivo = tieneOfertaSoles ? pSolesOfe : pSolesReg;
     const descOfertaSoles = tieneOfertaSoles && pSolesReg > 0 && pSolesReg > pSolesOfe
@@ -518,11 +526,23 @@ export default function SectionProductoDetalle({
 
                             {/* Nombre del Producto */}
                             <h1
-                                className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-snug mb-3"
+                                className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-snug mb-2"
                                 style={{ fontFamily: 'var(--tipografia-titulos)' }}
                             >
                                 {producto.nombre}
                             </h1>
+
+                            {/* Código de Producto */}
+                            {codigoProducto && (
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        Código:
+                                    </span>
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono bg-gray-100 text-gray-800 border border-gray-200">
+                                        {codigoProducto}
+                                    </span>
+                                </div>
+                            )}
 
                             {/* Descripción Corta */}
                             {(producto.descripcion_corta || producto.descripcion) && (

@@ -219,11 +219,19 @@ export default function ProductosDestacadosSection({
 
                                         {/* Nombre del Producto */}
                                         <h3
-                                            className="text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primario)] transition-colors line-clamp-2 min-h-[2.4rem] leading-snug mb-1.5"
+                                            className="text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-[var(--color-primario)] transition-colors line-clamp-2 min-h-[2.4rem] leading-snug mb-1"
                                             title={prod.nombre}
                                         >
                                             {prod.nombre}
                                         </h3>
+
+                                        {/* Código de Producto */}
+                                        {(prod.sku || prod.codigo_referencia || prod.codigo) && (
+                                            <p className="text-[11px] font-mono font-medium text-gray-500 mb-1 truncate">
+                                                <span className="text-[10px] uppercase font-sans text-gray-400 font-bold mr-1">Cód:</span>
+                                                {(prod.sku || prod.codigo_referencia || prod.codigo).toString().trim()}
+                                            </p>
+                                        )}
 
                                         {/* Descripción Corta */}
                                         {(prod.descripcion_corta || prod.descripcion) && (

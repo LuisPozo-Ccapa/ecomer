@@ -1369,6 +1369,14 @@ export default function SectionProductos({ dominio, siteSlug, seccion, secciones
                                                 {prod.nombre}
                                             </h3>
 
+                                            {/* Código de Producto */}
+                                            {(prod.sku || prod.codigo_referencia || prod.codigo) && (
+                                                <p className="text-[11px] font-mono font-medium text-gray-500 mb-1 truncate">
+                                                    <span className="text-[10px] uppercase font-sans text-gray-400 font-bold mr-1">Cód:</span>
+                                                    {(prod.sku || prod.codigo_referencia || prod.codigo).toString().trim()}
+                                                </p>
+                                            )}
+
                                             {/* Indicador de Stock */}
                                             {stockVal !== null ? (
                                                 stockVal > 5 ? (
