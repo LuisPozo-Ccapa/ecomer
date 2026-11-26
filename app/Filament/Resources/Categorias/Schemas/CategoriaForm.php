@@ -34,12 +34,6 @@ class CategoriaForm
                                         ->required()
                                         ->unique(ignoreRecord: true)
                                         ->maxLength(255),
-                                    Select::make('tienda_id')
-                                        ->label('Almacén')
-                                        ->relationship('tienda', 'nombre')
-                                        ->required()
-                                        ->searchable()
-                                        ->preload(),
                                     IconPicker::make('icono')
                                         ->label('Ícono'),
                                     TextInput::make('orden')
