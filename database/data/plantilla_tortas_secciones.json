@@ -1,0 +1,665 @@
+[
+    {
+        "slug": "Nav",
+        "nombre": "nav\/footer",
+        "orden": 0,
+        "activa": false,
+        "preguntas": [
+            {
+                "label": "accion_nav",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "icon",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "texto",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            },
+            {
+                "label": "logo_nav",
+                "tipo": "imagen",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "mensaje_footer",
+                "tipo": "area",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            }
+        ]
+    },
+    {
+        "slug": "Inicio",
+        "nombre": "Inicio",
+        "orden": 1,
+        "activa": true,
+        "preguntas": [
+            {
+                "label": "img_seccion1",
+                "tipo": "imagen",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "titulo_seccion1",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "descripcion_seccion1",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "buton",
+                "tipo": "grupo",
+                "estructura": "objeto",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "icon",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "texto",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            },
+            {
+                "label": "etiqueta",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 5,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "icon",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "span",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "span_sub",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 3,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "slug": "Categoría",
+        "nombre": "categoria",
+        "orden": 3,
+        "activa": false,
+        "preguntas": [
+            {
+                "label": "sub_titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "icono",
+                "tipo": "icono",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "servicios",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "imagen",
+                        "tipo": "imagen",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "titulo",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "descripción",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 3,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "enlace",
+                        "tipo": "enlace",
+                        "estructura": "objeto",
+                        "orden": 4,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "slug": "servicios",
+        "nombre": "servicios",
+        "orden": 3,
+        "activa": true,
+        "preguntas": [
+            {
+                "label": "sub_titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "icono",
+                "tipo": "icono",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "descripcion",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "servicio_detallado",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 5,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "nombreServicio",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "Titulo",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "Descripcion",
+                        "tipo": "area",
+                        "estructura": "objeto",
+                        "orden": 3,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "ImagenesServicios",
+                        "tipo": "galeria",
+                        "estructura": "array",
+                        "orden": 4,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "lista_servicio",
+                        "tipo": "grupo",
+                        "estructura": "array",
+                        "orden": 5,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "PDF",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 6,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "slug": "Elegirnos",
+        "nombre": "Elegirnos",
+        "orden": 4,
+        "activa": false,
+        "preguntas": [
+            {
+                "label": "Titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "Por que",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "icono",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "titulo",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "descripcion",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 3,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "slug": "nosotros",
+        "nombre": "Nosotros",
+        "orden": 5,
+        "activa": true,
+        "preguntas": [
+            {
+                "label": "sub_titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "icono",
+                "tipo": "icono",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "descripcion",
+                "tipo": "area",
+                "estructura": "objeto",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "etiqueta",
+                "tipo": "grupo",
+                "estructura": "array",
+                "orden": 5,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "icono",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "span",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "sub_span",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 3,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            },
+            {
+                "label": "imagen",
+                "tipo": "imagen",
+                "estructura": "objeto",
+                "orden": 6,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            }
+        ]
+    },
+    {
+        "slug": "Tortas destacadas",
+        "nombre": "Tortas destacadas",
+        "orden": 6,
+        "activa": false,
+        "preguntas": [
+            {
+                "label": "sub_titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "icono",
+                "tipo": "icono",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "boton",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            }
+        ]
+    },
+    {
+        "slug": "Productos",
+        "nombre": "Productos",
+        "orden": 8,
+        "activa": true,
+        "preguntas": []
+    },
+    {
+        "slug": "Contacto",
+        "nombre": "Contacto",
+        "orden": 9,
+        "activa": true,
+        "preguntas": [
+            {
+                "label": "Titulo",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 1,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "Descripcion",
+                "tipo": "texto",
+                "estructura": "objeto",
+                "orden": 2,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            },
+            {
+                "label": "Whatsap",
+                "tipo": "grupo",
+                "estructura": "objeto",
+                "orden": 3,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "Icono",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "texto",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            },
+            {
+                "label": "Direccion",
+                "tipo": "grupo",
+                "estructura": "objeto",
+                "orden": 4,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": [
+                    {
+                        "label": "Icono",
+                        "tipo": "icono",
+                        "estructura": "objeto",
+                        "orden": 1,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    },
+                    {
+                        "label": "texto",
+                        "tipo": "texto",
+                        "estructura": "objeto",
+                        "orden": 2,
+                        "requerida": false,
+                        "ayuda": null,
+                        "opciones": null
+                    }
+                ]
+            },
+            {
+                "label": "Imagen",
+                "tipo": "imagen",
+                "estructura": "objeto",
+                "orden": 5,
+                "requerida": false,
+                "ayuda": null,
+                "opciones": null,
+                "hijos": []
+            }
+        ]
+    }
+]

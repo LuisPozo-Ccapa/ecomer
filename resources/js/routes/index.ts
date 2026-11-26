@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../wayfinder'
 /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 export const sitemap = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ sitemap.definition = {
 
 /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 sitemap.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ sitemap.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 sitemap.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ sitemap.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
 sitemap.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ sitemap.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
     const sitemapForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ sitemap.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
         sitemapForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ sitemap.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\SitemapController::sitemap
- * @see app/Http/Controllers/SitemapController.php:10
+ * @see app/Http/Controllers/SitemapController.php:11
  * @route '/sitemap.xml'
  */
         sitemapForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -78,7 +78,7 @@ sitemap.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     sitemap.form = sitemapForm
 /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
 export const welcome = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -92,7 +92,7 @@ welcome.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
 welcome.url = (options?: RouteQueryOptions) => {
@@ -100,7 +100,7 @@ welcome.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
 welcome.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -108,7 +108,7 @@ welcome.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
 welcome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -117,7 +117,7 @@ welcome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
     const welcomeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -126,7 +126,7 @@ welcome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
         welcomeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -134,7 +134,7 @@ welcome.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
- * @see routes/web.php:18
+ * @see routes/web.php:24
  * @route '/'
  */
         welcomeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

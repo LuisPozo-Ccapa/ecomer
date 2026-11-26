@@ -4,7 +4,10 @@ namespace App\Filament\Resources\Sites\Tables;
 
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Tables\Columns\Layout;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class SitesTable
@@ -22,12 +25,16 @@ class SitesTable
                 Layout\View::make('filament.tables.cards.site'),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make()
                     ->label('Borrar'),
+                RestoreAction::make()
+                    ->label('Restaurar'),
+                ForceDeleteAction::make()
+                    ->label('Purgar Definitivo'),
             ]);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Subcategorias\Pages;
 
 use App\Filament\Resources\Subcategorias\SubcategoriaResource;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSubcategoria extends EditRecord
@@ -14,6 +16,8 @@ class EditSubcategoria extends EditRecord
     {
         return [
             DeleteAction::make(),
+            RestoreAction::make(),
+            ForceDeleteAction::make(),
         ];
     }
 }

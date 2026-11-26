@@ -5,9 +5,12 @@ namespace App\Filament\Resources\Productos\Tables;
 use App\Models\Producto;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -118,11 +121,16 @@ class ProductosTable
                     ->label('Destacados')
                     ->trueLabel('Solo destacados')
                     ->falseLabel('No destacados'),
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make()
                     ->label('Borrar'),
+                RestoreAction::make()
+                    ->label('Restaurar'),
+                ForceDeleteAction::make()
+                    ->label('Purgar Definitivo'),
             ]);
     }
 }

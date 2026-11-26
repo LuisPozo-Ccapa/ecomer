@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function PortadaSection({ seccionData, site, estilos, dominio, siteSlug, seccionesData }) {
-    if (!seccionData) return null;
-
     const { props } = usePage();
     const activeDominio = dominio || props?.dominio;
     const activeSiteSlug = siteSlug || props?.siteSlug;
@@ -88,8 +86,14 @@ export default function PortadaSection({ seccionData, site, estilos, dominio, si
     const rawImagen = data?.Imagen || data?.imagen;
     const fallbackImagenUrl = Array.isArray(rawImagen) ? rawImagen[0] : rawImagen;
 
-    // Normalizar Info (Array de métricas/estadísticas)
-    const infoStats = Array.isArray(data?.Info) ? data.Info : [];
+    // Normalizar Info (Array de métricas/estadísticas) con datos corporativos de respaldo
+    const rawInfoStats = Array.isArray(data?.Info) ? data.Info : (Array.isArray(data?.info) ? data.info : []);
+    const infoStats = rawInfoStats.length > 0 ? rawInfoStats : [
+        { Icono: 'FaAward', Titulo: '+15 Años', descripcion: 'Experiencia en el sector' },
+        { Icono: 'FaShieldAlt', Titulo: '100%', descripcion: 'Garantía y Confianza' },
+        { Icono: 'FaBoxOpen', Titulo: '+5,000', descripcion: 'Productos en Catálogo' },
+        { Icono: 'FaHeadset', Titulo: 'Atención 24/7', descripcion: 'Soporte Personalizado' },
+    ];
 
     // Helper para procesar títulos con la sintaxis /*texto destacado*/
     const renderFormattedTitle = (text) => {
@@ -134,7 +138,7 @@ export default function PortadaSection({ seccionData, site, estilos, dominio, si
     return (
         <section className="relative min-h-[100vh] md:pt-0 w-full overflow-hidden bg-slate-950 py-16 md:py-36 md:py-24 lg:py-28 text-white flex flex-col justify-center">
             {/* Imagen de fondo con zoom sutil y capas de degradado */}
-            {hasBgImage && (
+            {hasBgImage ? (
                 <div className="absolute inset-0 z-0 overflow-hidden">
                     <picture className="h-full w-full block">
                         {responsiveImg?.pc && <source media="(min-width: 1024px)" srcSet={responsiveImg.pc} />}
@@ -151,6 +155,16 @@ export default function PortadaSection({ seccionData, site, estilos, dominio, si
                     </picture>
                     {/* Fondo con degradado y opacidad sobre la imagen para legibilidad óptima en celular y desktop */}
                     <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/80 sm:bg-gradient-to-r sm:from-black/85 sm:via-black/55 sm:to-black/40" />
+                </div>
+            ) : (
+                /* Fondo decorativo blueprint cuando no hay imagen cargada */
+                <div className="absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-[#071120] via-[#0b1c36] to-[#12284c]">
+                    <div
+                        className="pointer-events-none absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"
+                        aria-hidden="true"
+                    />
+                    <div className="pointer-events-none absolute -top-40 right-0 h-96 w-96 rounded-full bg-[var(--color-primario)]/15 blur-3xl" />
+                    <div className="pointer-events-none absolute -bottom-20 left-0 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl" />
                 </div>
             )}
 

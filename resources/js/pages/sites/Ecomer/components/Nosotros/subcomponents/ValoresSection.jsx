@@ -3,29 +3,44 @@ import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function ValoresSection({ seccionData }) {
-    // Si no hay datos de sección o el valor está vacío, no renderizar nada
-    if (!seccionData || !seccionData.valor) return null;
-
-    const rawValor = seccionData.valor;
+    const rawValor = seccionData?.valor;
     const data = Array.isArray(rawValor) ? rawValor[0] : (rawValor || {});
 
-    // Extraer datos del CMS
-    const sub = data?.sub || data?.Sub || data?.kicker || '';
-    const titulo = data?.Titulo || data?.titulo || '';
-    const descripcion = data?.Descripcion || data?.descripcion || '';
+    // Extraer datos del CMS con respaldo corporativo
+    const sub = data?.sub || data?.Sub || data?.kicker || 'NUESTROS PILARES';
+    const titulo = data?.Titulo || data?.titulo || 'Valores que definen /*nuestro compromiso*/';
+    const descripcion = data?.Descripcion || data?.descripcion || 'Principios fundamentales que guían nuestras operaciones y relaciones comerciales a diario.';
 
     // Arreglo de tarjetas (Cards) desde el panel
     const rawCards = Array.isArray(data?.Cards)
         ? data.Cards
         : (Array.isArray(data?.cards) ? data.cards : []);
 
-    // Si no hay tarjetas configuradas y tampoco título, la sección no debe mostrarse
-    if (rawCards.length === 0 && !titulo) {
-        return null;
-    }
-
     const cards = useMemo(() => {
-        return rawCards.map((c, i) => ({
+        const sourceCards = rawCards.length > 0 ? rawCards : [
+            {
+                icono: 'FaAward',
+                titulo: 'Calidad y Garantía',
+                descripcion: 'Suministramos productos certificados y homologados bajo rigurosos estándares técnicos.',
+            },
+            {
+                icono: 'FaHandshake',
+                titulo: 'Transparencia y Ética',
+                descripcion: 'Relaciones comerciales duraderas, honestas y claras con nuestros clientes y aliados.',
+            },
+            {
+                icono: 'FaUsers',
+                titulo: 'Atención Personalizada',
+                descripcion: 'Asesoría continua de ingenieros y especialistas en cada etapa de cotización y compra.',
+            },
+            {
+                icono: 'FaRocket',
+                titulo: 'Innovación y Eficiencia',
+                descripcion: 'Optimización constante en logística, almacenamiento y tiempos de entrega.',
+            },
+        ];
+
+        return sourceCards.map((c, i) => ({
             numero: String(i + 1).padStart(2, '0'),
             icono: c.Icono || c.icono || 'FaAward',
             titulo: c.Titulo || c.titulo || '',

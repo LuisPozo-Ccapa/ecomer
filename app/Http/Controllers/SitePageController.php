@@ -162,8 +162,10 @@ class SitePageController extends Controller
         if (! empty($tiendaIds)) {
             $productosQuery->where(function ($q) use ($tiendaIds) {
                 $q->whereHas('tiendas', fn ($sub) => $sub->whereIn('tiendas.id', $tiendaIds))
-                    ->orWhereDoesntHave('tiendas');
+                    ->orWhereIn('tienda_id', $tiendaIds);
             });
+        } else {
+            $productosQuery->whereRaw('1 = 0');
         }
 
         $productos = $productosQuery->orderBy('orden')->orderBy('nombre')->get();
@@ -221,6 +223,22 @@ class SitePageController extends Controller
             ])
             ->toArray();
 
+        // Serializar todas las marcas comerciales activas para catálogo y desplegable del menú
+        $marcasCatalogo = Marca::query()
+            ->where('activa', true)
+            ->orderBy('orden')
+            ->orderBy('titulo')
+            ->get()
+            ->map(fn (Marca $m) => [
+                'id' => $m->id,
+                'titulo' => $m->titulo,
+                'nombre' => $m->titulo,
+                'slug' => $m->slug,
+                'imagen' => $m->imagen ? asset('storage/'.$m->imagen) : null,
+                'descripcion' => $m->descripcion,
+            ])
+            ->toArray();
+
         $seccionesArray = $seccionesNav
             ->map(fn (Seccion $s): array => [
                 'slug' => $s->slug,
@@ -230,9 +248,9 @@ class SitePageController extends Controller
             ->values()
             ->toArray();
 
-        $prodOrden = isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== ''
+        $prodOrden = isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== '' && $estilos['seccion_productos']['orden'] !== null
             ? (int) $estilos['seccion_productos']['orden']
-            : 2;
+            : 3;
 
         $hasProductosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])
@@ -246,17 +264,15 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['productos', 'tienda', 'tiendas'])) {
-                    if (isset($estilos['seccion_productos']['orden']) && $estilos['seccion_productos']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_productos']['orden'];
-                    }
+                    $sec['orden'] = $prodOrden;
                 }
             }
             unset($sec);
         }
 
-        $servOrden = isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== ''
+        $servOrden = isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== '' && $estilos['seccion_servicios']['orden'] !== null
             ? (int) $estilos['seccion_servicios']['orden']
-            : 3;
+            : 6;
 
         $hasServiciosInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['servicios', 'servicio'])
@@ -270,9 +286,7 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['servicios', 'servicio'])) {
-                    if (isset($estilos['seccion_servicios']['orden']) && $estilos['seccion_servicios']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_servicios']['orden'];
-                    }
+                    $sec['orden'] = $servOrden;
                 }
             }
             unset($sec);
@@ -282,7 +296,7 @@ class SitePageController extends Controller
         if (! empty($catalogoConfig['activo'])) {
             $catOrden = isset($catalogoConfig['orden']) && $catalogoConfig['orden'] !== ''
                 ? (int) $catalogoConfig['orden']
-                : 4;
+                : 98;
             $catTitulo = ! empty($catalogoConfig['titulo']) ? $catalogoConfig['titulo'] : 'Catálogo';
 
             $hasCatalogoInNav = collect($seccionesArray)->contains(
@@ -299,18 +313,16 @@ class SitePageController extends Controller
                 foreach ($seccionesArray as &$sec) {
                     if (strtolower($sec['slug'] ?? '') === 'catalogo') {
                         $sec['isCatalogo'] = true;
-                        if (isset($catalogoConfig['orden']) && $catalogoConfig['orden'] !== '') {
-                            $sec['orden'] = (int) $catalogoConfig['orden'];
-                        }
+                        $sec['orden'] = $catOrden;
                     }
                 }
                 unset($sec);
             }
         }
 
-        $marcasOrden = isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== ''
+        $marcasOrden = isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== '' && $estilos['seccion_marcas']['orden'] !== null
             ? (int) $estilos['seccion_marcas']['orden']
-            : 5;
+            : 4;
 
         $hasMarcasInNav = collect($seccionesArray)->contains(
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['marcas', 'marca'])
@@ -324,29 +336,125 @@ class SitePageController extends Controller
         } else {
             foreach ($seccionesArray as &$sec) {
                 if (in_array(strtolower($sec['slug'] ?? ''), ['marcas', 'marca'])) {
-                    if (isset($estilos['seccion_marcas']['orden']) && $estilos['seccion_marcas']['orden'] !== '') {
-                        $sec['orden'] = (int) $estilos['seccion_marcas']['orden'];
-                    }
+                    $sec['orden'] = $marcasOrden;
                 }
             }
             unset($sec);
         }
 
+        foreach ($seccionesArray as &$sec) {
+            $slugLower = strtolower($sec['slug'] ?? '');
+            if (in_array($slugLower, ['contacto', 'contactos']) && ($sec['orden'] === 5 || $sec['orden'] === 8 || empty($sec['orden']))) {
+                $sec['orden'] = 7;
+            }
+        }
+        unset($sec);
+
         usort($seccionesArray, fn ($a, $b) => ($a['orden'] ?? 99) <=> ($b['orden'] ?? 99));
 
-        // ─── SEO: calcular título y descripción en el servidor para que Google los vea ───
+        // ─── SEO: calcular título, descripción, imagen y esquema en el servidor ───
         $seoCustomTitle       = $estilos['seo']['title'] ?? null;
         $seoCustomDescription = $estilos['seo']['description'] ?? null;
         $seoCustomKeywords    = $estilos['seo']['keywords'] ?? null;
 
-        $seoTitle = $seoCustomTitle
-            ?: "{$site->nombre} — " . ($seccionActiva['nombre'] ?? 'Inicio');
+        $paramProd = request()->query('producto');
+        $productoActivo = null;
+        if (! empty($paramProd)) {
+            $paramProdStr = (string) $paramProd;
+            $productoActivo = $productos->first(function ($p) use ($paramProdStr) {
+                return (string) $p->id === $paramProdStr
+                    || (string) $p->slug === $paramProdStr
+                    || strcasecmp((string) $p->nombre, $paramProdStr) === 0;
+            });
+        }
 
-        $rawDescription = $seoCustomDescription
-            ?: ($seccionActiva['descripcion'] ?? null)
-            ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
+        $scheme = (request()->secure() || request()->header('X-Forwarded-Proto') === 'https') ? 'https' : 'http';
+        $host = request()->getHost();
+        $port = request()->getPort();
+        $portStr = ($port && ! in_array($port, [80, 443])) ? ":{$port}" : '';
+        $currentBaseUrl = "{$scheme}://{$host}{$portStr}";
 
-        $seoDescription = mb_substr(strip_tags($rawDescription), 0, 160);
+        if ($productoActivo) {
+            $seoTitle = "{$productoActivo->nombre} | {$site->nombre}";
+            $rawDescription = $productoActivo->descripcion
+                ?: $productoActivo->descripcion_corta
+                ?: "Comprar {$productoActivo->nombre} en {$site->nombre}. Envíos y garantía.";
+            $seoDescription = mb_substr(strip_tags((string) $rawDescription), 0, 160);
+
+            $seoImage = null;
+            if (! empty($productoActivo->imagenes) && is_array($productoActivo->imagenes)) {
+                $first = $productoActivo->imagenes[0] ?? null;
+                if ($first) {
+                    $seoImage = filter_var($first, FILTER_VALIDATE_URL) ? $first : asset('storage/' . ltrim($first, '/'));
+                }
+            } elseif (! empty($productoActivo->imagen)) {
+                $seoImage = filter_var($productoActivo->imagen, FILTER_VALIDATE_URL) ? $productoActivo->imagen : asset('storage/' . ltrim($productoActivo->imagen, '/'));
+            }
+            if (! $seoImage && $site->imagen) {
+                $seoImage = asset('storage/' . ltrim($site->imagen, '/'));
+            }
+
+            $canonicalUrl = "{$currentBaseUrl}/productos?producto=" . rawurlencode((string) ($productoActivo->slug ?: $productoActivo->id));
+            $productSchema = \App\Services\SeoSchemaService::generateProductSchema($site, $productoActivo, $canonicalUrl);
+
+            $breadcrumbItems = [
+                ['name' => 'Inicio', 'url' => "{$currentBaseUrl}"],
+                ['name' => 'Productos', 'url' => "{$currentBaseUrl}/productos"],
+            ];
+            if ($productoActivo->categoria) {
+                $breadcrumbItems[] = [
+                    'name' => $productoActivo->categoria->nombre,
+                    'url'  => "{$currentBaseUrl}/productos?categoria=" . rawurlencode((string) ($productoActivo->categoria->slug ?: $productoActivo->categoria->nombre)),
+                ];
+            }
+            $breadcrumbItems[] = [
+                'name' => $productoActivo->nombre,
+                'url'  => $canonicalUrl,
+            ];
+            $breadcrumbSchema = \App\Services\SeoSchemaService::generateBreadcrumbSchema($breadcrumbItems);
+
+            $schemaJsonLd = \App\Services\SeoSchemaService::wrapInGraph([$productSchema, $breadcrumbSchema]);
+            $seoType = 'product';
+        } else {
+            $seoTitle = $seoCustomTitle
+                ?: "{$site->nombre} — " . ($seccionActiva['nombre'] ?? 'Inicio');
+
+            $rawDescription = $seoCustomDescription
+                ?: ($seccionActiva['descripcion'] ?? null)
+                ?: "Bienvenido a {$site->nombre}. Descubre nuestros productos, ofertas y servicios con la mejor calidad y garantía.";
+
+            $seoDescription = mb_substr(strip_tags((string) $rawDescription), 0, 160);
+
+            $customOgImage = ! empty($estilos['seo']['og_image'])
+                ? (filter_var($estilos['seo']['og_image'], FILTER_VALIDATE_URL) ? $estilos['seo']['og_image'] : asset('storage/' . ltrim($estilos['seo']['og_image'], '/')))
+                : null;
+
+            $seoImage = $customOgImage ?: ($site->imagen ? asset('storage/' . ltrim($site->imagen, '/')) : asset('/favicon.png'));
+
+            $cleanSlug = strtolower($seccionActiva['slug'] ?? 'inicio');
+            if (in_array($cleanSlug, ['inicio', 'hero', 'home'])) {
+                $canonicalUrl = "{$currentBaseUrl}";
+                $schemaJsonLd = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
+            } else {
+                $canonicalUrl = "{$currentBaseUrl}/{$seccionActiva['slug']}";
+                $storeSchema = \App\Services\SeoSchemaService::generateStoreSchema($site, $canonicalUrl);
+                $breadcrumbSchema = \App\Services\SeoSchemaService::generateBreadcrumbSchema([
+                    ['name' => 'Inicio', 'url' => "{$currentBaseUrl}"],
+                    ['name' => $seccionActiva['nombre'] ?? ucfirst($cleanSlug), 'url' => $canonicalUrl],
+                ]);
+                $schemaJsonLd = \App\Services\SeoSchemaService::wrapInGraph([$storeSchema, $breadcrumbSchema]);
+            }
+            $seoType = 'website';
+        }
+
+        $googleVerification = $estilos['seo']['google_verification'] ?? null;
+        if (! empty($googleVerification)) {
+            if (preg_match('/content=[\'"]([^\'"]+)[\'"]/i', $googleVerification, $matches)) {
+                $googleVerification = $matches[1];
+            } else {
+                $googleVerification = preg_replace('/^google-site-verification[:=\s]*/i', '', trim($googleVerification));
+            }
+        }
 
         // ─── LCP Preload: primer slide del hero para acelerar la carga en móvil y desktop ───
         $heroPreload = null;
@@ -387,9 +495,14 @@ class SitePageController extends Controller
 
         Inertia::share([
             '_seo' => [
-                'title'       => $seoTitle,
-                'description' => $seoDescription,
-                'keywords'    => $seoCustomKeywords,
+                'title'              => $seoTitle,
+                'description'        => $seoDescription,
+                'keywords'           => $seoCustomKeywords,
+                'image'              => $seoImage,
+                'canonical'          => $canonicalUrl,
+                'type'               => $seoType,
+                'googleVerification' => $googleVerification,
+                'schemaJsonLd'       => $schemaJsonLd,
             ],
             '_heroPreload' => $heroPreload,
         ]);
@@ -414,6 +527,7 @@ class SitePageController extends Controller
             'estilos' => $estilos,
             'serviciosSitio' => $serviciosSitio,
             'marcasSitio' => $marcasSitio,
+            'marcasCatalogo' => $marcasCatalogo,
         ]);
     }
 
@@ -449,6 +563,14 @@ class SitePageController extends Controller
     {
         if ($plantillaOrTipo instanceof Plantilla) {
             $studlySlug = Str::studly($plantillaOrTipo->slug);
+
+            // 1. Si coincide con una plantilla estándar compilada en Vite, resolver directamente
+            //    (Garantiza funcionamiento en producción cuando resources/js/ no se transfiere al cPanel)
+            if (in_array($studlySlug, ['Ecomer', 'Tortas', 'Corporativa', 'Anuncio'])) {
+                return "sites/{$studlySlug}/Index";
+            }
+
+            // 2. Si existe físicamente en desarrollo/local
             if (file_exists(resource_path("js/pages/sites/{$studlySlug}/Index.jsx"))) {
                 return "sites/{$studlySlug}/Index";
             }
@@ -463,10 +585,10 @@ class SitePageController extends Controller
         }
 
         return match ($tipo) {
-            'ecommerce' => 'sites/Tortas/Index',
+            'ecommerce' => 'sites/Ecomer/Index',
             'landing_page' => 'sites/Corporativa/Index',
             'anuncio' => 'sites/Anuncio/Index',
-            default => 'sites/Index',
+            default => 'sites/Ecomer/Index',
         };
     }
 
@@ -579,6 +701,13 @@ class SitePageController extends Controller
                 return null;
             }
 
+            if ($tipo === 'imagen' && is_array($valor)) {
+                $first = reset($valor);
+                if (is_string($first)) {
+                    $valor = $first;
+                }
+            }
+
             $formatUrl = function ($ruta) {
                 if (empty($ruta) || ! is_string($ruta)) {
                     return $ruta;
@@ -661,7 +790,17 @@ class SitePageController extends Controller
         $productos = $productosQuery->orderBy('orden')->orderBy('nombre')->get();
         $titulo = $catalogoConfig['titulo'] ?? 'Catálogo de Productos';
         $colorPrimario = $estilos['color_primario'] ?? '#F72F46';
+        $filename = Str::slug($titulo).'.pdf';
+        $cacheRelPath = 'catalogos/catalogo_site_' . $site->id . '.pdf';
 
+        // Fase 3 (Cache-Aside): Si el PDF pre-renderizado ya existe en disco, servirlo estáticamente (< 50ms, 0 MB RAM)
+        if (Storage::disk('public')->exists($cacheRelPath)) {
+            return response()->download(Storage::disk('public')->path($cacheRelPath), $filename, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
+
+        // Compilar con DomPDF una sola vez y persistir en disco
         $pdf = Pdf::loadView('pdf.catalogo', [
             'site' => $site,
             'titulo' => $titulo,
@@ -670,8 +809,14 @@ class SitePageController extends Controller
             'estilos' => $estilos,
         ])->setOption('isGdEnabled', false)->setOption('isRemoteEnabled', true);
 
-        $filename = Str::slug($titulo).'.pdf';
+        if (! Storage::disk('public')->exists('catalogos')) {
+            Storage::disk('public')->makeDirectory('catalogos');
+        }
 
-        return $pdf->download($filename);
+        Storage::disk('public')->put($cacheRelPath, $pdf->output());
+
+        return response()->download(Storage::disk('public')->path($cacheRelPath), $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }

@@ -3,21 +3,40 @@ import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function HistoriaSection({ seccionData }) {
-    if (!seccionData) return null;
-
     // Normalizar los datos del valor de la sección
     const rawValor = seccionData?.valor;
     const data = Array.isArray(rawValor) ? rawValor[0] : (rawValor || {});
 
     const sub = data?.sub || 'NUESTRA HISTORIA';
     const titulo = data?.Titulo || 'Nacimos para /*impulsar*/ la industria peruana';
-    const descripcion = data?.Descripción || data?.descripcion || data?.Parrafo || '';
+    const descripcion = data?.Descripción || data?.descripcion || data?.Parrafo || 'Con años de trayectoria en el sector, acompañamos a empresas, técnicos y proyectos con el más amplio catálogo de productos certificados, asesoramiento profesional y vocación de servicio constante.';
 
     // Normalizar arreglo de contactos/info (icono y texto)
-    const infoList = Array.isArray(data?.info) ? data.info : (Array.isArray(data?.Info) ? data.Info : []);
+    const rawInfoList = Array.isArray(data?.info) ? data.info : (Array.isArray(data?.Info) ? data.Info : []);
+    const infoList = rawInfoList.length > 0 ? rawInfoList : [
+        { icono: 'FaTruck', Texto: 'Envíos rápidos y seguros a nivel nacional' },
+        { icono: 'FaShieldAlt', Texto: 'Garantía oficial y distribución directa' },
+    ];
 
-    // Normalizar arreglo de la cronología/línea de tiempo (año, Titulo, Descripcion)
-    const timelineList = Array.isArray(data?.Historia) ? data.Historia : (Array.isArray(data?.historia) ? data.historia : []);
+    // Normalizar arreglo de la cronología/línea de tiempo con respaldo cronológico
+    const rawTimelineList = Array.isArray(data?.Historia) ? data.Historia : (Array.isArray(data?.historia) ? data.historia : []);
+    const timelineList = rawTimelineList.length > 0 ? rawTimelineList : [
+        {
+            año: '2012',
+            Titulo: 'Fundación e Inicios',
+            Descripcion: 'Nacimiento de la empresa con el compromiso de suministrar productos de alta calidad y asesoría técnica confiable.',
+        },
+        {
+            año: '2018',
+            Titulo: 'Crecimiento y Cobertura Nacional',
+            Descripcion: 'Ampliación de nuestro catálogo multimarca y consolidación logística para despachos oportunos a nivel nacional.',
+        },
+        {
+            año: '2025',
+            Titulo: 'Modernización y Tienda Virtual',
+            Descripcion: 'Transformación digital de nuestra plataforma comercial para una experiencia ágil de cotización y compra.',
+        },
+    ];
 
     // Helper para procesar títulos con la sintaxis /*texto destacado*/
     const renderFormattedTitle = (text) => {

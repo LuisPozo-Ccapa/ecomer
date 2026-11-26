@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\LibroReclamaciones\Pages;
 
 use App\Filament\Resources\LibroReclamaciones\LibroReclamacionResource;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditLibroReclamacion extends EditRecord
@@ -13,8 +12,7 @@ class EditLibroReclamacion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            // Borrado deshabilitado por cumplimiento legal de custodia INDECOPI (D.S. N° 011-2011-PCM)
         ];
     }
 }
-

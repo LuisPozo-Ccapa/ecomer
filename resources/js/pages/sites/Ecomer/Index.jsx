@@ -27,6 +27,7 @@ export default function Ecomer({
     estilos,
     serviciosSitio = [],
     marcasSitio = [],
+    marcasCatalogo = [],
 }) {
     useEffect(() => {
         if (typeof document !== 'undefined') {
@@ -240,6 +241,8 @@ export default function Ecomer({
                     tieneTienda={tieneTienda}
                     productos={productos}
                     serviciosSitio={serviciosSitio}
+                    marcasSitio={marcasSitio}
+                    marcasCatalogo={marcasCatalogo}
                     estilos={estilos}
                     esDetalleProducto={Boolean(productoSeleccionado)}
                 />
@@ -287,6 +290,7 @@ export default function Ecomer({
                             productosDestacados={productosDestacados}
                             serviciosSitio={serviciosSitio}
                             marcasSitio={marcasSitio}
+                            marcasCatalogo={marcasCatalogo}
                             styles={styles}
                             estilos={estilos}
                             onSeleccionarProducto={handleSeleccionarProducto}
