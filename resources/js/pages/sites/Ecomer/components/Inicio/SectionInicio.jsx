@@ -16,6 +16,7 @@ const TikTokSection = lazy(() => import('./subcomponents/TikTokSection'));
 const BanerPieSection = lazy(() => import('./subcomponents/BanerPieSection'));
 
 export default function SectionInicio({
+    site,
     dominio,
     siteSlug,
     seccion,
@@ -74,8 +75,8 @@ export default function SectionInicio({
 
     return (
         <main className="flex-1">
-            <HeroSection seccionData={inicio} />
-            <GaleriaSection seccionData={galeria} />
+            <HeroSection seccionData={inicio} site={site} />
+            <GaleriaSection seccionData={galeria} site={site} />
             <div className="content-auto">
                 <MarcasSection
                     seccionData={marcas}

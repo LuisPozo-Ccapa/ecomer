@@ -99,16 +99,19 @@ export default function SedesSection({ seccionData }) {
     const [sedeActivaIndex, setSedeActivaIndex] = useState(0);
     const [progress, setProgress] = useState(0); // 0% a 100%
     const [vistaMedia, setVistaMedia] = useState('sede'); // 'sede' | 'mapa'
+    const [isPaused, setIsPaused] = useState(false);
     const tabsContainerRef = useRef(null);
 
-    const DURATION = 6000; // 6 segundos por sede
+    const DURATION = 9000; // 9 segundos por sede para lectura cómoda
     const TICK = 50; // actualización cada 50ms
 
-    // Auto-avance continuo con barra de progreso tipo historias
+    // Auto-avance continuo con barra de progreso tipo historias y pausa en hover
     useEffect(() => {
         if (sedes.length <= 1) return;
 
         const interval = setInterval(() => {
+            if (isPaused) return;
+
             setProgress((prev) => {
                 const next = prev + (TICK / DURATION) * 100;
                 if (next >= 100) {
@@ -120,24 +123,35 @@ export default function SedesSection({ seccionData }) {
         }, TICK);
 
         return () => clearInterval(interval);
-}, [sedes.length, sedeActivaIndex]);
+    }, [sedes.length, isPaused]);
 
-// Resetea el progreso al cambiar de sede manualmente
-const handleSelectSede = (index) => {
-    setSedeActivaIndex(index);
-    setProgress(0);
-    setVistaMedia('sede'); // resetear vista a foto al cambiar de sede
+    // Resetea el progreso al cambiar de sede manualmente
+    const handleSelectSede = (index) => {
+        setSedeActivaIndex(index);
+        setProgress(0);
+        setVistaMedia('sede'); // resetear vista a foto al cambiar de sede
 
-    // Scroll automático suave de la pestaña activa en móviles
-    if (tabsContainerRef.current) {
-        const tabs = tabsContainerRef.current.children;
-        if (tabs[index]) {
-            tabs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Scroll automático suave de la pestaña activa en móviles
+        if (tabsContainerRef.current) {
+            const tabs = tabsContainerRef.current.children;
+            if (tabs[index]) {
+                tabs[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
-    }
-};
+    };
 
-const currentSede = sedes[sedeActivaIndex] || sedes[0] || {};
+    const currentSede = sedes[sedeActivaIndex] || sedes[0] || {};
+
+    // Obtener layout balanceado según la cantidad de sedes
+    const getTabsLayoutClass = () => {
+        if (sedes.length === 2) {
+            return 'grid grid-cols-2 max-w-3xl mx-auto items-stretch gap-4 sm:gap-6 mb-8 sm:mb-10';
+        }
+        if (sedes.length === 3) {
+            return 'flex md:grid md:grid-cols-3 items-stretch gap-4 sm:gap-6 mb-8 sm:mb-10 overflow-x-auto no-scrollbar pb-2 pt-1 snap-x snap-mandatory';
+        }
+        return 'flex md:grid md:grid-cols-4 items-stretch gap-4 sm:gap-6 mb-8 sm:mb-10 overflow-x-auto no-scrollbar pb-2 pt-1 snap-x snap-mandatory';
+    };
 
 // URL de Google Maps para el iframe
 const getMapEmbedUrl = (sede) => {
@@ -184,10 +198,12 @@ return (
                 </div>
 
                 {/* 2. SELECTOR DE SEDES (TABS CON BARRA DE PROGRESO ANIMADA) */}
-                {sedes.length > 0 && (
+                {sedes.length > 1 && (
                     <div
                         ref={tabsContainerRef}
-                        className="flex md:grid md:grid-cols-3 items-stretch gap-4 sm:gap-6 mb-8 sm:mb-10 overflow-x-auto no-scrollbar pb-2 pt-1 snap-x snap-mandatory"
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
+                        className={getTabsLayoutClass()}
                     >
                         {sedes.map((sede, idx) => {
                             const isActive = idx === sedeActivaIndex;
@@ -197,7 +213,7 @@ return (
                                     key={idx}
                                     type="button"
                                     onClick={() => handleSelectSede(idx)}
-                                    className={`group text-left flex-1 min-w-[240px] sm:min-w-[280px] md:min-w-0 p-3 sm:p-4 rounded-xl transition-all duration-200 cursor-pointer snap-start flex flex-col justify-between ${isActive ? 'bg-slate-50/80' : 'hover:bg-slate-50/50'
+                                    className={`group text-left flex-1 min-w-[220px] sm:min-w-[260px] md:min-w-0 p-3.5 sm:p-4 rounded-xl transition-all duration-200 cursor-pointer snap-start flex flex-col justify-between border ${isActive ? 'bg-slate-50/90 border-slate-200 shadow-xs' : 'border-transparent hover:bg-slate-50/50'
                                         }`}
                                 >
                                     <div>
@@ -243,7 +259,11 @@ return (
                 )}
 
                 {/* 3. TARJETA CENTRAL (CARD BLANCA CON SOMBRA Y DIVISIÓN 2 COLUMNAS) */}
-                <div className="bg-white rounded-2xl sm:rounded-3xl border border-gray-100 shadow-xl overflow-hidden p-4 sm:p-6 md:p-8">
+                <div
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                    className="bg-white rounded-2xl sm:rounded-3xl border border-gray-100 shadow-xl overflow-hidden p-4 sm:p-6 md:p-8"
+                >
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
                         {/* Columna Izquierda: FOTO / MAPA INTERACTIVO CON SWITCH */}
                         <div className="lg:col-span-7">
@@ -314,6 +334,11 @@ return (
 
                         {/* Columna Derecha: INFORMACIÓN Y ACCIÓN */}
                         <div className="lg:col-span-5 flex flex-col justify-center">
+                            {sedes.length === 1 && (
+                                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-[var(--color-primario,#eab308)]/15 text-[var(--color-primario,#d97706)] mb-3 w-fit">
+                                    Sede Principal
+                                </span>
+                            )}
                             {/* Nombre de la Sede */}
                             <h3 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight mb-6">
                                 {currentSede.titulo}

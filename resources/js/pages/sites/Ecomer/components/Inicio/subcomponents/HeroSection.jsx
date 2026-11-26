@@ -7,8 +7,11 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-export default function HeroSection({ seccionData }) {
+export default function HeroSection({ seccionData, site }) {
     if (!seccionData) return null;
+
+    const siteNombre = site?.nombre || '';
+    const fallbackH1 = siteNombre ? `${siteNombre} — Catálogo Oficial y Soluciones` : 'Tienda Oficial';
 
     const getItem = (label) =>
         seccionData?.contenido?.find(
@@ -155,7 +158,7 @@ export default function HeroSection({ seccionData }) {
                 {slide.tablet && <source media="(min-width: 640px)" srcSet={slide.tablet} />}
                 <img
                     src={fallbackUrl}
-                    alt={`Hero slide ${idx + 1}`}
+                    alt={`${siteNombre || 'Hero'} — Slide ${idx + 1}`}
                     width={1920}
                     height={1080}
                     fetchPriority={idx === 0 ? "high" : "low"}
@@ -199,7 +202,32 @@ export default function HeroSection({ seccionData }) {
                     >
                         {renderResponsiveImage(slides[0], 0)}
                     </motion.div>
-                ) : null}
+                ) : (
+                    <div className="w-full aspect-[1221/2161] sm:aspect-[16/9] bg-gradient-to-br from-[#0a172c] via-[#0f2240] to-[#1e3a6a] flex flex-col items-center justify-center p-6 text-white text-center relative overflow-hidden">
+                        <div className="pointer-events-none absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px]" />
+                        <div className="relative z-10 max-w-2xl flex flex-col items-center">
+                            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center mb-4 text-[var(--color-primario,#eab308)] shadow-inner">
+                                <DynamicIcon name="FaStore" className="h-8 w-8 sm:h-10 sm:w-10" />
+                            </div>
+                            <span className="inline-block px-3 py-1 mb-3 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-widest bg-[var(--color-primario,#eab308)] text-gray-950">
+                                BIENVENIDO A NUESTRA TIENDA
+                            </span>
+                            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight mb-3">
+                                {tituloHero || 'Calidad y Variedad en Productos'}
+                            </h1>
+                            <p className="text-xs sm:text-base text-slate-300 max-w-lg mb-6 leading-relaxed">
+                                {descripcionHero || 'Explora nuestro catálogo en línea y solicita tu cotización de forma rápida y sencilla.'}
+                            </p>
+                            <a
+                                href="#productos"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--color-primario,#eab308)] text-gray-950 font-bold text-xs sm:text-sm shadow-lg hover:brightness-105 transition"
+                            >
+                                <span>Ver Catálogo de Productos</span>
+                                <DynamicIcon name="FaChevronDown" className="h-3 w-3" />
+                            </a>
+                        </div>
+                    </div>
+                )}
 
                 <style>{`
                     .hero-swiper, .hero-swiper .swiper-wrapper, .hero-swiper .swiper-slide {
@@ -234,7 +262,7 @@ export default function HeroSection({ seccionData }) {
 
             {/* Contenedor de texto si existen datos */}
             {!hasTextContent && (
-                <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+                <h1 className="sr-only">{fallbackH1}</h1>
             )}
             {hasTextContent && (
                 <div className="absolute inset-0 z-20 mx-auto flex w-full max-w-7xl items-center justify-start px-5 sm:px-8 lg:px-12 py-6 sm:py-12 pointer-events-none">
@@ -249,7 +277,7 @@ export default function HeroSection({ seccionData }) {
                                 {renderFormattedTitle(tituloHero)}
                             </h1>
                         ) : (
-                            <h1 className="sr-only">Lismer Corp — Productos Eléctricos, Industriales y Ferretería</h1>
+                            <h1 className="sr-only">{fallbackH1}</h1>
                         )}
 
                         {descripcionHero && (

@@ -20,6 +20,17 @@ class TikTokApiController extends Controller
         $id = $request->query('id');
         $url = $request->query('url');
 
+        if ($id !== null && $id !== '') {
+            $sanitizedId = preg_replace('/\D/', '', (string) $id);
+            if ($sanitizedId === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El identificador de vídeo no es válido.'
+                ], 422);
+            }
+            $id = $sanitizedId;
+        }
+
         if (! $id && $url && preg_match('/\/video\/(\d+)/', $url, $matches)) {
             $id = $matches[1];
         }
@@ -45,8 +56,7 @@ class TikTokApiController extends Controller
         $cacheKey = 'tiktok_oembed_meta_' . md5($url);
         $meta = Cache::remember($cacheKey, 86400, function () use ($url) {
             try {
-                $response = Http::withoutVerifying()
-                    ->withHeaders([
+                $response = Http::withHeaders([
                         'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
                         'Accept' => 'application/json',
                         'Accept-Language' => 'es-ES,es;q=0.9,en;q=0.8',
