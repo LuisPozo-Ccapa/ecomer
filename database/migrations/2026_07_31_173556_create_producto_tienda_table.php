@@ -15,7 +15,11 @@ return new class extends Migration
             Schema::create('producto_tienda', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('producto_id')->constrained()->cascadeOnDelete();
-                $table->foreignId('tienda_id')->constrained()->cascadeOnDelete();
+                if (Schema::hasTable('tiendas')) {
+                    $table->foreignId('tienda_id')->constrained('tiendas')->cascadeOnDelete();
+                } else {
+                    $table->unsignedBigInteger('tienda_id');
+                }
                 $table->timestamps();
                 $table->unique(['producto_id', 'tienda_id']);
             });

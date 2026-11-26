@@ -40,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('errors', new ViewErrorBag);
 
+        // Registro de Observers para gestión segura de archivos físicos en disco
+        \App\Models\Producto::observe(\App\Observers\ProductoObserver::class);
+
         // Asegurar que las carpetas de subida temporal de Livewire existan y tengan permisos
         $tmpDirectories = [
             storage_path('app/livewire-tmp'),

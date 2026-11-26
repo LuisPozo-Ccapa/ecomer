@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
+import DynamicIcon from '@/components/DynamicIcon';
 
 export default function SectoresSection({ seccionData }) {
     if (!seccionData) return null;
@@ -13,7 +14,7 @@ export default function SectoresSection({ seccionData }) {
         );
 
     const subtitulo = getItem('subtitulo')?.valor || 'SECTORES';
-    const rawTitulo = getItem('titulo')?.valor || 'Soluciones hidráulicas para tu sector';
+    const rawTitulo = getItem('titulo')?.valor || 'Soluciones técnicas para tu sector';
 
     // Obtener las tarjetas de sectores (tipo grupo array)
     const sectoresGroup =
@@ -50,9 +51,31 @@ export default function SectoresSection({ seccionData }) {
             .filter((item) => item && (item.titulo || item.imagen))
         : [];
 
-    if (sectores.length === 0) {
-        return null;
-    }
+    const defaultSectores = [
+        {
+            titulo: 'Construcción e Infraestructura',
+            descripcion: 'Equipos, herramientas pesadas y suministros de alta resistencia.',
+            badge: 'ALTO RENDIMIENTO',
+            enlace: '/productos',
+            icono: 'FaWrench',
+        },
+        {
+            titulo: 'Industria y Manufactura',
+            descripcion: 'Insumos técnicos para mantenimiento, plantas y producción continua.',
+            badge: 'SUMINISTRO INTEGRAL',
+            enlace: '/productos',
+            icono: 'FaIndustry',
+        },
+        {
+            titulo: 'Minería y Energía',
+            descripcion: 'Soluciones certificadas para entornos de máxima exigencia operativa.',
+            badge: 'GRAN ESCALA',
+            enlace: '/productos',
+            icono: 'FaTruck',
+        },
+    ];
+
+    const listaSectores = sectores.length > 0 ? sectores : defaultSectores;
 
     // Título en color negro con acento en las últimas dos palabras en el color principal
     const renderTitulo = () => {
@@ -124,13 +147,13 @@ export default function SectoresSection({ seccionData }) {
 
                 {/* Vista Mobile: Grid 2x2 */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 md:hidden">
-                    {sectores.map((sector, index) => (
+                    {listaSectores.map((sector, index) => (
                         <div
                             key={`mobile-sector-${index}`}
                             onClick={() => handleCardClick(sector.enlace)}
                             className="relative h-60 sm:h-72 rounded-2xl overflow-hidden cursor-pointer shadow-sm active:scale-95 transition-transform duration-200 group bg-slate-900"
                         >
-                            {sector.imagen && (
+                            {sector.imagen ? (
                                 <img
                                     src={sector.imagen}
                                     alt={sector.titulo}
@@ -138,11 +161,22 @@ export default function SectoresSection({ seccionData }) {
                                     decoding="async"
                                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
+                            ) : (
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#183159] via-[#0f2240] to-[#0a172c] flex items-center justify-center p-6 text-white text-center">
+                                    <div className="h-12 w-12 rounded-xl border border-white/20 bg-white/5 flex items-center justify-center text-[var(--color-primario,#f59e0b)] mb-8 shadow-inner">
+                                        <DynamicIcon name={sector.icono || 'FaIndustry'} className="h-6 w-6" />
+                                    </div>
+                                </div>
                             )}
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/10" />
 
                             <div className="absolute bottom-0 inset-x-0 p-3.5 flex flex-col justify-end z-10">
+                                {sector.badge && (
+                                    <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[var(--color-primario,#f59e0b)] text-gray-950 mb-1.5 w-max">
+                                        {sector.badge}
+                                    </span>
+                                )}
                                 <h3 className="text-sm sm:text-base font-bold text-white leading-tight mb-1">
                                     {sector.titulo}
                                 </h3>
@@ -161,7 +195,7 @@ export default function SectoresSection({ seccionData }) {
                     className="hidden md:flex flex-row gap-4 h-[450px] lg:h-[480px] w-full"
                     onMouseLeave={() => setHoveredIndex(null)}
                 >
-                    {sectores.map((sector, index) => {
+                    {listaSectores.map((sector, index) => {
                         const isHovered = hoveredIndex === index;
 
                         return (
@@ -174,7 +208,7 @@ export default function SectoresSection({ seccionData }) {
                                 }}
                                 className="relative rounded-3xl overflow-hidden cursor-pointer shadow-md group transition-[flex] duration-500 ease-out bg-slate-900"
                             >
-                                {sector.imagen && (
+                                {sector.imagen ? (
                                     <img
                                         src={sector.imagen}
                                         alt={sector.titulo}
@@ -182,6 +216,12 @@ export default function SectoresSection({ seccionData }) {
                                         decoding="async"
                                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                     />
+                                ) : (
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#183159] via-[#0f2240] to-[#0a172c] flex items-center justify-center p-6 text-white text-center">
+                                        <div className="h-14 w-14 rounded-2xl border border-white/20 bg-white/5 flex items-center justify-center text-[var(--color-primario,#f59e0b)] mb-12 shadow-inner">
+                                            <DynamicIcon name={sector.icono || 'FaIndustry'} className="h-7 w-7" />
+                                        </div>
+                                    </div>
                                 )}
 
                                 <div

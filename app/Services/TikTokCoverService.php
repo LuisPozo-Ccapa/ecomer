@@ -23,8 +23,8 @@ class TikTokCoverService
      */
     public static function getOrDownloadCover(string|int $idVideo): ?string
     {
-        $cleanId = trim((string) $idVideo);
-        if ($cleanId === '') {
+        $cleanId = preg_replace('/\D/', '', (string) $idVideo);
+        if ($cleanId === '' || $cleanId === null) {
             return null;
         }
 
@@ -47,8 +47,7 @@ class TikTokCoverService
         $tempPath = sys_get_temp_dir() . '/tiktok_raw_' . md5($cleanId . microtime(true)) . '.jpg';
 
         try {
-            $imageResponse = Http::withoutVerifying()
-                ->timeout(15)
+            $imageResponse = Http::timeout(15)
                 ->withHeaders([
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
                     'Referer' => 'https://www.tiktok.com/',
@@ -95,8 +94,8 @@ class TikTokCoverService
      */
     public static function deleteCover(string|int $idVideo): bool
     {
-        $cleanId = trim((string) $idVideo);
-        if ($cleanId === '') {
+        $cleanId = preg_replace('/\D/', '', (string) $idVideo);
+        if ($cleanId === '' || $cleanId === null) {
             return false;
         }
 
@@ -206,8 +205,7 @@ class TikTokCoverService
         $url = "https://www.tiktok.com/@tiktok/video/{$idVideo}";
 
         try {
-            $response = Http::withoutVerifying()
-                ->timeout(10)
+            $response = Http::timeout(10)
                 ->withHeaders([
                     // User-Agent de Facebook external hit / Twitter bot permite recibir el HTML con etiquetas OpenGraph
                     'User-Agent' => 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',

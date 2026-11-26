@@ -27,6 +27,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class PlantillaForm
@@ -271,6 +272,7 @@ class PlantillaForm
                                                     ->schema([
                                                         Repeater::make('estilos.acciones_nav')
                                                             ->label('WhatsApp, Correos y Contacto')
+                                                            ->defaultItems(0)
                                                             ->schema([
                                                                 Grid::make(3)->schema([
                                                                     Select::make('icono')
@@ -590,9 +592,9 @@ class PlantillaForm
 
             'grupo' => Repeater::make($statePath)
                 ->schema(function () use ($pregunta, $contentDirectory) {
-                    $children = $pregunta->children;
-                    if ($children->isEmpty() && isset($pregunta->id)) {
-                        $children = Pregunta::where('parent_id', $pregunta->id)->orderBy('orden')->get();
+                    $children = self::asegurarSubcamposResponsive($pregunta);
+                    if ($children->isEmpty() && in_array(strtolower($pregunta->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
+                        return self::camposFallbackResponsive($contentDirectory);
                     }
 
                     return $children->map(function (Pregunta $child) use ($contentDirectory) {
@@ -612,9 +614,9 @@ class PlantillaForm
                             // ── Hijo tipo grupo → Repeater con sus propios sub-campos ──
                             'grupo' => Repeater::make($childPath)
                                 ->schema(function () use ($child, $contentDirectory) {
-                                    $grandChildren = $child->children;
-                                    if ($grandChildren->isEmpty() && isset($child->id)) {
-                                        $grandChildren = Pregunta::where('parent_id', $child->id)->orderBy('orden')->get();
+                                    $grandChildren = self::asegurarSubcamposResponsive($child);
+                                    if ($grandChildren->isEmpty() && in_array(strtolower($child->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
+                                        return self::camposFallbackResponsive($contentDirectory);
                                     }
 
                                     return $grandChildren->map(function (Pregunta $grandChild) use ($contentDirectory) {
@@ -650,7 +652,7 @@ class PlantillaForm
 
                                                         $ggcField = $ggcField->label($ggc->label);
                                                         if ($ggc->ayuda) {
-                                                            $ggcField->helperText($ggc->ayuda);
+                                                             $ggcField->helperText($ggc->ayuda);
                                                         }
 
                                                         return $ggcField->required((bool) $ggc->requerida);
@@ -667,7 +669,13 @@ class PlantillaForm
                                             default => TextInput::make($gcPath),
                                         };
 
-                                        $gcField = $gcField->label($grandChild->label);
+                                        $gcLabel = match ($grandChild->label) {
+                                            'Imagen_pc' => 'Imagen Desktop / PC',
+                                            'Imagen_tablet' => 'Imagen Tablet',
+                                            'Imagen_cel' => 'Imagen Celular / Móvil',
+                                            default => $grandChild->label,
+                                        };
+                                        $gcField = $gcField->label($gcLabel);
                                         if ($grandChild->ayuda) {
                                             $gcField->helperText($grandChild->ayuda);
                                         }
@@ -675,7 +683,10 @@ class PlantillaForm
                                         return $gcField->required((bool) $grandChild->requerida);
                                     })->all();
                                 })
-                                ->label($child->label)
+                                ->label(match ($child->label) {
+                                    'Imagenes' => 'Imágenes de Portada / Banner',
+                                    default => $child->label,
+                                })
                                 ->itemLabel(fn (array $state): ?string => $state['nombre'] ?? $state['titulo'] ?? $state['label'] ?? null)
                                 ->defaultItems($child->estructura === 'objeto' ? 1 : 0)
                                 ->minItems(($child->estructura === 'objeto' && $child->requerida) ? 1 : 0)
@@ -694,7 +705,13 @@ class PlantillaForm
                         };
 
                         if ($child->tipo !== 'grupo') {
-                            $subField->label($child->label);
+                            $childLabel = match ($child->label) {
+                                'Imagen_pc' => 'Imagen Desktop / PC',
+                                'Imagen_tablet' => 'Imagen Tablet',
+                                'Imagen_cel' => 'Imagen Celular / Móvil',
+                                default => $child->label,
+                            };
+                            $subField->label($childLabel);
                         }
                         if ($child->ayuda) {
                             $subField->helperText($child->ayuda);
@@ -1000,6 +1017,7 @@ class PlantillaForm
 
                         Repeater::make('estilos.cuentas_pago')
                             ->label('Cuentas Bancarias Disponibles')
+                            ->defaultItems(0)
                             ->helperText('Agrega las cuentas donde tus clientes pueden depositar (ej. BCP, Interbank, BBVA).')
                             ->schema([
                                 Grid::make(3)->schema([
@@ -1045,7 +1063,7 @@ class PlantillaForm
 
                             TextInput::make('estilos.metodos_pago_carrito.yape.titular')
                                 ->label('Nombre del titular de la cuenta YAPE (Opcional)')
-                                ->placeholder('Ej. Lismer Corp SRL'),
+                                ->placeholder('Ej. Mi Empresa S.A.C.'),
 
                             TextInput::make('estilos.metodos_pago_carrito.yape.instruccion')
                                 ->label('Instrucción junto al QR')
@@ -1072,5 +1090,87 @@ class PlantillaForm
                     ]),
             ])
             ->columnSpanFull();
+    }
+
+    /**
+     * Asegura o genera los sub-campos responsive (Imagen_pc, Imagen_tablet, Imagen_cel)
+     * para preguntas de tipo grupo dedicadas a imágenes.
+     */
+    public static function asegurarSubcamposResponsive(Pregunta $pregunta): mixed
+    {
+        $children = $pregunta->children;
+        if ((! $children || $children->isEmpty()) && isset($pregunta->id)) {
+            $children = Pregunta::where('parent_id', $pregunta->id)->orderBy('orden')->get();
+        }
+
+        if (($children->isEmpty() || ! $children) && in_array(strtolower($pregunta->label), ['imagenes', 'imagen', 'portada_imagenes', 'hero_imagenes'])) {
+            if (isset($pregunta->id) && $pregunta->id) {
+                $subCampos = [
+                    ['label' => 'Imagen_pc', 'orden' => 1, 'ayuda' => 'Imagen para computadoras de escritorio (Recomendado 1920x800 o proporción panorámica).'],
+                    ['label' => 'Imagen_tablet', 'orden' => 2, 'ayuda' => 'Imagen para tablets (Recomendado 1024x600 o proporción estándar).'],
+                    ['label' => 'Imagen_cel', 'orden' => 3, 'ayuda' => 'Imagen para celulares (Recomendado 768x800 o proporción vertical).'],
+                ];
+
+                foreach ($subCampos as $sc) {
+                    Pregunta::firstOrCreate(
+                        [
+                            'parent_id' => $pregunta->id,
+                            'label'     => $sc['label'],
+                        ],
+                        [
+                            'plantilla_id' => $pregunta->plantilla_id,
+                            'seccion_id'   => $pregunta->seccion_id,
+                            'tipo'         => 'imagen',
+                            'estructura'   => 'objeto',
+                            'orden'        => $sc['orden'],
+                            'requerida'    => false,
+                            'ayuda'        => $sc['ayuda'],
+                        ]
+                    );
+                }
+
+                $children = Pregunta::where('parent_id', $pregunta->id)->orderBy('orden')->get();
+            }
+        }
+
+        return $children ?? collect();
+    }
+
+    /**
+     * @return array<int, Component>
+     */
+    public static function camposFallbackResponsive(mixed $contentDirectory): array
+    {
+        return [
+            FileUpload::make('Imagen_pc')
+                ->label('Imagen Desktop / PC')
+                ->webp5Mb($contentDirectory, 'public')
+                ->orientImagesFromExif(false)
+                ->uploadingMessage('Subiendo imagen...')
+                ->deletable(true)
+                ->openable()
+                ->downloadable()
+                ->helperText('Recomendado 1920x800 o proporción panorámica. Formato WebP.'),
+
+            FileUpload::make('Imagen_tablet')
+                ->label('Imagen Tablet')
+                ->webp5Mb($contentDirectory, 'public')
+                ->orientImagesFromExif(false)
+                ->uploadingMessage('Subiendo imagen...')
+                ->deletable(true)
+                ->openable()
+                ->downloadable()
+                ->helperText('Recomendado 1024x600 o proporción estándar. Formato WebP.'),
+
+            FileUpload::make('Imagen_cel')
+                ->label('Imagen Celular / Móvil')
+                ->webp5Mb($contentDirectory, 'public')
+                ->orientImagesFromExif(false)
+                ->uploadingMessage('Subiendo imagen...')
+                ->deletable(true)
+                ->openable()
+                ->downloadable()
+                ->helperText('Recomendado 768x800 o proporción vertical. Formato WebP.'),
+        ];
     }
 }

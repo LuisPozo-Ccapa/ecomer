@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
+use App\Models\User;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -29,11 +29,11 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteAction::make()
+                    ->label('Borrar')
+                    ->hidden(fn (User $record): bool => $record->id === auth()->id())
+                    ->disabled(fn (User $record): bool => $record->sites()->exists())
+                    ->tooltip(fn (User $record): ?string => $record->sites()->exists() ? 'No se puede eliminar un usuario con tiendas asignadas.' : null),
             ]);
     }
 }

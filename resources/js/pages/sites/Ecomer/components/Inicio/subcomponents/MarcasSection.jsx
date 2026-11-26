@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { router } from '@inertiajs/react';
 import DynamicIcon from '@/components/DynamicIcon';
 import { useCartStore } from '@/stores/useCartStore';
 
@@ -95,7 +96,9 @@ export default function MarcasSection({
         return Array.from(map.values());
     }, [productos]);
 
-    // Combinar y deduplicar marcas manteniendo el orden de prioridad: Backend > Productos > CMS
+    // Combinar y deduplicar marcas para el carrusel de inicio:
+    // SOLO marcasFromBackend (Marcas Aliadas del sitio) y marcasFromCMS (logos del CMS de portada).
+    // EXCLUIMOS marcasFromProductos para que las marcas de productos NO se mezclen en el carrusel de inicio.
     const marcasList = useMemo(() => {
         const result = [];
         const seenKeys = new Set();
@@ -109,18 +112,25 @@ export default function MarcasSection({
         };
 
         marcasFromBackend.forEach(addMarca);
-        marcasFromProductos.forEach(addMarca);
         marcasFromCMS.forEach(addMarca);
 
         return result;
-    }, [marcasFromBackend, marcasFromProductos, marcasFromCMS]);
+    }, [marcasFromBackend, marcasFromCMS]);
 
     // Pista base para el marquee: asegurar suficientes marcas para cualquier resolución y loop uniforme
     const marcasTrack = useMemo(() => {
-        if (!marcasList || marcasList.length === 0) return [];
-        let list = [...marcasList];
+        const defaultMarcas = [
+            { titulo: 'Marca Líder 01', imagen: null },
+            { titulo: 'Marca Líder 02', imagen: null },
+            { titulo: 'Marca Líder 03', imagen: null },
+            { titulo: 'Marca Líder 04', imagen: null },
+            { titulo: 'Marca Líder 05', imagen: null },
+            { titulo: 'Marca Líder 06', imagen: null },
+        ];
+        const base = marcasList && marcasList.length > 0 ? marcasList : defaultMarcas;
+        let list = [...base];
         while (list.length < 12) {
-            list = [...list, ...marcasList];
+            list = [...list, ...base];
         }
         return list;
     }, [marcasList]);
@@ -211,6 +221,14 @@ export default function MarcasSection({
         }
     };
 
+    const handleMarcaClick = (m) => {
+        const marcaParam = m.slug || m.titulo;
+        if (!marcaParam || typeof window === 'undefined') return;
+        const currentPath = window.location.pathname.replace(/\/inicio\/?$/, '').replace(/\/+$/, '');
+        const targetUrl = `${currentPath || ''}/productos?marca=${encodeURIComponent(marcaParam)}`;
+        router.visit(targetUrl);
+    };
+
     if (!seccionData && marcasList.length === 0 && productos.length === 0) return null;
 
     return (
@@ -242,7 +260,7 @@ export default function MarcasSection({
                 </div>
 
                 {/* ── CARRUSEL INFINITO DE MARCAS (MARQUEE CONTINUO SIN PARAR) ── */}
-                {marcasList.length > 0 && (
+                {marcasTrack.length > 0 && (
                     <div className="relative w-full overflow-hidden mb-10 py-2 select-none">
                         {/* Difuminado suave en los bordes para una transición continua elegante */}
                         <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-white to-transparent z-10" />
@@ -260,6 +278,8 @@ export default function MarcasSection({
                                 {marcasTrack.map((m, idx) => (
                                     <div
                                         key={`m1-${idx}`}
+                                        onClick={() => handleMarcaClick(m)}
+                                        title={m.titulo ? `Ver productos de ${m.titulo}` : 'Ver marca'}
                                         className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
                                     >
                                         {m.imagen ? (
@@ -289,6 +309,8 @@ export default function MarcasSection({
                                 {marcasTrack.map((m, idx) => (
                                     <div
                                         key={`m2-${idx}`}
+                                        onClick={() => handleMarcaClick(m)}
+                                        title={m.titulo ? `Ver productos de ${m.titulo}` : 'Ver marca'}
                                         className="shrink-0 w-[170px] sm:w-[210px] md:w-[230px] h-24 sm:h-28 bg-white border border-gray-200/80 rounded-xl p-4 shadow-2xs hover:shadow-md hover:border-gray-300 transition-all duration-300 flex items-center justify-center text-center group cursor-pointer"
                                     >
                                         {m.imagen ? (

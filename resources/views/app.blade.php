@@ -90,21 +90,45 @@
         <link rel="apple-touch-icon" href="/favicon.png">
         <x-inertia::head>
             @php
-                $seoData = $page['props']['_seo'] ?? [];
+                $seoData        = $page['props']['_seo'] ?? [];
                 $seoTitle       = $seoData['title']       ?? config('app.name', 'Laravel');
                 $seoDescription = $seoData['description'] ?? '';
                 $seoKeywords    = $seoData['keywords']    ?? '';
+                $seoImage       = $seoData['image']       ?? null;
+                $seoCanonical   = $seoData['canonical']   ?? url()->current();
+                $seoType        = $seoData['type']        ?? 'website';
+                $schemaJsonLd   = $seoData['schemaJsonLd'] ?? null;
             @endphp
             <title>{{ $seoTitle }}</title>
+            @if($seoCanonical)
+                <link rel="canonical" href="{{ $seoCanonical }}">
+            @endif
             @if($seoDescription)
                 <meta name="description" content="{{ $seoDescription }}">
                 <meta property="og:description" content="{{ $seoDescription }}">
+                <meta name="twitter:description" content="{{ $seoDescription }}">
             @endif
             @if($seoKeywords)
                 <meta name="keywords" content="{{ $seoKeywords }}">
             @endif
             <meta property="og:title" content="{{ $seoTitle }}">
-            <meta property="og:type" content="website">
+            <meta property="og:type" content="{{ $seoType }}">
+            <meta property="og:url" content="{{ $seoCanonical }}">
+            @if($seoImage)
+                <meta property="og:image" content="{{ $seoImage }}">
+                <meta name="twitter:image" content="{{ $seoImage }}">
+            @endif
+            <meta name="twitter:card" content="{{ $seoImage ? 'summary_large_image' : 'summary' }}">
+            <meta name="twitter:title" content="{{ $seoTitle }}">
+            @if(!empty($seoData['googleVerification']))
+                <meta name="google-site-verification" content="{{ $seoData['googleVerification'] }}">
+            @endif
+
+            @if(!empty($schemaJsonLd))
+                <script type="application/ld+json">
+{!! json_encode($schemaJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+                </script>
+            @endif
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

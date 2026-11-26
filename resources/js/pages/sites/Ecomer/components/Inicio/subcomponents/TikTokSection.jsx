@@ -30,14 +30,22 @@ export default function TikTokSection({ seccionData }) {
     }
 
     // 2. Extraer 'Titulo'
-    const titulo = getValor('Titulo') || getValor('titulo') || seccionData?.nombre || null;
+    const titulo = getValor('Titulo') || getValor('titulo') || seccionData?.nombre || 'TikTok y no te pierdas ninguna novedad!';
 
     // 3. Extraer 'Videos' (array de objetos con IdVideo y Titulo)
     const rawVideos = getValor('Videos') || getValor('videos') || getValor('galeria') || getValor('items') || [];
+    const hasRealVideos = Array.isArray(rawVideos) && rawVideos.length > 0;
 
-    if (!Array.isArray(rawVideos) || rawVideos.length === 0) return null;
+    const defaultVideos = [
+        { Titulo: 'Conoce nuestras instalaciones y novedades', idVideo: null, url: 'https://www.tiktok.com' },
+        { Titulo: 'Demostración de productos y asesoría técnica', idVideo: null, url: 'https://www.tiktok.com' },
+        { Titulo: 'Envíos rápidos y suministros de calidad', idVideo: null, url: 'https://www.tiktok.com' },
+        { Titulo: '¡Síguenos en TikTok para sorteos y ofertas!', idVideo: null, url: 'https://www.tiktok.com' },
+    ];
 
-    const videoList = rawVideos.map((v, idx) => {
+    const effectiveVideos = hasRealVideos ? rawVideos : defaultVideos;
+
+    const videoList = effectiveVideos.map((v, idx) => {
         const imgUrl = v.imagen || v.foto || v.cover || (Array.isArray(v.imagen) ? v.imagen[0] : null);
         let extractedId = v.IdVideo || v.idVideo || v.video_id || null;
         const rawUrl = v.url || v.link || v.urlVideo || null;

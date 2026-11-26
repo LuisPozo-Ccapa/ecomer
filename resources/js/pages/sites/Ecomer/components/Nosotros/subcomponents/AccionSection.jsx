@@ -4,8 +4,6 @@ import { motion } from 'framer-motion';
 import DynamicIcon from '@/components/DynamicIcon';
 
 export default function AccionSection({ seccionData, site, estilos, dominio, siteSlug, seccionesData }) {
-    if (!seccionData) return null;
-
     const { props } = usePage();
     const activeDominio = dominio || props?.dominio;
     const activeSiteSlug = siteSlug || props?.siteSlug;
@@ -16,9 +14,9 @@ export default function AccionSection({ seccionData, site, estilos, dominio, sit
     const rawValor = seccionData?.valor;
     const data = Array.isArray(rawValor) ? rawValor[0] : (rawValor || {});
 
-    const icono = data?.Icono || data?.icono;
+    const icono = data?.Icono || data?.icono || 'FaComments';
     const titulo = data?.Titulo || data?.titulo || '¿Listo para equipar tu empresa?';
-    const descripcion = data?.Descripcion || data?.descripcion || '';
+    const descripcion = data?.Descripcion || data?.descripcion || 'Contáctanos hoy mismo para recibir asesoría personalizada, cotizaciones exclusivas y las mejores condiciones para tu negocio.';
 
     // --- CONFIGURACIÓN EXACTA DE CATÁLOGO (IGUAL AL NAV / HEADER) ---
     const catalogoConfig = activeEstilos?.catalogo || activeSite?.estilos?.catalogo || {};
