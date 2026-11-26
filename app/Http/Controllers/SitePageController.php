@@ -418,7 +418,10 @@ class SitePageController extends Controller
             fn ($s) => in_array(strtolower($s['slug'] ?? ''), ['marcas', 'marca'])
         );
         $marcasVisible = ! isset($visibilidad['marcas']) || (bool) $visibilidad['marcas'];
-        if ($marcasVisible && ! empty($marcasSitio) && count($marcasSitio) > 0 && ! $hasMarcasInNav) {
+        $hasMarcasDisponibles = (! empty($marcasCatalogo) && count($marcasCatalogo) > 0)
+            || (! empty($marcasSitio) && count($marcasSitio) > 0);
+
+        if ($marcasVisible && $hasMarcasDisponibles && ! $hasMarcasInNav) {
             $seccionesArray[] = [
                 'slug' => 'marcas',
                 'nombre' => 'Marcas',
