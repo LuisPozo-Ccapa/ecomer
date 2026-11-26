@@ -206,7 +206,7 @@ class SiteForm
                                                             ->columns(3)
                                                             ->searchable()
                                                             ->bulkToggleable(),
-                                                        Grid::make(4)->schema([
+                                                        Grid::make(5)->schema([
                                                             TextInput::make('estilos.seccion_productos.sub_titulo')
                                                                 ->label('Subtítulo de Productos / Almacén')
                                                                 ->placeholder('Ej: Catálogo Completo'),
@@ -219,6 +219,10 @@ class SiteForm
                                                                 ->label('Orden en el Menú')
                                                                 ->numeric()
                                                                 ->placeholder('Ej: 2'),
+                                                            TextInput::make('estilos.seccion_marcas.orden')
+                                                                ->label('Orden de Marcas en Menú')
+                                                                ->numeric()
+                                                                ->placeholder('Ej: 4'),
                                                         ]),
                                                     ]),
 
@@ -284,41 +288,22 @@ class SiteForm
                                                             ]),
                                                     ]),
 
-                                                Grid::make(2)->schema([
-                                                    Section::make('Marcas Aliadas')
-                                                        ->icon('heroicon-o-tag')
-                                                        ->description('Selecciona las marcas que comercializa esta tienda.')
-                                                        ->collapsible()
-                                                        ->schema([
-                                                            CheckboxList::make('marcas')
-                                                                ->label('Marcas asociadas')
-                                                                ->relationship('marcas', 'titulo')
-                                                                ->columns(2)
-                                                                ->searchable()
-                                                                ->bulkToggleable(),
-                                                            TextInput::make('estilos.seccion_marcas.orden')
-                                                                ->label('Orden en el Menú')
-                                                                ->numeric()
-                                                                ->placeholder('Ej: 5'),
-                                                        ]),
-
-                                                    Section::make('Servicios Ofrecidos')
-                                                        ->icon('heroicon-o-wrench-screwdriver')
-                                                        ->description('Servicios complementarios mostrados en la tienda.')
-                                                        ->collapsible()
-                                                        ->schema([
-                                                            CheckboxList::make('servicios')
-                                                                ->label('Servicios asociados')
-                                                                ->relationship('servicios', 'nombre')
-                                                                ->columns(2)
-                                                                ->searchable()
-                                                                ->bulkToggleable(),
-                                                            TextInput::make('estilos.seccion_servicios.orden')
-                                                                ->label('Orden en el Menú')
-                                                                ->numeric()
-                                                                ->placeholder('Ej: 3'),
-                                                        ]),
-                                                ]),
+                                                Section::make('Servicios Ofrecidos')
+                                                    ->icon('heroicon-o-wrench-screwdriver')
+                                                    ->description('Servicios complementarios mostrados en la tienda.')
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        CheckboxList::make('servicios')
+                                                            ->label('Servicios asociados')
+                                                            ->relationship('servicios', 'nombre')
+                                                            ->columns(3)
+                                                            ->searchable()
+                                                            ->bulkToggleable(),
+                                                        TextInput::make('estilos.seccion_servicios.orden')
+                                                            ->label('Orden en el Menú')
+                                                            ->numeric()
+                                                            ->placeholder('Ej: 3'),
+                                                    ]),
                                             ]),
 
                                         Tab::make('SEO, Contacto & Pagos')

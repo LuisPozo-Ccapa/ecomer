@@ -187,24 +187,6 @@ class PlantillaForm
                                                     ])
                                                     ->columnSpanFull(),
 
-                                                Section::make('Marcas')
-                                                    ->icon('heroicon-o-tag')
-                                                    ->collapsible()
-                                                    ->schema([
-                                                        Grid::make(2)->schema([
-                                                            CheckboxList::make('marcas')
-                                                                ->label('Marcas asociadas')
-                                                                ->relationship('marcas', 'titulo')
-                                                                ->columns(3)
-                                                                ->searchable()
-                                                                ->bulkToggleable(),
-                                                            TextInput::make('estilos.seccion_marcas.orden')
-                                                                ->label('Orden en el Menú')
-                                                                ->numeric()
-                                                                ->placeholder('Ej: 5'),
-                                                        ]),
-                                                    ])
-                                                    ->columnSpanFull(),
 
                                                 Section::make('Catálogo de Productos')
                                                     ->icon('heroicon-o-book-open')
