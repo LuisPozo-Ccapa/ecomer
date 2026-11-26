@@ -17,7 +17,11 @@ class CreateProducto extends CreateRecord
         if ($producto->productoTiendas->isNotEmpty()) {
             $hasNullStock = $producto->productoTiendas->contains(fn ($pt) => is_null($pt->stock));
             $totalStock = $hasNullStock ? null : (int) $producto->productoTiendas->sum('stock');
-            $producto->updateQuietly(['stock' => $totalStock]);
+            $firstTiendaId = $producto->productoTiendas->first()?->tienda_id;
+            $producto->updateQuietly([
+                'stock' => $totalStock,
+                'tienda_id' => $firstTiendaId,
+            ]);
         }
     }
 }
