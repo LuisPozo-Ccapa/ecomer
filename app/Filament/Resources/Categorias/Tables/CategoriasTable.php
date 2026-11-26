@@ -31,10 +31,6 @@ class CategoriasTable
                     ->label('Productos')
                     ->counts('productos')
                     ->sortable(),
-                TextColumn::make('tienda.nombre')
-                    ->label('Almacén')
-                    ->searchable()
-                    ->sortable(),
                 IconColumn::make('activa')
                     ->boolean()
                     ->sortable(),
