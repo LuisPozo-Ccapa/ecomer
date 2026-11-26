@@ -21,6 +21,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProductoForm
@@ -115,27 +116,13 @@ class ProductoForm
                                 ->placeholder('— sin marca —'),
                             Select::make('categoria_id')
                                 ->label('Categoría')
-                                ->options(function (Get $get, ?Producto $record): array {
-                                    $tiendaIds = (array) ($get('tiendas') ?? []);
-                                    if (empty($tiendaIds)) {
-                                        $pts = (array) ($get('productoTiendas') ?? []);
-                                        foreach ($pts as $pt) {
-                                            if (! empty($pt['tienda_id'])) {
-                                                $tiendaIds[] = $pt['tienda_id'];
-                                            }
-                                        }
-                                    }
-                                    if (empty($tiendaIds) && $record) {
-                                        $tiendaIds = $record->tiendas->pluck('id')->all();
-                                    }
-
-                                    return Categoria::query()
-                                        ->when(! empty($tiendaIds), fn ($q) => $q->whereIn('tienda_id', $tiendaIds))
-                                        ->get()
-                                        ->mapWithKeys(fn (Categoria $categoria): array => [$categoria->id => $categoria->nombre])
-                                        ->all();
-                                })
+                                ->relationship(
+                                    'categoria',
+                                    'nombre',
+                                    fn (Builder $query) => $query->where('activa', true)->orderBy('orden')->orderBy('nombre')
+                                )
                                 ->searchable()
+                                ->preload()
                                 ->live()
                                 ->afterStateUpdated(fn (Set $set) => $set('subcategoria_id', null))
                                 ->placeholder('— sin categoría —'),
